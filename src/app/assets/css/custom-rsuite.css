@@ -1,0 +1,389 @@
+.form-cus .rs-picker-toggle.rs-btn {
+    height: 36px;
+}
+
+.max-line-3 .rs-table-cell-wrap {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: break-spaces;
+}
+
+.max-line-3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: break-spaces;
+}
+
+.max-line-2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: break-spaces;
+}
+
+.rs-nav-item {
+    padding: 6px 9px;
+}
+
+/* border checbox antd */
+.ant-checkbox-inner {
+    border-color: red;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: red;
+    border-color: red;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-checkbox-wrapper-checked:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-inner,
+:where(.css-dev-only-do-not-override-1vtf12y).ant-checkbox-checked:not(.ant-checkbox-disabled):hover .ant-checkbox-inner {
+    background-color: red;
+    border-color: transparent;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-checkbox-checked:after {
+    border: 2px solid red;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-checked:not(.ant-checkbox-disabled) .ant-checkbox-inner {
+    background-color: red;
+    border-color: transparent;
+}
+
+/* border checbox antd */
+.rs-table-cell-header {
+    text-transform: uppercase;
+}
+
+.rs-tree-open>.rs-tree-node .rs-tree-node-expand-icon-wrapper>.rs-tree-node-expand-icon {
+    font-size: 18px;
+}
+
+.rs-tree-node-expand-icon-wrapper>.rs-tree-node-expand-icon {
+    font-size: 18px;
+}
+
+.rs-table-cell-expand-icon {
+    font-size: 20px;
+}
+
+.rs-nav-tabs {
+    overflow: auto;
+}
+
+/* scroll nav */
+.rs-nav-tabs ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.rs-nav-tabs * {
+    scrollbar-color: #00000000 transparent !important;
+}
+
+.rs-nav-tabs {
+    scrollbar-color: #00000000 transparent !important;
+}
+
+.rs-nav-tabs {
+    scrollbar-width: none !important;
+}
+
+/* scroll nav */
+.form-cus-36 .rs-picker-toggle.rs-btn {
+    padding-top: 4px;
+    height: 30px;
+}
+
+.cus-modal .MuiAutocomplete-input {
+    padding: 4.5px 4px 7.5px 6px !important;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.723);
+    border-radius: 0px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #f1f1f1c8;
+    border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+}
+
+::-webkit-scrollbar-track:hover .card-body-phantrang {
+    background: #0349fb;
+}
+
+/* firefox*/
+
+.sidebar * {
+    scrollbar-color: #00000000 transparent !important;
+}
+
+.sidebar {
+    scrollbar-color: #00000000 transparent !important;
+
+}
+
+* {
+    scrollbar-width: none !important;
+}
+
+body {
+    overflow: hidden;
+}
+
+.rs-table-body-row-wrapper {
+    /* overflow: scroll !important;
+    overscroll-behavior-y: none; */
+
+
+}
+
+.rs-modal-header .rs-modal-header-close {
+    z-index: 1;
+}
+
+.table {
+    margin-top: 5px;
+}
+
+/* width */
+.table ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+/* Track */
+.table ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.723);
+    border-radius: 0px;
+}
+
+/* Handle */
+.table ::-webkit-scrollbar-thumb {
+    background: rgba(120, 120, 120, 0.786);
+    border-radius: 0px;
+}
+
+/* Handle on hover */
+.table ::-webkit-scrollbar-thumb:hover {
+    background: #838589;
+}
+
+.table ::-webkit-scrollbar-track:hover .card-body-phantrang {
+    background: #0349fb;
+}
+
+/* firefox*/
+
+.table .sidebar * {
+    scrollbar-color: #00000000 transparent !important;
+}
+
+.table .sidebar {
+    scrollbar-color: #00000000 transparent !important;
+
+}
+
+.table * {
+    scrollbar-width: none !important;
+}
+
+.div-flex {
+    display: flex;
+    align-items: center;
+}
+
+.div-flex-sadqwex {
+    display: flex;
+}
+
+.item-sltruycap {
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.div-flex-2 {
+    display: flex;
+    align-items: flex-start;
+}
+
+.hovergray:hover {
+    background-color: #ededed;
+}
+
+.div-flex-start {
+    display: flex;
+    align-items: flex-start;
+}
+
+.MuiInputBase-input {
+    padding: 7.5px 14px;
+}
+
+.MuiTextField-root {
+    margin-bottom: 14px;
+}
+
+.form-login .MuiInputLabel-root {
+    top: 0px !important;
+}
+
+.MuiInputLabel-root {
+    top: -8px;
+    font-size: 14px;
+}
+
+.font13 .rs-stack-item {
+    font-size: 14px;
+}
+
+.MuiInputLabel-shrink {
+    top: 2px;
+    font-size: 15px;
+    color: #000258;
+}
+
+.modal-font13 * {
+    font-size: 14px !important;
+}
+
+.MuiOutlinedInput-input {
+    padding: 7.5px 14px;
+    font-size: 14px;
+}
+
+.MuiAutocomplete-root .MuiOutlinedInput-root {
+    padding: 4px;
+    height: 36px;
+}
+
+.text-eror {
+    color: red;
+    margin-right: 15px;
+}
+
+.css-1fh410u-MuiGrid-root>.MuiGrid-item {
+    padding-top: 82px;
+}
+
+.rs-modal-wrapper {
+    background: #535353e0;
+}
+
+.css-15v22id-MuiAccordionDetails-root {
+    padding: 0px 16px 16px;
+}
+
+.MuiAccordionSummary-root.Mui-expanded {
+    min-height: 43px;
+}
+
+p {
+    margin: 0px;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+
+.rs-table-scrollbar-horizontal {
+    background: #f9f9f9;
+}
+
+.rs-table-scrollbar-horizontal .rs-table-scrollbar-handle {
+    background: #e2e2e2;
+}
+
+.css-wqyqkm-MuiGrid-root {
+    margin-bottom: 0px;
+}
+
+.rs-uploader {
+    margin-bottom: 15px;
+}
+
+.MuiInputLabel-root.Mui-focused {
+    color: unset;
+}
+
+.MuiOutlinedInput-input:focus {
+    outline: 1px;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #1976d2;
+    border-width: 2px;
+}
+
+.rs-picker-date.rs-picker-cleanable.rs-picker-has-value .rs-picker-toggle,
+.rs-picker-daterange.rs-picker-cleanable.rs-picker-has-value .rs-picker-toggle {
+    /* padding-top: 10px; */
+
+}
+
+.rs-table-scrollbar {
+    opacity: 1;
+}
+
+.rs-table-scrollbar-handle {
+    background-color: #cecece;
+}
+
+.rs-table-scrollbar-pressed.rs-table-scrollbar-vertical:hover,
+.rs-table-scrollbar-vertical:hover {
+    -webkit-transform-origin: unset;
+    transform-origin: unset;
+    -webkit-transform: unset;
+    transform: unset;
+}
+
+.ps .ps__rail-x:hover,
+.ps .ps__rail-y:hover,
+.ps .ps__rail-x:focus,
+.ps .ps__rail-y:focus,
+.ps .ps__rail-x.ps--clicking,
+.ps .ps__rail-y.ps--clicking {
+    background-color: #eee0;
+    /* opacity: 0; */
+}
+
+.ps__thumb-y {
+    /* display: none; */
+}
+
+.MuiOutlinedInput-root {
+    /* padding: 4px !important; */
+    /* height: 36px; */
+}
+
+.rs-input-group.rs-input-group-inside .rs-input-group-addon {
+
+    padding: 8px 9px;
+}
+
+.rs-table-scrollbar-pressed .rs-table-scrollbar-handle {
+    background-color: #828282;
+}
