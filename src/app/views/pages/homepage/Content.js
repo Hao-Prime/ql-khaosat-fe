@@ -197,23 +197,23 @@ export const content = {
     subtitle: "Thông tin",
     social_media: [
       {
-        text: "codeaprogram@gmail.com",
+        text: "vahao.lan@vnpt.vn",
         icon: GrMail,
-        link: "mailto:codeaprogram@gmail.com",
+        link: "mailto:vahao.lan@vnpt.vn",
       },
       {
         text: "+91 1234 56778",
         icon: MdCall,
-        link: "https://wa.me/1234567890",
+        link: "vahao.lan@vnpt.vn",
       },
       {
         text: "codeaprogram",
         icon: BsInstagram,
-        link: "https://www.instagram.com/codeaprogram/",
+        link: "",
       },
     ],
   },
   Footer: {
-    text: "All © Copy Right Reserved 2022",
+    text: "All © Copy Right Reserved 2024",
   },
 };

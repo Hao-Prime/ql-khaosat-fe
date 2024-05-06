@@ -1,44 +1,53 @@
-// import components
-
+import React, { useEffect, useState } from 'react';
+import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import HomePage from "app/views/pages/homepage/HomePage";
-import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import Services from "app/services";
 import '../index.css';
-import "app/assets/css/rsuite-lib.css"
-// import "./assets/css/custom-rsuite.css"
-import "app/assets/css/style.css"
-import "app/assets/css/custom-antd.css"
+import "app/assets/css/rsuite-lib.css";
+import "app/assets/css/style.css";
+import "app/assets/css/custom-antd.css";
 import MyListFormPage from "./views/pages/mylistformpage/MyListFormPage";
-import LoginPage from "./views/pages/loginpage/LoginPage";
 import FormDetailPage from "./views/pages/mylistformpage/FormDetailPage";
-import ViewForm from "./views/pages/mylistformpage/components/ViewForm";
+
+import Loading from './components/Loading';
+
 const App = () => {
+  const [user, setUser] = useState();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setLoading(true)
+    Services.getTaiKhoanService().getBanThan().then((res) => {
+      setUser(res?.data);
+      setLoading(false)
+    }, (err) => {
+      setUser();
+    });
+  }, []);
 
   return (
-    <Routes>
+    <>
+      {loading ? <>
+        <Loading />
+      </> :
+        <Routes>
+          <Route path="/admin" element={<ProtectedRoute user={user} role="admin"> <HomePage /> </ProtectedRoute>} />
+          <Route path="/chi-tiet-bieu-mau" element={<ProtectedRoute user={user} role="admin"> <FormDetailPage /> </ProtectedRoute>} />
+          <Route path="/danh-sach-bieu-mau" element={<ProtectedRoute user={user} role="admin"> <MyListFormPage /> </ProtectedRoute>} />
+        </Routes>
 
-      <Route exact path="/khao-sat-bieu-mau" element={<ViewForm />}></Route>
-      <Route exact path="/danh-sach-bieu-mau" element={<MyListFormPage />}></Route>
-      <Route exact path="/dang-nhap" element={<LoginPage />}></Route>
-      <Route exact path="/chi-tiet-bieu-mau" element={<FormDetailPage />}></Route>
-      <Route exact path="/" element={<HomePage />}></Route>
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute user={true}>
-            <HomePage />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+      }
+    </>
 
   );
 };
 
 export default App;
-const ProtectedRoute = ({ user, redirectPath = '/landing' }) => {
-  if (!user) {
+
+const ProtectedRoute = ({ user, role, redirectPath = '/dang-nhap', children }) => {
+
+  if (!user?.listVaiTro?.includes(role)) {
+    console.log(user?.listVaiTro?.includes(role));
     return <Navigate to={redirectPath} replace />;
   }
-
-  return <Outlet />;
+  return children;
 };

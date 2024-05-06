@@ -1,7 +1,57 @@
 .bg-white{
     background: white;
 }
-
+.inputlg .MuiInputBase-input{
+    padding: 3px 7px;
+}
+.formio-component{
+    margin-bottom: 10px;
+}
+.div-finish{
+    text-align: center;
+}
+.loading-hiden-all{
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: #ffffffa8;
+}
+.loading-hiden-all .dsaidopa{
+    position: fixed;
+    z-index: 999;
+    top: calc(47vh);
+    left: calc(47vw);
+    height: auto;
+}
+.btn-submit-form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    flex-direction: column;
+}
+.btn-submit-form button{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 15px;
+}
+#webpack-dev-server-client-overlay{
+    display: none !important;
+    z-index: 0 !important;
+}
+.errlg{
+    font-weight: bold;
+    background: white;
+    padding: 5px 13px;
+    border-radius: 15px;
+}
+.w-xsadwqq{
+    width: 200px !important;
+}
+.card-header h4.card-title{
+    font-size: 20px;
+}
 .bg-red span{
     color: white;
 }
@@ -59,6 +109,7 @@
 .text-his-nav{
     font-size: 14px;
     color: rgb(153 153 153);
+    text-transform: uppercase;
 }
 .table-thongke-cus .rs-table-cell-content {
     white-space: unset;
@@ -145,7 +196,9 @@
     font-size: 20px;
     transition: opacity 0.3s;
 }
-
+.MuiGrid-root{
+    margin: 0px !important;
+}
 .scroll-to-top.show {
     display: block;
 }
@@ -312,7 +365,7 @@
 
 
 .ant-modal-wrap {
-    z-index: 1050 !important;
+    z-index: 2001 !important;
 }
 
 .fc-day-grid-event {
@@ -1305,7 +1358,7 @@
 }
 
 .gray {
-    color: #e8e8e8;
+    color: #858585;
     font-size: 10px;
 }
 
@@ -1348,16 +1401,52 @@
     border: 1px solid #c4c4c4;
     border-radius: 4px;
 }
-
+.ant-picker-dropdown-placement-bottomLeft{
+    z-index: 3000 !important;
+}
 .pos-relative .rs-picker-toggle-wrapper {
     width: 100%;
     margin-bottom: 15px;
 }
-
+.status-info{
+    padding: 3px 15px;
+    border-radius: 30px;
+    border: 1px solid rgb(100, 100, 255);
+    color: rgb(0, 0, 192)
+}
+.status-cuccess{
+    padding: 3px 15px;
+    border-radius: 30px;
+    border: 1px solid rgb(126, 255, 93);
+    color: rgb(26, 171, 0)
+}
+.status-cyan{
+    padding: 3px 15px;
+    border-radius: 30px;
+    border: 1px solid rgb(103, 232, 255);
+    color: rgb(0, 141, 223)
+}
+.status-danger{
+    padding: 3px 15px;
+    border-radius: 30px;
+    border: 1px solid rgb(255, 119, 119);
+    color: rgb(187, 2, 2)
+}
 .pos-relative {
     position: relative;
 }
-
+.img-logo-load{
+    position: absolute;
+    width: 30px;
+    top: 5px;
+    left: 5px;
+}
+.dsaidopa{
+    display: flex;
+    height: calc(100vh);
+    justify-content: space-evenly;
+    align-items: center;
+}
 .div-search-nav {
     width: 100%;
     padding: 0px 16px 0px 16px;
@@ -1916,10 +2005,97 @@
     font-size: 28px !important;
 }
 
+.f-29 {
+    font-size: 29px !important;
+}
+
 .f-30 {
     font-size: 30px !important;
 }
 
+.f-31 {
+    font-size: 31px !important;
+}
+
+.f-32 {
+    font-size: 32px !important;
+}
+
+.f-33 {
+    font-size: 33px !important;
+}
+
+.f-34 {
+    font-size: 34px !important;
+}
+
+.f-35 {
+    font-size: 35px !important;
+}
+
+.f-36 {
+    font-size: 36px !important;
+}
+
+.f-37 {
+    font-size: 37px !important;
+}
+
+.f-38 {
+    font-size: 38px !important;
+}
+
+.f-39 {
+    font-size: 39px !important;
+}
+
+.f-40 {
+    font-size: 40px !important;
+}
+
+.f-41 {
+    font-size: 41px !important;
+}
+
+.f-42 {
+    font-size: 42px !important;
+}
+
+.f-43 {
+    font-size: 43px !important;
+}
+
+.f-44 {
+    font-size: 44px !important;
+}
+
+.f-45 {
+    font-size: 45px !important;
+}
+
+.f-46 {
+    font-size: 46px !important;
+}
+
+.f-47 {
+    font-size: 47px !important;
+}
+
+.f-48 {
+    font-size: 48px !important;
+}
+
+.f-49 {
+    font-size: 49px !important;
+}
+
+.f-50 {
+    font-size: 50px !important;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
 /* .sidenavHoverShow {
     color: #e7e7e7f5;
 }
@@ -2079,7 +2255,8 @@
     }
     .tpn_card{
         padding: 10px 15px;
-        margin-left: 45px;
+        width: 80%;
+        margin-left: -35px;
       }
     .div-baithi {
         width: 100%;
@@ -3819,12 +3996,14 @@ menu {
 	height: 600px;
 	box-shadow: 0px 0px 24px #4bc8ff;
     overflow: hidden;
+    border-radius: 10px;
 }
 
 .screen__content {
 	z-index: 1;
 	position: relative;	
 	height: 100%;
+    border-radius: 10px;
 }
 
 .screen__background {		

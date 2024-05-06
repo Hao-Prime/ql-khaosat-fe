@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { debounce, forEach } from "lodash";
 import { Divider, Input, QRCode } from 'antd';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-const ShareForm = () => {
+const ShareForm = ({ bieuMau }) => {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -18,7 +18,7 @@ const ShareForm = () => {
             <div className='mt-3'>
 
                 {
-                    value == 0 ? <LinkKhaoSat /> : <ShareQuyen />
+                    value == 0 ? <LinkKhaoSat bieuMau={bieuMau} /> : <ShareQuyen />
                 }
 
             </div>
@@ -29,17 +29,17 @@ const ShareForm = () => {
 };
 
 export default ShareForm;
-const LinkKhaoSat = () => {
+const LinkKhaoSat = ({ bieuMau }) => {
     return (
         <div className=''>
             <div>
                 <p className='bold f-25'>Link chia sẻ mẫu khảo sát</p>
             </div>
-            <Input value={"https://form.gov.vn/IY4kgWZA"} />
+            <Input value={process.env.REACT_APP_URL_CLIENT + "/khao-sat-bieu-mau?key=" + bieuMau?.maBieuMau} />
             <div className='flex justify-center '>
                 <QRCode
                     errorLevel="H"
-                    value="https://ant.design/"
+                    value={process.env.REACT_APP_URL_CLIENT + "/khao-sat-bieu-mau?key=" + bieuMau?.maBieuMau}
                     icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
                 />
             </div>

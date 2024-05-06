@@ -90,7 +90,7 @@ const Skills = () => {
                 <img
                   src={skill.logo}
                   alt="..."
-                  className="w-10 group-hover:scale-125 duration-200"
+                  className="w-10 group-hover:scale-125 duration-200 w-xsadwqq"
                 />
               </div>
               <div>

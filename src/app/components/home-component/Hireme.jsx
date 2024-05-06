@@ -14,18 +14,18 @@ const Hireme = () => {
         </h4>
         <br />
         <div className="flex items-center md:flex-row flex-col-reverse ">
-          <img
+          {/* <img
             src={Hireme.image1}
             alt="..."
             data-aos="fade-right"
             className="max-w-sm md:block hidden"
-          />
-          <img
+          /> */}
+          {/* <img
             src={Hireme.image2}
             data-aos="fade-up"
             alt="..."
             className="max-w-sm md:hidden"
-          />
+          /> */}
           <div
             data-aos="fade-left"
             className="border-2 border-dark_primary max-w-sm

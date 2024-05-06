@@ -27,7 +27,7 @@ const Hero = () => {
                        
                     </div> */}
                     <div ><span></span>
-                        <div class="div-key-form"><span>
+                        <div className="div-key-form"><span>
                             <Input size="large" className="input-key-form" placeholder="Nhập mã biểu mẫu" />
                         </span></div>
                     </div>

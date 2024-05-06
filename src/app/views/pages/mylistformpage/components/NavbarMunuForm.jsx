@@ -17,7 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import iconfile from 'app/assets/images/icons8-file-200.png'
 import iconvnpt from 'app/assets/images/vnptlogo.png'
 import PreviewIcon from '@mui/icons-material/Preview';
-
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 const NavbarMunuForm = ({ content }) => {
     const settings = ['Thông tin cá nhân', 'Biểu mẫu của tôi', 'Đăng xuất'];
 
@@ -47,7 +47,9 @@ const NavbarMunuForm = ({ content }) => {
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {content?.type ?
                             <>
-                                <a href='/'><HomeIcon className='icon-homex' /></a>
+                                {/* <a href='/'><HomeIcon className='icon-homex' /></a> */}
+                                <a href='/danh-sach-bieu-mau'><ArrowBackIosNewIcon className='icon-homex' /></a>
+
                                 <div className='div-nav-flex'>
                                     <img className='img-nav' src={iconfile}></img>
                                     <div>
@@ -99,7 +101,7 @@ const NavbarMunuForm = ({ content }) => {
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseNavMenu}>
 
-                                        <a href='/khao-sat-bieu-mau' target='_blank'><Typography textAlign="center"><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} />Xem nhanh</Typography></a>
+                                        <a href={"/khao-sat-bieu-mau?key=" + content?.maBieuMau} target='_blank'><Typography textAlign="center"><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} />Xem nhanh</Typography></a>
                                     </MenuItem>
 
                                 </Menu>
@@ -128,7 +130,7 @@ const NavbarMunuForm = ({ content }) => {
                         <div className='div-flex'>
                             {content?.type ? <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                                 <div className='me-2'>
-                                    <a href="/khao-sat-bieu-mau" target='_blank' className='div-flex text-tieude-nav'><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} /> Xem nhanh</a>
+                                    <a href={"/khao-sat-bieu-mau?key=" + content?.maBieuMau} target='_blank' className='div-flex text-tieude-nav'><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} /> Xem nhanh</a>
 
                                 </div>
                             </Box> : <></>}

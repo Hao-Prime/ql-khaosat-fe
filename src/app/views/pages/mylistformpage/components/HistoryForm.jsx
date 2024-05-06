@@ -1,30 +1,23 @@
 import { Timeline } from 'antd';
-import React, { useState } from 'react'
-const HistoryForm = () => {
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react'
+const HistoryForm = ({ bieuMau }) => {
 
+    const [listLichSu, setListLichSu] = useState([]);
+    useEffect(() => {
+        let rs = []
+        console.log(bieuMau);
+        bieuMau?.lichSuChinhSuaBieuMau?.reverse()?.forEach(ls => {
+            rs.push({ label: dayjs(ls.ngayThaoTac).format("DD/MM/YYYY HH:mm "), children: ls.noiDung })
+        });
+        setListLichSu(rs)
+    }, []);
 
     return (
         <div className="div-Timeline-cus">
             <Timeline
                 mode={"left"}
-                items={[
-                    {
-                        label: '2024-04-01 14:12:11',
-                        children: 'Anh Hào đã cập nhật biểu mẫu',
-                    },
-                    {
-                        label: '2024-03-01 09:12:11',
-                        children: 'Anh Hào đã chia sẻ biểu mẫu cho Trần Tuyền',
-                    },
-                    {
-                        label: '2024-03-01 09:55:11',
-                        children: 'Anh Hào đã cập nhật biểu mẫu',
-                    },
-                    {
-                        label: '2024-03-01 09:12:11',
-                        children: 'Biểu mẫu được Anh Hào  khởi tạo',
-                    },
-                ]}
+                items={listLichSu}
             />
 
         </div >

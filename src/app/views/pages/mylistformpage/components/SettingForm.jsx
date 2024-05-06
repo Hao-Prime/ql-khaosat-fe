@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Radio } from 'antd';
+import { Button, DatePicker, Divider, Input, Radio } from 'antd';
 import React, { useState } from 'react'
 import { Upload } from 'antd';
 const SettingForm = () => {
@@ -49,6 +49,10 @@ const SettingForm = () => {
 
             </div>
             <div className='pb-3'>
+                <p className='bold'> Mô tả: </p>
+                {/* <TextArea onChange={(e) => onChange("moTa", e?.target?.value)} placeholder="Nhập tên biểu mẫu" /> */}
+            </div>
+            <div className='pb-3'>
                 <p className='bold'> Ảnh bìa: </p>
 
                 <Upload
@@ -70,6 +74,11 @@ const SettingForm = () => {
                 </div>
 
 
+            </div>
+            <Divider />
+            <div className='flex justify-between pb-3 pt-3'>
+                {/* <p className='bold'></p> */}
+                <Button type="primary" danger className='bg-red'>Xóa biểu mẫu</Button>
             </div>
         </div >
 

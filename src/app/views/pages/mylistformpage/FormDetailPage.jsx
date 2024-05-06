@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Paper, Stack, } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -9,7 +9,7 @@ import hoa03 from "app/assets/images/banner/hoa-3.jpg";
 import hoa04 from "app/assets/images/banner/hoa-4.jpg";
 import hoa05 from "app/assets/images/banner/hoa-5.jpg";
 import HomeIcon from '@mui/icons-material/Home';
-import { Button, Divider, Tabs } from 'antd';
+import { Button, Divider, Modal, Skeleton, Tabs, message } from 'antd';
 import { Input } from 'antd';
 import Footer from 'app/components/home-component/Footer';
 import EditForm from './components/EditForm';
@@ -18,69 +18,88 @@ import DashboardForm from './components/DashboardForm';
 import ShareForm from './components/ShareForm';
 import SettingForm from './components/SettingForm';
 import NavbarMunuForm from './components/NavbarMunuForm';
+import Loading from 'app/components/Loading';
+import Services from 'app/services';
+import 'dayjs/locale/vi'; // Import locale tiếng Việt
+import dayjs from 'dayjs';
+dayjs.locale('vi');
 
 const FormDetailPage = () => {
-    const [value, setValue] = React.useState(0);
+    const [bieuMau, setBieuMau] = React.useState();
+    const [tabValue, setTabValue] = React.useState("1");
+    const idBieuMau = new URLSearchParams(window.location.search).get("id");
+    const [loading, setLoading] = useState(false);
+    var isMounted = true;
+    useEffect(() => {
+        isMounted = true;
+        reloadList()
 
-    const [form, setForm] = useState(
-
-        {
-            tieuDe: "Đánh giá Độ Hài Hòa Xã Hội",
-            moTa: "Khảo sát này nhằm đánh giá mức độ hài hòa và công bằng trong xã hội từ quan điểm của người dân.",
-            banner: hoa01
-        });
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
-
+        return () => {
+            isMounted = false;
+        };
+    }, [idBieuMau]);
+    function reloadList() {
+        setLoading(true)
+        Services.getFormService().getFormDetail(idBieuMau).then(
+            (res) => {
+                if (res?.data && isMounted) {
+                    setBieuMau(res?.data)
+                    setLoading(false)
+                } else {
+                    // message.error();
+                    Modal.error({
+                        title: "Không tìm thấy biểu mẫu",
+                    });
+                }
+            }
+        )
+    }
+    const onChange = (e) => {
+        setTabValue(e);
+    }
     return (
         <div className="">
             <div className='banner-top'>
                 <img src={banner} style={{ width: "100%" }}></img>
             </div>
-            {/* <Divider></Divider> */}
-            <NavbarMunuForm content={{ type: true, title: "Đánh Giá Hiệu Quả Dịch Vụ Công", history: "ĐƯỢC LƯU LÚC 11:26 THỨ HAI, 1 THÁNG 4, 2024" }} />
-            <div className='w-lg-80pt'>
-
-                <Tabs
-                    className='tab-menu'
-                    defaultActiveKey="1"
-                    items={[
-                        {
-                            key: '1',
-                            label: 'Thiết kế',
-                            children: <EditForm />,
-                        },
-                        {
-                            key: '2',
-                            label: 'Lịch sử chỉnh sửa',
-                            children: <HistoryForm />
-                        },
-                        {
-                            key: '3',
-                            label: 'Thống kê',
-                            children: <DashboardForm />
-                        },
-                        {
-                            key: '4',
-                            label: 'Chia sẻ',
-                            children: <ShareForm />,
-                        },
-                        {
-                            key: '5',
-                            label: 'Cài đặt',
-                            children: <SettingForm />,
-                        },
-                    ]}
-                // onChange={onChange}
-                />
-
-
-
-                <Divider></Divider>
-            </div>
-
+            {loading ? <Skeleton /> : <>
+                <NavbarMunuForm content={{ ...bieuMau, type: true, title: bieuMau?.tenBieuMau, history: "ĐƯỢC LƯU LÚC " + dayjs(bieuMau?.ngayLuuGanNhat)?.format('HH:mm dddd, D [THÁNG] M, YYYY') }} />
+                <div className='w-lg-80pt'>
+                    <Tabs
+                        className='tab-menu'
+                        defaultActiveKey="1"
+                        items={[
+                            {
+                                key: '1',
+                                label: 'Thiết kế',
+                                children: <EditForm bieuMau={bieuMau} />,
+                            },
+                            {
+                                key: '2',
+                                label: 'Lịch sử chỉnh sửa',
+                                children: <HistoryForm bieuMau={bieuMau} />
+                            },
+                            {
+                                key: '3',
+                                label: 'Thống kê',
+                                children: <DashboardForm />
+                            },
+                            {
+                                key: '4',
+                                label: 'Chia sẻ',
+                                children: <ShareForm bieuMau={bieuMau} />,
+                            },
+                            {
+                                key: '5',
+                                label: 'Cài đặt',
+                                children: <SettingForm bieuMau={bieuMau} />,
+                            },
+                        ]}
+                        onChange={onChange}
+                    />
+                    <Divider></Divider>
+                </div>
+            </>}
             <Footer></Footer>
         </div >
 
