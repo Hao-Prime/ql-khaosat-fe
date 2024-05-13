@@ -18,7 +18,7 @@ import iconfile from 'app/assets/images/icons8-file-200.png'
 import iconvnpt from 'app/assets/images/vnptlogo.png'
 import PreviewIcon from '@mui/icons-material/Preview';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-const NavbarMunuForm = ({ content }) => {
+const NavbarMunuForm = ({ content, type }) => {
     const settings = ['Thông tin cá nhân', 'Biểu mẫu của tôi', 'Đăng xuất'];
 
 
@@ -99,10 +99,12 @@ const NavbarMunuForm = ({ content }) => {
                                         <a href='/'><Typography textAlign="center"><HomeIcon className='f-39 me-1' style={{ color: "#6782df" }} /> Trang chủ</Typography></a>
 
                                     </MenuItem>
-                                    <MenuItem onClick={handleCloseNavMenu}>
+                                    {type != 1 &&
+                                        <MenuItem onClick={handleCloseNavMenu}>
 
-                                        <a href={"/khao-sat-bieu-mau?key=" + content?.maBieuMau} target='_blank'><Typography textAlign="center"><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} />Xem nhanh</Typography></a>
-                                    </MenuItem>
+                                            <a href={"/khao-sat-bieu-mau?key=" + content?.maBieuMau} target='_blank'><Typography textAlign="center"><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} />Xem nhanh</Typography></a>
+                                        </MenuItem>
+                                    }
 
                                 </Menu>
                             </Box>
@@ -111,7 +113,7 @@ const NavbarMunuForm = ({ content }) => {
 
                                     <img className='img-nav-2' src={iconfile}></img>
                                     <div>
-                                        <p className='text-tieude-nav-1'>Đánh Giá Hiệu Quả Dịch Vụ Công</p>
+                                        <p className='text-tieude-nav-1'>{content?.title}</p>
                                     </div>
                                 </div>
                             </Box>
@@ -130,49 +132,53 @@ const NavbarMunuForm = ({ content }) => {
                         <div className='div-flex'>
                             {content?.type ? <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                                 <div className='me-2'>
-                                    <a href={"/khao-sat-bieu-mau?key=" + content?.maBieuMau} target='_blank' className='div-flex text-tieude-nav'><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} /> Xem nhanh</a>
+                                    {type != 1 && <a href={"/khao-sat-bieu-mau?key=" + content?.maBieuMau} target='_blank' className='div-flex text-tieude-nav'><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} /> Xem nhanh</a>}
 
                                 </div>
                             </Box> : <></>}
-                            <span className='black me-2'>|</span>
-                            <Tooltip title="Mở cài đặt">
-                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt="V" src="/static/images/avatar/2.jpg" style={{ background: "linear-gradient(90deg, #6782df, #29b8e9)" }} />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
+                            {type != 1 && <>
+                                <span className='black me-2'>|</span>
 
-                                <MenuItem  >
-                                    <Typography textAlign="center">Thông tin cá nhân</Typography>
-                                </MenuItem>
-                                <MenuItem >
-                                    <a href='/danh-sach-bieu-mau'>
-                                        <Typography textAlign="center">Biểu mẫu của tôi</Typography>
-                                    </a>
-                                </MenuItem>
-                                <MenuItem >
-                                    <a href='/dang-nhap'>
-                                        <Typography textAlign="center">Đăng xuất</Typography>
-                                    </a>
+                                <Tooltip title="Mở cài đặt">
+                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                        <Avatar alt="V" src="/static/images/avatar/2.jpg" style={{ background: "linear-gradient(90deg, #6782df, #29b8e9)" }} />
+                                    </IconButton>
+                                </Tooltip>
 
-                                </MenuItem>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
 
-                            </Menu>
+                                    <MenuItem  >
+                                        <Typography textAlign="center">Thông tin cá nhân</Typography>
+                                    </MenuItem>
+                                    <MenuItem >
+                                        <a href='/danh-sach-bieu-mau'>
+                                            <Typography textAlign="center">Biểu mẫu của tôi</Typography>
+                                        </a>
+                                    </MenuItem>
+                                    <MenuItem >
+                                        <a href='/dang-nhap'>
+                                            <Typography textAlign="center">Đăng xuất</Typography>
+                                        </a>
+
+                                    </MenuItem>
+
+                                </Menu>
+                            </>}
                         </div>
 
                     </Box>

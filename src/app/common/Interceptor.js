@@ -1,12 +1,36 @@
 // import getCookie from './getCookie';
 import { Modal } from "antd";
+import Services from "app/services";
 import axios from "axios";
+import dayjs from "dayjs";
 // import { toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 function initInterceptor() {
     // Đặt token
     axios.defaults.headers.common["Authorization"] = localStorage.getItem("tkv");
     // Lỗi 401 và 403
+    axios.interceptors.request.use(async function (config) {
+
+        // if (!config?.url?.includes("/be-form/user/refresh-token"))
+        //     if (!checkvalidToken(axios.defaults.headers.common["Authorization"]) && localStorage.getItem("tkv")) {
+        //         console.log("XXXXXX" + config?.url);
+        //         let token = await Services.getTaiKhoanService().refreshToken({ accessToken: localStorage.getItem("tkv"), refreshToken: localStorage.getItem("tkfv") })
+        //         console.log(token);
+
+        //         if (token) {
+        //             localStorage.setItem('tkv', token?.access_token)
+        //             localStorage.setItem('tkfv', token?.refresh_token)
+        //             axios.defaults.headers.common["Authorization"] = token?.access_token;
+        //         }
+        //     }
+        // console.log(config);
+        return config;
+    }, function (error) {
+        console.log(error);
+        // Do something with request error
+        return Promise.reject(error);
+    });
+
     axios.interceptors.response.use(
         (res) => {
             if (201 === res.status) {
@@ -23,7 +47,7 @@ function initInterceptor() {
             }
             return res;
         },
-        (error) => {
+        async (error) => {
             // console.log(error);
             if (400 === error.response.status) {
                 if ((axios.defaults.headers.common['Authorization']) != undefined) {
@@ -49,7 +73,29 @@ function initInterceptor() {
             if (401 === error.response.status) {
 
                 // alert("Lỗi xác thực, cần đăng nhập lại");
-                if (localStorage.getItem("tkv")) {
+                if (localStorage.getItem("tkfv")) {
+                    let token = await Services.getTaiKhoanService().refreshToken({ accessToken: localStorage.getItem("tkv"), refreshToken: localStorage.getItem("tkfv") })
+
+                    if (token?.data?.error) {
+                        Modal.error({
+                            title: 'Phiên đăng nhập đã hết hạn',
+                            content: 'Bạn cần đăng nhập lại',
+                            onOk() {
+                                window.location.href = "/dang-nhap";
+                            }
+                        });
+                        localStorage.removeItem('tkv')
+                        localStorage.removeItem('tkfv')
+                        axios.defaults.headers.common["Authorization"] = ""
+                    } else {
+                        localStorage.setItem('tkv', token?.data?.access_token)
+                        localStorage.setItem('tkfv', token?.data?.refresh_token)
+                        // axios.defaults.headers.common["Authorization"] = token?.data?.access_token;
+                        axios.defaults.headers.common.Authorization = `${token?.data?.access_token}`
+                        console.log(token?.data?.access_token);
+                        return axios(error.config);
+                    }
+                } else {
                     Modal.error({
                         title: 'Phiên đăng nhập đã hết hạn',
                         content: 'Bạn cần đăng nhập lại',
@@ -58,9 +104,10 @@ function initInterceptor() {
                         }
                     });
                     localStorage.removeItem('tkv')
-                } else {
-
+                    localStorage.removeItem('tkfv')
+                    axios.defaults.headers.common["Authorization"] = ""
                 }
+
 
             } if (403 === error.response.status) {
 
@@ -108,7 +155,18 @@ function initInterceptor() {
     );
 }
 
-
+const checkvalidToken = (token) => {
+    try {
+        const [, payloadBase64] = token.split('.');
+        const decodedPayload = atob(payloadBase64);
+        const decodedPayloadObj = JSON.parse(decodedPayload);
+        console.log(dayjs.unix(decodedPayloadObj?.exp));
+        return dayjs.unix(decodedPayloadObj?.exp).isAfter(dayjs());
+    } catch (error) {
+        console.error('Error decoding JWT:', error.message);
+        return null;
+    }
+};
 export default {
     initInterceptor
 

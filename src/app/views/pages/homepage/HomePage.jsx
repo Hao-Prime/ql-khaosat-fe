@@ -36,7 +36,7 @@ const HomePage = () => {
             {/* <Contact /> */}
             <footer className="p-3 text-center">
                 <h6 className="mb-3">VNPT Long An</h6>
-                <p>Trung tâm CNTT © Phiến triển 2024</p>
+                <p>Trung tâm CNTT © Phát  triển 2024</p>
             </footer>
         </div>
 

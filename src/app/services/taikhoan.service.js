@@ -13,10 +13,13 @@ const dangNhap = ({ tenDangNhap, matKhau }) => {
     "matKhau": matKhau
   })
 };
-
+const refreshToken = async (token) => {
+  return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/refresh-token", token)
+};
 const taiKhoanService = {
   dangNhap,
   getBanThan,
   doiMatKhau,
+  refreshToken
 };
 export default taiKhoanService;

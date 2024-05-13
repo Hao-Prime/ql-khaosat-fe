@@ -1,5 +1,5 @@
 import { Autocomplete, Grid, Tab, Tabs, TextField } from '@mui/material';
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { debounce, forEach } from "lodash";
 import { Divider, Input, QRCode } from 'antd';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -13,7 +13,7 @@ const ShareForm = ({ bieuMau }) => {
         <div className="">
             <Tabs value={value} onChange={handleChange} centered>
                 <Tab label="Link khảo sát" />
-                <Tab label="Chia sẻ quyền" />
+                <Tab label="Chia sẻ đơn vị" />
             </Tabs>
             <div className='mt-3'>
 
@@ -36,12 +36,23 @@ const LinkKhaoSat = ({ bieuMau }) => {
                 <p className='bold f-25'>Link chia sẻ mẫu khảo sát</p>
             </div>
             <Input value={process.env.REACT_APP_URL_CLIENT + "/khao-sat-bieu-mau?key=" + bieuMau?.maBieuMau} />
-            <div className='flex justify-center '>
-                <QRCode
-                    errorLevel="H"
-                    value={process.env.REACT_APP_URL_CLIENT + "/khao-sat-bieu-mau?key=" + bieuMau?.maBieuMau}
-                    icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
-                />
+            <div className='flex justify-evenly mt-3'>
+                <div>
+                    <QRCode
+                        errorLevel="H"
+                        value={process.env.REACT_APP_URL_CLIENT + "/khao-sat-bieu-mau?key=" + bieuMau?.maBieuMau}
+                        icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
+                    />
+                    <p className='text-center'>WEB</p>
+                </div>
+                <div>
+                    <QRCode
+                        errorLevel="H"
+                        value={process.env.REACT_APP_URL_CLIENT + "/khao-sat-bieu-mau?key=" + bieuMau?.maBieuMau}
+                        icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
+                    />
+                    <p className='text-center'>ZALO APP</p>
+                </div>
             </div>
 
         </div>
@@ -49,12 +60,17 @@ const LinkKhaoSat = ({ bieuMau }) => {
 }
 const ShareQuyen = () => {
     const [listLietSi, setlistLietSi] = useState([]);
+
     const handleSearchChange = useCallback(
         debounce((keyword) => {
 
         }, 500),
         [],
     );
+    useEffect(() => {
+
+    }, []);
+
     function handleSelectChange(arr, value) {
 
         // setLichViengTham({ ...lichViengTham, [arr]: value });

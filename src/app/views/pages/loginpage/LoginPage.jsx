@@ -41,7 +41,7 @@ const LoginPage = () => {
 
                     <form className="login">
                         <div className="login__field">
-                            <p className="bold f-30 nowrap">PHẦN MỀM KHẢO SÁT</p>
+                            <p className="bold f-30 nowrap">HỆ THỐNG ĐIỀU TRA, KHẢO SÁT</p>
                             <p className="bold f-24 ">Đăng nhập</p>
                         </div>
                         <div className="login__field">

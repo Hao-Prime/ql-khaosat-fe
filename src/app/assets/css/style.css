@@ -4,8 +4,44 @@
 .inputlg .MuiInputBase-input{
     padding: 3px 7px;
 }
+.sidpaa{
+    height: calc(-62px + 100vh);
+    overflow: hidden scroll;
+    background: #e7e7e7;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.page-new{
+    padding: 15px 15px 30px 15px;
+    background-color: white;
+    border-radius: 10px;
+}
+.nav-top{
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 15px;
+    box-shadow: 2px 2px 8px 0px #bfbfbf;
+}
+.eqwrttqweq{    
+    padding: 10px 25px;
+}
+.eqwrttqwecq{
+    padding: 16px 31px;
+}
+.logo-nav{
+    width: 160px;
+    margin-left: 10px;
+}
+a {
+  color: #0d6efd; 
+}
 .formio-component{
     margin-bottom: 10px;
+}
+.social-login a{
+    color: white;
 }
 .div-finish{
     text-align: center;
@@ -16,6 +52,24 @@
     width: 100%;
     height: 100%;
     background: #ffffffa8;
+}
+.nav-bar-cus{
+    width: 256px;
+    /* background: red; */
+    background-color: rgb(31, 59, 179);
+    background-image: linear-gradient(359deg, rgba(35, 35, 138, 0.91) 25%, rgba(16, 89, 174, 0) 100%), url("https://ycht.vnptlongan.vn/assets/images/bg-sidebar2.jpg");
+}
+.ant-menu {
+    background-color: rgba(255, 255, 255, 0);
+}
+.ant-menu-inline{
+    background-color: rgb(61 61 61 / 23%) !important;
+}
+.ant-menu-submenu  .ant-menu-vertical{
+    background-color: rgb(228, 232, 255) !important;
+}
+.nav-bar-cus *{
+    color: white;
 }
 .loading-hiden-all .dsaidopa{
     position: fixed;
@@ -45,6 +99,7 @@
     background: white;
     padding: 5px 13px;
     border-radius: 15px;
+    white-space: nowrap;    
 }
 .w-xsadwqq{
     width: 200px !important;
@@ -1432,8 +1487,40 @@
     border: 1px solid rgb(255, 119, 119);
     color: rgb(187, 2, 2)
 }
+.box-list-riqopwr:hover .btn-nhanban-css{
+    display: inline-block;
+}
 .pos-relative {
     position: relative;
+}
+.box-green{
+    background: #cbffcb;
+    color: rgb(0, 222, 0);
+    border-radius: 5px;
+    padding: 2px 10px;
+    border: 1px solid #14ff00;
+}
+.box-red{
+    background: #ffcbcb;
+    color: rgb(222, 0, 0);
+    border-radius: 5px;
+    padding: 2px 10px;
+    border: 1px solid #ff0000;
+}
+.ieoqwpesad{
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.btn-nhanban-css{
+    position: absolute;
+    display: none;
+    top: 5px;
+    right: 5px;
+    
+}
+.btn-nhanban-css span{
+    color: white;
 }
 .img-logo-load{
     position: absolute;
@@ -2230,7 +2317,7 @@
         min-width: 150px;
     }
     .form-dashboard-detail .t-value{
-        min-width: 100px;
+        min-width: 0px;
         text-align:  center;
     }
     .tab-menu-list .MuiStack-root{

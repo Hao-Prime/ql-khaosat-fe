@@ -1,11 +1,11 @@
 // import content
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { content } from "../../views/pages/homepage/Content";
 import { Input } from 'antd';
 const { Search } = Input;
 const Hero = () => {
     const { hero } = content;
-
+    const [keyForm, setKeyForm] = useState()
     return (
         <section id="home" className="overflow-hidden">
             <div className="min-h-screen relative flex md:flex-row flex-col-reverse md:items-end justify-center items-center">
@@ -28,7 +28,16 @@ const Hero = () => {
                     </div> */}
                     <div ><span></span>
                         <div className="div-key-form"><span>
-                            <Input size="large" className="input-key-form" placeholder="Nhập mã biểu mẫu" />
+                            <Input size="large"
+                                className="input-key-form"
+                                placeholder="Nhập mã biểu mẫu" S
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        window.location.href = "/khao-sat-bieu-mau?key=" + keyForm
+                                    }
+                                }}
+                                onChange={(e) => setKeyForm(e?.target?.value)}
+                            />
                         </span></div>
                     </div>
                     <h2>{hero.title}</h2>

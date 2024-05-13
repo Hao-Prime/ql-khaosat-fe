@@ -27,6 +27,12 @@ function guiKetQua(rs) {
   return axios.post(process.env.REACT_APP_URL_SERVER + `/be-form/form/send-result`, rs);
 };
 
+function thongKeKetQua(id) {
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/thongke-selectbox?idBieuMau=${id}`);
+};
+function thongKeSoLuongKhaoSatBieuMauTheoThoiGian(id, ngayBD, ngayKT) {
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/thongke-truycap?idBieuMau=${id}&ngayBD=${ngayBD}&ngayKT=${ngayKT}`);
+};
 const formService = {
   getMyListForm,
   getFormDetail,
@@ -35,7 +41,8 @@ const formService = {
   capNhatBieuMau,
   taoMoiBieuMau,
   xoaBieuMau,
-  guiKetQua
-
+  guiKetQua,
+  thongKeKetQua,
+  thongKeSoLuongKhaoSatBieuMauTheoThoiGian
 };
 export default formService;

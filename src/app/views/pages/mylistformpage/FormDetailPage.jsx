@@ -42,9 +42,11 @@ const FormDetailPage = () => {
         setLoading(true)
         Services.getFormService().getFormDetail(idBieuMau).then(
             (res) => {
-                if (res?.data && isMounted) {
-                    setBieuMau(res?.data)
+
+                if (res?.data) {
+                    setBieuMau({ ...res?.data, thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [] })
                     setLoading(false)
+                    console.log(JSON?.parse(res?.data?.thanhPhan));
                 } else {
                     // message.error();
                     Modal.error({
@@ -82,7 +84,7 @@ const FormDetailPage = () => {
                             {
                                 key: '3',
                                 label: 'Thống kê',
-                                children: <DashboardForm />
+                                children: <DashboardForm bieuMau={bieuMau} />
                             },
                             {
                                 key: '4',
@@ -92,7 +94,7 @@ const FormDetailPage = () => {
                             {
                                 key: '5',
                                 label: 'Cài đặt',
-                                children: <SettingForm bieuMau={bieuMau} />,
+                                children: <SettingForm bieuMau={bieuMau} reloadList={reloadList} />,
                             },
                         ]}
                         onChange={onChange}

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { CircularProgress, Grid, Paper, Stack, Tab, Tabs, debounce } from '@mui/material';
+import { CircularProgress, Grid, Paper, Stack, Tab, Tabs } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
+import { debounce } from "lodash";
 import banner from "app/assets/images/intrenet-so-1-1900-620.png";
 import hoa01 from "app/assets/images/banner/hoa-1.jpg";
 import hoa02 from "app/assets/images/banner/hoa-2.jpg";
@@ -18,6 +18,7 @@ import Services from 'app/services';
 import Loading from 'app/components/Loading';
 import dayjs from 'dayjs';
 import FormatDate from 'app/common/FormatDate';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 const { Search } = Input;
 const { TextArea } = Input;
 
@@ -67,6 +68,7 @@ const MyListFormPage = () => {
         ]
     );
     const [openAddModal, setOpenAddModal] = useState(false);
+    const [bieuMauUp, setBieuMauUp] = useState({ loaiBieuMau: 1 });
     const [loading, setLoading] = useState(false);
     const [fillter, setFillter] = React.useState({ isShare: 0 });
     const handleChange = (arr, newValue) => {
@@ -109,6 +111,24 @@ const MyListFormPage = () => {
     function convertIdToNumber(id) {
         return Math.abs(id?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 5 + 1;
     }
+    function checkTrangThaiBieuMau(bieuMau) {
+        if (bieuMau?.ngayBD) {
+            if (dayjs(bieuMau?.ngayBD).isAfter(dayjs())) {
+                return <p className="status-cyan ">Sắp diễn ra</p>// Sắp diễn ra
+            }
+        }
+        if (bieuMau?.ngayKT) {
+            if (dayjs(bieuMau?.ngayBD).isBefore(dayjs())) {
+                return <p className="status-cuccess ">Đã kết thúc</p>// Đã kết thúc
+            }
+        }
+        return <p className="status-cyan ">Đang diễn ra</p>;//Đâng diễn ra
+    }
+    function taoMoiBieuMauSaoChep(idBieuMauSaoChep) {
+        setOpenAddModal(true)
+        setBieuMauUp({ loaiBieuMau: 1, idBieuMauSaoChep: idBieuMauSaoChep })
+    }
+
     return (
         <div className="">
 
@@ -118,7 +138,7 @@ const MyListFormPage = () => {
             {/* <Divider></Divider> */}
             <NavbarMunuForm />
             <div className='w-lg-80pt mt-3'>
-                <AddFormModal open={openAddModal} setOpen={setOpenAddModal} reloadList={reloadList} />
+                <AddFormModal open={openAddModal} setOpen={setOpenAddModal} bieuMauUp={bieuMauUp} reloadList={reloadList} />
                 <div className='tab-menu-list'>
                     <Stack
                         direction="row"
@@ -129,7 +149,9 @@ const MyListFormPage = () => {
                         <div>
                             <Tabs value={fillter?.isShare} onChange={(e, value) => handleChange("isShare", value)} centered>
                                 <Tab label="Biểu mẫu của tôi" />
-                                <Tab label="Biểu mẫu được chia sẻ" />
+
+                                <Tab label="Hộ dân đã khảo sát" />
+                                <Tab label="Đơn vị trực thuộc" />
                             </Tabs>
                         </div>
                         <div>
@@ -149,7 +171,7 @@ const MyListFormPage = () => {
                                         listForm?.map((form, i) =>
 
 
-                                            <Grid key={i} item xs={12} md={3} className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2">
+                                            <Grid key={i} item xs={12} md={3} className="pos-relative box-list-riqopwr d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2">
 
                                                 <div className="tpn_card" >
                                                     <div onClick={() => window.location.href = `/chi-tiet-bieu-mau?id=${form?._id}`}>
@@ -158,25 +180,16 @@ const MyListFormPage = () => {
                                                         <h5 className='bold pointer tieude-p' title={form?.tenBieuMau}>{form?.tenBieuMau}</h5>
                                                     </div>
                                                     <p className='moTa-p' title={form?.moTa}>{form?.moTa}</p>
-                                                    <div className='flex justify-between pb-3 pt-3'>
+                                                    <div className='flex justify-between  pt-3'>
                                                         <p ><strong className='me-2'>Mã: {form?.maBieuMau}</strong></p>
                                                         {form?.trangThai ?
-                                                            <>{(form?.ngayBD && form?.ngayKT) ?
-                                                                dayjs(form?.ngayBD).isBefore(dayjs()) && dayjs(form?.ngayKT).isAfter(dayjs()) ?
-                                                                    <p className="status-info ">Đang diễn ra</p> :
-                                                                    dayjs(form?.ngayKT).isBefore(dayjs()) ?
-                                                                        <p className="status-cuccess ">Đã diễn ra</p> :
-                                                                        <p className="status-cyan ">Sắp diễn ra</p>
-                                                                :
-                                                                <p className="status-cyan ">Đang hoạt động</p>
-                                                            }
-                                                            </>
-
+                                                            <>{checkTrangThaiBieuMau(form)} </>
                                                             :
                                                             <p className="status-danger ">Đã vô hiệu hóa</p>
                                                         }
                                                     </div>
                                                 </div>
+                                                <Button type="primary" onClick={() => taoMoiBieuMauSaoChep(form?._id)} className='btn-nhanban-css'><ContentCopyIcon className='me-1 f-14'></ContentCopyIcon>Nhân bản</Button>
                                             </Grid>
                                         )
                                     }
@@ -208,13 +221,13 @@ const MyListFormPage = () => {
     );
 };
 
-const AddFormModal = ({ open, setOpen, reloadList }) => {
-    const [newForm, setNewForm] = useState();
+const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
+    const [newForm, setNewForm] = useState(bieuMauUp);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
     useEffect(() => {
         if (open) {
-            setNewForm()
+            setNewForm(bieuMauUp)
         }
     }, [open]);
     const handleOk = () => {
@@ -312,9 +325,8 @@ const AddFormModal = ({ open, setOpen, reloadList }) => {
                 <div className='pb-3'>
                     <p className='bold'> Loại biểu mẫu *: </p>
                     <Radio.Group onChange={(e) => onChange("loaiBieuMau", e?.target?.value)} >
-                        <Radio value={1}>Cá nhân</Radio>
+                        <Radio value={1} defaultChecked>Cá nhân</Radio>
                         <Radio value={2}>Tổ chức</Radio>
-
                     </Radio.Group>
                 </div>
                 <div className='pb-3'>

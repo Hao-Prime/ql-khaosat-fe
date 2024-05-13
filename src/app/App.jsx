@@ -10,6 +10,8 @@ import MyListFormPage from "./views/pages/mylistformpage/MyListFormPage";
 import FormDetailPage from "./views/pages/mylistformpage/FormDetailPage";
 
 import Loading from './components/Loading';
+import ProtectedRoute from './common/ProtectedRoute';
+import AdminPage from './views/pages/admin/AdminPage';
 
 const App = () => {
   const [user, setUser] = useState();
@@ -30,9 +32,10 @@ const App = () => {
         <Loading />
       </> :
         <Routes>
-          <Route path="/admin" element={<ProtectedRoute user={user} role="admin"> <HomePage /> </ProtectedRoute>} />
-          <Route path="/chi-tiet-bieu-mau" element={<ProtectedRoute user={user} role="admin"> <FormDetailPage /> </ProtectedRoute>} />
-          <Route path="/danh-sach-bieu-mau" element={<ProtectedRoute user={user} role="admin"> <MyListFormPage /> </ProtectedRoute>} />
+          <Route path="/admin/*" element={<AdminPage user={user} />} />
+          <Route path="/chi-tiet-bieu-mau" element={<ProtectedRoute user={user} role="user"> <FormDetailPage /> </ProtectedRoute>} />
+          <Route path="/danh-sach-bieu-mau" element={<ProtectedRoute user={user} role="user"> <MyListFormPage /> </ProtectedRoute>} />
+
         </Routes>
 
       }
@@ -43,11 +46,4 @@ const App = () => {
 
 export default App;
 
-const ProtectedRoute = ({ user, role, redirectPath = '/dang-nhap', children }) => {
 
-  if (!user?.listVaiTro?.includes(role)) {
-    console.log(user?.listVaiTro?.includes(role));
-    return <Navigate to={redirectPath} replace />;
-  }
-  return children;
-};

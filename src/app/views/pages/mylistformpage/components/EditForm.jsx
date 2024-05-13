@@ -13,7 +13,7 @@ const EditForm = ({ bieuMau }) => {
     const key = new URLSearchParams(window.location.search).get("key");
     const [formData, setFormData] = useState({
         display: "form",
-        components: bieuMau?.thanhPhan ? JSON.parse(bieuMau?.thanhPhan) : []
+        components: bieuMau?.thanhPhan
         // components: [{
         //     "html": "<h4><strong>PHIẾU KHẢO SÁT VỀ VIỆC...</strong></h4><p>Nhầm nâng cao chất lượng sản phẩm và dịch vụ, nay công ty chúng tôi ...</p>",
         //     "label": "Giới thiệu",
@@ -88,8 +88,8 @@ const EditForm = ({ bieuMau }) => {
             } else if (element?.components?.length > 0) {
                 rs.push({ ...element, components: generateKey(element?.components) })
             } else {
-                if (element?.key?.length != 15) {
-                    rs.push({ ...element, key: (element?.inputType == "radio" ? generateRandomString(9) + "-radio" : generateRandomString(15)) })
+                if (element?.key?.length < 20) {
+                    rs.push({ ...element, key: generateRandomString(20) + "-" + (element?.type || "") })
                 } else {
                     rs.push(element)
                 }
@@ -105,7 +105,12 @@ const EditForm = ({ bieuMau }) => {
         }
         return result;
     }
+    useEffect(() => {
+        if (bieuMau?.thanhPhan) {
 
+            console.log(bieuMau?.thanhPhan);
+        }
+    }, [bieuMau]);
     return (
         <div>
 
