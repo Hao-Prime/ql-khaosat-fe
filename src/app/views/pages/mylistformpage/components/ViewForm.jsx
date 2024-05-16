@@ -11,14 +11,17 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 const ViewForm = () => {
     // const formRef = useRef(null);
+    const [modal, contextHolder] = Modal.useModal();
     const [listPageForm, setListPageForm] = React.useState([]);
     const [page, setPage] = useState(0);
     const [bieuMau, setBieuMau] = React.useState();
     const key = new URLSearchParams(window.location.search).get("key");
+    const iddonVi = new URLSearchParams(window.location.search).get("iddv");
     const [loading, setLoading] = useState(false);
     const [sending, setSending] = useState(false);
     const [finish, setFinish] = useState(false);
     const [dataSubmit, setDataSubmit] = useState();
+    const [listLabel, setListLabel] = useState([]);
     const [error, setError] = useState("");
     var isMounted = true;
     useEffect(() => {
@@ -31,17 +34,29 @@ const ViewForm = () => {
             isMounted = false;
         };
     }, [key]);
+    // useEffect(() => {
+    //     Services.getTaiKhoanService().getBanThan().then((res) => {
+    //         if (res?.data) {
+    //             dispatch(allActions.taiKhoanActions.setTaiKhoanNguoiDung(res?.data))
+    //         }
+    //     }, (err) => {
+    //     });
+    // }, []);
+
     function reloadList() {
         setLoading(true)
-        Services.getFormService().getFormDetail(key).then(
+        Services.getFormService().getFormDetailSubmit(key).then(
             (res) => {
                 if (res?.data?.error) {
                     Modal.error({
                         title: res?.data?.message,
+                        onOk: () => {
+                            window.location.href = "/"
+                        }
                     });
                 } else {
                     setBieuMau({ ...res?.data, thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [] })
-                    console.log(convertBieuMauToListPage(JSON?.parse(res?.data?.thanhPhan)));
+                    setListLabel(convertLabelFromListComponent(JSON?.parse(res?.data?.thanhPhan)));
                     setListPageForm(convertBieuMauToListPage(JSON?.parse(res?.data?.thanhPhan)));
                     setLoading(false)
 
@@ -94,7 +109,6 @@ const ViewForm = () => {
 
             }
         }
-
         return list;
     }
     const convertObjectChildValue = (obj, keyParent) => {
@@ -106,21 +120,31 @@ const ViewForm = () => {
         }
         return list;
     }
-    const onSubmitHandler = (submission) => {
+    const onSubmitHandler = async (submission) => {
         if (page == (listPageForm?.length - 1)) {
-            setSending(true)
-            Services.getFormService().guiKetQua({ bieuMau: { _id: bieuMau?._id }, ketQua: convertObject({ ...dataSubmit, ...submission?.data }) })?.then(
-                (res) => {
-                    setSending(false)
-                    if (res.data?.error) {
-                        Modal.error({
-                            title: res.data?.message,
-                        });
-                    } else {
-                        setFinish(true)
+            const confirmed = await modal.confirm({
+                title: "Bạn có chắc muốn xóa biểu mẫu này",
+                content: "",
+            });
+            if (confirmed) {
+                setSending(true)
+                let rs = convertObject({ ...dataSubmit, ...submission?.data })
+                rs = rs?.map(obj => {
+                    return { ...obj, label: getLabelFromKey(obj?.key) };
+                })
+                Services.getFormService().guiKetQua({ bieuMau: { _id: bieuMau?._id }, ketQua: rs, donVi: iddonVi ? { _id: iddonVi } : null })?.then(
+                    (res) => {
+                        setSending(false)
+                        if (res.data?.error) {
+                            Modal.error({
+                                title: res.data?.message,
+                            });
+                        } else {
+                            setFinish(true)
+                        }
                     }
-                }
-            )
+                )
+            }
         } else {
             setDataSubmit({ ...dataSubmit, ...submission?.data })
             setPage(page + 1);
@@ -149,8 +173,38 @@ const ViewForm = () => {
             return null;
         }
     };
+    const convertLabelFromListComponent = (listCom, keyParen) => {
+
+        let rs = []
+        listCom?.forEach(e => {
+            if (keyParen) {
+                rs.push({ label: e?.label, key: keyParen + '_' + e?.value })
+            } else {
+                if (e?.components?.length > 0) {
+                    rs = [...rs, ...convertLabelFromListComponent(e?.components)]
+                } else if (e?.columns?.length > 0) {
+                    rs = [...rs, ...convertLabelFromListComponent(e?.columns)]
+                } else if (!["content", "container", "column", "tab"]?.includes(e?.type)) {
+                    rs.push({ label: e?.label, key: e?.key, })
+                    if (e?.values?.length > 0) {
+                        rs = [...rs, ...convertLabelFromListComponent(e?.values, e?.key)]
+                    }
+                    if (e?.data?.values?.length > 0) {
+                        rs = [...rs, ...convertLabelFromListComponent(e?.data?.values, e?.key)]
+                    }
+                }
+            }
+
+        });
+        return rs;
+    }
+    const getLabelFromKey = (key) => {
+        return listLabel?.find(element => element?.key == key)?.label || "";
+    }
     return (
         <div className='div-form-view'>
+            {contextHolder}
+
             {loading ? <Skeleton /> : <>
                 <NavbarMunuForm type={1} content={{ ...bieuMau, type: true, title: bieuMau?.tenBieuMau, history: "ĐƯỢC LƯU LÚC " + dayjs(bieuMau?.ngayLuuGanNhat)?.format('HH:mm dddd, D [THÁNG] M, YYYY') }} />
                 <div className='pos-relative'>

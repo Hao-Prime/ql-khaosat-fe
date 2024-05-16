@@ -4,12 +4,13 @@ import { Upload } from 'antd';
 import Services from 'app/services';
 import FormatDate from 'app/common/FormatDate';
 import dayjs from 'dayjs';
-const { TextArea } = Input;
 import locale from 'antd/lib/locale/vi_VN';
 import { CircularProgress } from '@mui/material';
 import Loading from 'app/components/Loading';
-const SettingForm = ({ bieuMau, reloadList }) => {
 
+const { TextArea } = Input;
+const SettingForm = ({ bieuMau, reloadList }) => {
+    const [modal, contextHolder] = Modal.useModal();
     const [value, setValue] = useState(1);
     const [bieuMauUpdate, setBieuMauUpdate] = useState(bieuMau);
     const [error, setError] = useState("");
@@ -61,8 +62,12 @@ const SettingForm = ({ bieuMau, reloadList }) => {
             }
         )
     }
-    const handleDelete = () => {
-        if (confirm("Bạn có chắc muốn xóa biểu mẫu này")) {
+    const handleDelete = async () => {
+        const confirmed = await modal.confirm({
+            title: "Bạn có chắc muốn xóa biểu mẫu này",
+            content: "",
+        });
+        if (confirmed) {
             setSending(true);
             Services.getFormService().xoaBieuMau(bieuMauUpdate?._id).then(
                 (res) => {
@@ -143,15 +148,29 @@ const SettingForm = ({ bieuMau, reloadList }) => {
         }
         return true;
     }
+    function checkTrangThaiBieuMau(bieuMau) {
+        if (bieuMau?.ngayBD) {
+            if (dayjs(bieuMau?.ngayBD).isAfter(dayjs())) {
+                return <span className="status-cyan ">Sắp diễn ra</span>// Sắp diễn ra
+            }
+        }
+        if (bieuMau?.ngayKT) {
+            if (dayjs(bieuMau?.ngayKT).isBefore(dayjs())) {
+                return <span className="status-cuccess ">Đã kết thúc</span>// Đã kết thúc
+            }
+        }
+        return <span className="status-info ">Đang diễn ra</span>;//Đâng diễn ra
+    }
     return (
 
         <div className="div-setting-cus">
+            {contextHolder}
             {!bieuMauUpdate ? <Loading></Loading> :
                 <>
                     <div className='flex justify-between pb-3'>
                         {bieuMauUpdate?.trangThai == 1 ? <>
 
-                            <p className='bold'> Trạng thái: <soan className="green">Đang hoạt động</soan></p>
+                            <p className='bold'> Trạng thái: {checkTrangThaiBieuMau(bieuMau)} </p>
                             <Button type="primary" danger className='bg-red flex align-center justify-center' onClick={handleVoHieuHoaBieuMau} disabled={sending}>
                                 <span style={{ display: sending ? 'inherit' : 'none' }}>
                                     <CircularProgress className="span-sender" />

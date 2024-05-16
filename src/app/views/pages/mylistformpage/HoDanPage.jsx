@@ -2,57 +2,56 @@
 import { Button, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState } from 'react'
-import DonViModal from './DonViModal';
+// import NguoiDungModal from './NguoiDungModal';
 import Services from 'app/services';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
-import { debounce } from "lodash";
-import SapXep from 'app/common/SapXep';
+import { debounce, size } from "lodash";
+import dayjs from 'dayjs';
 const { Search } = Input;
 const items = [
-    {
-        key: '1',
-        label: "Cập nhật",
-    },
-    {
-        key: '2',
-        danger: true,
-        label: 'Xóa',
-    },
+    // {
+    //     key: '1',
+    //     label: "Cập nhật",
+    // },
+
+
+    // {
+    //     key: '3',
+    //     label: 'Reset mật khẩu',
+    // },
+    // {
+    //     key: '2',
+    //     label: 'Khóa tài khoản',
+    // },
+    // {
+    //     key: '4',
+    //     danger: true,
+    //     label: 'Xóa',
+    // },
 ];
-const DonViPage = () => {
+const HoDanPage = () => {
     const [modal, contextHolder] = Modal.useModal();
-    const [listDonVi, setListDonVi] = useState([]);
-    const [listDonViMD, setListDonViMD] = useState([]);
-    const [donViUp, setDonViUp] = useState();
-    const [openDonViModal, setOpenDonViModal] = useState(false);
+    const [listNguoiDung, setListNguoiDung] = useState([]);
+    const [searchValue, setSearchValue] = useState("");
+    const [listNguoiDungMD, setListNguoiDungMD] = useState([]);
+    const [nguoiDungUp, setNguoiDungUp] = useState();
+    // const [openNguoiDungModal, setOpenNguoiDungModal] = useState(false);
 
     const [windowScreen, setWindowScreen] = useState(window.screen.width > 1000);
     const [limit, setLimit] = useState(30);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
-
+    const [totalPage, setTotalPage] = useState(0);
     useEffect(() => {
         reLoadList()
-    }, []);
-    useEffect(() => {
-        if (listDonViMD?.length > 0) {
-            let data = listDonViMD.filter((v, i) => {
-                const start = limit * (page - 1);
-                const end = start + limit;
-                return i >= start && i < end;
-            });
-            setListDonVi(data);
-        }
-
-    }, [limit, page, listDonViMD]);
+    }, [limit, page, searchValue]);
     async function reLoadList(params) {
         setLoading(true)
-
-        let dataRSLisstDv = await Services.getDonViService().getAll("")
-        if (dataRSLisstDv.data) {
-            setListDonViMD(dataRSLisstDv?.data)
-            setPage(1)
+        let dataRSLisstDv = await Services.getFormService().getListNguoiDungTheoDonVICuaToi(searchValue, page - 1, limit)
+        if (dataRSLisstDv?.data) {
+            setListNguoiDung(dataRSLisstDv?.data?.content)
+            setTotalPage(dataRSLisstDv?.data?.totalElements)
         }
         setLoading(false)
     }
@@ -61,57 +60,43 @@ const DonViPage = () => {
         setLimit(pageSize)
     };
     const onClick = async (key, data) => {
-        console.log(key?.key);
         switch (key?.key) {
             case "1":
-                setOpenDonViModal(true)
-                setDonViUp(data)
+                // setOpenNguoiDungModal(true)
+                setNguoiDungUp(data)
                 break;
-            case "2":
-                const confirmed = await modal.confirm({
-                    title: 'Bạn có chắc muốn xóa đơn vị này',
-                    content: "",
-                });
-                console.log(confirmed);
-                if (confirmed) {
-                    setLoading(true);
-                    Services.getDonViService().deleteByID(data?._id)?.then(
-                        (res) => {
-                            if (res?.data?.error) {
-                                alert(res?.data?.message)
-                            } else {
-                                reLoadList()
-                            }
-                        });
-                }
 
-                break;
 
         }
     };
     const handleSearch = useCallback(
         debounce(async (e) => {
             setLoading(false)
-            console.log(e);
-            let dataRSLisstDv = await Services.getDonViService().getAll(e?.target?.value)
 
-            if (dataRSLisstDv?.data?.length == 0) {
-                message.error("Không tìm thấy đơn vị")
-            } else {
-                setListDonViMD(SapXep.sapXepTheoObjectAtrVaAtr(dataRSLisstDv?.data, "donViTrucThuoc", "stt", -1, 1))
+            if (page == 1) {
+                setSearchValue(e?.target?.value)
                 setPage(1)
+            } else {
+                let dataRSLisstDv = await Services.getFormService().getListNguoiDungTheoDonVICuaToi(e?.target?.value, 0, limit)
+                if (dataRSLisstDv?.data?.length == 0) {
+                    message.error("Không tìm thấy")
+                } else {
+                    setListNguoiDung(dataRSLisstDv?.data?.content)
+                    setTotalPage(dataRSLisstDv?.data?.totalElements)
+                }
+                setLoading(false)
             }
+
 
         }, 500),
         [],
     );
-
     return (
         <div className="page-new">
-            <DonViModal open={openDonViModal} setOpen={setOpenDonViModal} donViUp={donViUp} reLoadList={reLoadList} />
+            {/* <NguoiDungModal open={openNguoiDungModal} setOpen={setOpenNguoiDungModal} nguoiDungUp={nguoiDungUp} reLoadList={reLoadList} /> */}
             <div className='flex  ieoqwpesad'>
                 <div>
-                    <Button onClick={() => { setOpenDonViModal(true); setDonViUp() }} type="primary" className='btn-add btn-gra-blue bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                    {/* <Button onClick={() => setOpenNguoiDungModal(true)} type="primary" className='btn-add btn-gra-blue bold'><AddIcon className='icon-btn' />Thêm mới</Button> */}
                 </div>
                 <div>
                     <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
@@ -129,23 +114,30 @@ const DonViPage = () => {
                         render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
                     },
                     {
-                        title: "Đơn vị trực thuộc",
-                        render: (data) => (<p>{data?.donViTrucThuoc?.tenDonVi}</p>),
+                        title: "Họ và tên",
+                        render: (data) => (<p>{data?.hoTen}</p>),
                         width: 180,
                     },
                     {
-                        title: "Tên đơn vị",
-                        dataIndex: "tenDonVi",
-                        key: "tenDonVi",
-                        width: 200,
+                        title: "Số điện thoại",
+                        render: (data) => (<p>{`${data?.soDienThoai}`}</p>),
+                        width: 280,
                     },
                     {
-                        title: "Mô tả",
-                        dataIndex: "moTa",
-                        key: "moTa",
-                        width: 250,
+                        title: "Email",
+                        render: (data) => (<p>{`${data?.email}`}</p>),
+                        width: 230,
                     },
-
+                    {
+                        title: "Đơn vị quản lý",
+                        render: (data) => (<p>{data?.listDonViQuanLy?.map(obj => obj.donVi?.tenDonVi)?.join(', ')} </p>),
+                        width: 230,
+                    },
+                    // {
+                    //     title: "Ngày tham gia",
+                    //     render: (data) => (<p>{dayjs(data?.taiKhoan?.lanChinhSuaGanNhat)?.format('DD/MM/YYYY HH:mm')} </p>),
+                    //     width: 180,
+                    // },
 
                     {
                         title: " ",
@@ -174,7 +166,7 @@ const DonViPage = () => {
                 scroll={{ x: '100%', y: 415 }}
                 locale={{ emptyText: 'Không có dữ liệu' }}
                 style={{ minHeight: 415 }}
-                dataSource={listDonVi}
+                dataSource={listNguoiDung}
                 pagination={false}
                 size='small'
                 className='pointer mt-1 table-cus-antd'
@@ -185,10 +177,10 @@ const DonViPage = () => {
                 <div></div>
                 <Pagination
                     showSizeChanger
-                    onShowSizeChange={onShowSizeChange}
+                    onChange={onShowSizeChange}
 
-                    total={listDonVi?.length}
-                    defaultPageSize={30}
+                    total={totalPage}
+                    defaultPageSize={limit}
                 />
             </div>
         </div >
@@ -196,4 +188,4 @@ const DonViPage = () => {
     );
 };
 
-export default DonViPage;
+export default HoDanPage;

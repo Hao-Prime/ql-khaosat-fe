@@ -5,7 +5,7 @@ import { Checkbox } from "antd";
 import Services from "app/services";
 import { useDispatch } from "react-redux";
 import allActions from "app/actions";
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const LoginPage = () => {
     const dispatch = useDispatch();
     const [user, setUser] = useState()
@@ -23,8 +23,8 @@ const LoginPage = () => {
             (res) => {
 
                 if (!res?.data?.error) {
-                    console.log(res?.data);
-                    dispatch(allActions.taiKhoanActions.setTaiKhoanNguoiDung(res?.data))
+                    // console.log(res?.data);
+                    dispatch(allActions.taiKhoanActions.loginUser(res?.data))
                     window.location.href = path || "/"
                 } else {
                     setError(res?.data?.message)
@@ -89,6 +89,9 @@ const LoginPage = () => {
                         <br />
 
                         <a href="/#">Đăng ký tài khoản •</a>
+                        <br />
+
+                        <a href="/" ><ArrowBackIcon className="f-13 me-1" />Quay lại</a>
                     </div>
                 </div>
                 <div className="screen__background">

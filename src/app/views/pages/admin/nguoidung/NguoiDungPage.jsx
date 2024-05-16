@@ -42,15 +42,16 @@ const NguoiDungPage = () => {
     const [limit, setLimit] = useState(30);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
-
+    const [totalPage, setTotalPage] = useState(0);
     useEffect(() => {
         reLoadList()
     }, [limit, page]);
     async function reLoadList(params) {
         setLoading(true)
-        let dataRSLisstDv = await Services.getNguoiDungService().getAll("", page, limit)
+        let dataRSLisstDv = await Services.getNguoiDungService().getAll("", page - 1, limit)
         if (dataRSLisstDv?.data) {
-            setListNguoiDung(dataRSLisstDv?.data)
+            setListNguoiDung(dataRSLisstDv?.data?.content)
+            setTotalPage(dataRSLisstDv?.data?.totalElements)
         }
         setLoading(false)
     }
@@ -145,10 +146,14 @@ const NguoiDungPage = () => {
                         render: (data) => (<p>{dayjs(data?.taiKhoan?.lanChinhSuaGanNhat)?.format('DD/MM/YYYY HH:mm')} </p>),
                         width: 180,
                     },
-
+                    {
+                        title: "Đơn vị sử dụng",
+                        render: (data) => (<p>{data?.donVi?.tenDonVi} </p>),
+                        width: 250,
+                    },
                     {
                         title: "Đơn vị quản lý",
-                        render: (data) => (<p>{data?.listDonVi?.map(obj => obj.tenDonVi)?.join(', ')} </p>),
+                        render: (data) => (<p>{data?.listDonViQuanLy?.map(obj => obj.donVi?.tenDonVi)?.join(', ')} </p>),
                         width: 250,
                     },
                     {
@@ -204,10 +209,10 @@ const NguoiDungPage = () => {
                 <div></div>
                 <Pagination
                     showSizeChanger
-                    onShowSizeChange={onShowSizeChange}
+                    onChange={onShowSizeChange}
 
-                    total={listNguoiDung?.length}
-                    defaultPageSize={30}
+                    total={totalPage}
+                    defaultPageSize={limit}
                 />
             </div>
         </div >

@@ -1,6 +1,8 @@
-const nguoiDung = (state = {}, action) => {
+const taiKhoan = (state = {}, action) => {
   switch (action.type) {
     case "SET_USER":
+      return action.payload;
+    case "SET_USER_LOGIN":
       return action.payload;
     case "SET_USER_ZALO":
       return action.payload;
@@ -11,4 +13,4 @@ const nguoiDung = (state = {}, action) => {
   }
 };
 
-export default nguoiDung;
+export default taiKhoan;

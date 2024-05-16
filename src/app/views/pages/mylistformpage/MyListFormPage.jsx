@@ -8,7 +8,7 @@ import hoa02 from "app/assets/images/banner/hoa-2.jpg";
 import hoa03 from "app/assets/images/banner/hoa-3.jpg";
 import hoa04 from "app/assets/images/banner/hoa-4.jpg";
 import hoa05 from "app/assets/images/banner/hoa-5.jpg";
-import { Button, Divider, Modal, DatePicker, Input, Radio, Empty } from 'antd';
+import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Tooltip } from 'antd';
 import { Upload } from 'antd';
 import AddIcon from '@mui/icons-material/Add';
 import Contact from 'app/components/home-component/Contact';
@@ -19,6 +19,10 @@ import Loading from 'app/components/Loading';
 import dayjs from 'dayjs';
 import FormatDate from 'app/common/FormatDate';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import StarPurple500Icon from '@mui/icons-material/Star';
+// import StarIcon from '@mui/icons-material/Star';
+import BackToTopButton from 'app/components/BackToTopButton';
+import { useSelector } from 'react-redux';
 const { Search } = Input;
 const { TextArea } = Input;
 
@@ -67,25 +71,25 @@ const MyListFormPage = () => {
 
         ]
     );
+    const taiKhoan = useSelector(state => state.taiKhoan)
     const [openAddModal, setOpenAddModal] = useState(false);
     const [bieuMauUp, setBieuMauUp] = useState({ loaiBieuMau: 1 });
     const [loading, setLoading] = useState(false);
-    const [fillter, setFillter] = React.useState({ isShare: 0 });
-    const handleChange = (arr, newValue) => {
-        setFillter({ ...fillter, [arr]: newValue });
-    };
+
+
     const listAnhBia = [hoa01, hoa02, hoa03, hoa04, hoa05]
     var isMounted = true;
+
     useEffect(() => {
         isMounted = true;
         reloadList()
         return () => {
             isMounted = false;
         };
-    }, [fillter]);
+    }, []);
     function reloadList() {
         setLoading(true)
-        Services.getFormService().getMyListForm(fillter).then(
+        Services.getFormService().getMyListForm().then(
             (res) => {
                 if (res?.data && isMounted) {
                     setListForm(res?.data)
@@ -97,7 +101,7 @@ const MyListFormPage = () => {
     const handleSearch = useCallback(
         debounce((e) => {
             setLoading(false)
-            Services.getFormService().getMyListForm({ ...fillter, search: e?.target?.value }).then(
+            Services.getFormService().getMyListForm({ search: e?.target?.value }).then(
                 (res) => {
                     if (res?.data && isMounted) {
                         setListForm(res?.data)
@@ -118,7 +122,7 @@ const MyListFormPage = () => {
             }
         }
         if (bieuMau?.ngayKT) {
-            if (dayjs(bieuMau?.ngayBD).isBefore(dayjs())) {
+            if (dayjs(bieuMau?.ngayKT).isBefore(dayjs())) {
                 return <p className="status-cuccess ">Đã kết thúc</p>// Đã kết thúc
             }
         }
@@ -130,48 +134,41 @@ const MyListFormPage = () => {
     }
 
     return (
-        <div className="">
 
-            <div className='banner-top'>
-                <img src={banner} style={{ width: "100%" }}></img>
+
+        <>
+            <AddFormModal open={openAddModal} setOpen={setOpenAddModal} bieuMauUp={bieuMauUp} reloadList={reloadList} />
+            <div className='tab-menu-list'>
+                <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                    spacing={1}
+                    className='sadqwqeqweq1'
+                >
+
+                    <div>
+                        <Button onClick={() => setOpenAddModal(true)} type="primary" className='btn-add btn-gra-blue bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+
+
+                    </div>
+                    <div>
+                        <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
+
+                    </div>
+                </Stack>
             </div>
-            {/* <Divider></Divider> */}
-            <NavbarMunuForm />
-            <div className='w-lg-80pt mt-3'>
-                <AddFormModal open={openAddModal} setOpen={setOpenAddModal} bieuMauUp={bieuMauUp} reloadList={reloadList} />
-                <div className='tab-menu-list'>
-                    <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="flex-start"
-                        spacing={1}
-                    >
-                        <div>
-                            <Tabs value={fillter?.isShare} onChange={(e, value) => handleChange("isShare", value)} centered>
-                                <Tab label="Biểu mẫu của tôi" />
+            <div>
+                {loading ? <Loading /> :
+                    <Grid container spacing={5} className='w-100pt'>
 
-                                <Tab label="Hộ dân đã khảo sát" />
-                                <Tab label="Đơn vị trực thuộc" />
-                            </Tabs>
-                        </div>
-                        <div>
-                            <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
-                            <Button onClick={() => setOpenAddModal(true)} type="primary" className='btn-add btn-gra-blue bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        {listForm?.length > 0 ?
+                            <>
+                                {
+                                    listForm?.map((form, i) =>
+                                        <Grid key={i} item xs={12} sm={6} md={3} className=" box-list-riqopwr d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2">
+                                            <div className="pos-relative  sadqwqeqweq">
 
-                        </div>
-                    </Stack>
-                </div>
-                <div>
-                    {loading ? <Loading /> :
-                        <Grid container spacing={5}>
-
-                            {listForm?.length > 0 ?
-                                <>
-                                    {
-                                        listForm?.map((form, i) =>
-
-
-                                            <Grid key={i} item xs={12} md={3} className="pos-relative box-list-riqopwr d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2">
 
                                                 <div className="tpn_card" >
                                                     <div onClick={() => window.location.href = `/chi-tiet-bieu-mau?id=${form?._id}`}>
@@ -189,20 +186,28 @@ const MyListFormPage = () => {
                                                         }
                                                     </div>
                                                 </div>
+                                                {form?.donVi != taiKhoan?.donVi?._id &&
+                                                    <Tooltip placement="bottomLeft" title={"Biểu mẫu của đơn vị trực thuộc"}>
+                                                        <div className='type-phutro'>
+                                                            <StarPurple500Icon className='yellow f-18' />
+                                                        </div>
+                                                    </Tooltip>
+                                                }
                                                 <Button type="primary" onClick={() => taoMoiBieuMauSaoChep(form?._id)} className='btn-nhanban-css'><ContentCopyIcon className='me-1 f-14'></ContentCopyIcon>Nhân bản</Button>
-                                            </Grid>
-                                        )
-                                    }
-                                </> :
-                                <div className='mt-5 mb-5 pt-3 div-flex justify-center w-100pt'>
-                                    <Empty className="mt-5 mb-5 " description={
-                                        <span>
-                                            Không có biểu mẫu nào
-                                        </span>
-                                    }
-                                    />
-                                </div>
-                            }
+                                            </div>
+                                        </Grid>
+                                    )
+                                }
+                            </> :
+                            <div className='mt-5 mb-5 pt-3 div-flex justify-center w-100pt'>
+                                <Empty className="mt-5 mb-5 " description={
+                                    <span>
+                                        Không có biểu mẫu nào
+                                    </span>
+                                }
+                                />
+                            </div>
+                        }
 
 
 
@@ -210,13 +215,15 @@ const MyListFormPage = () => {
 
 
 
-                        </Grid>
-                    }
-                </div>
-                <Divider></Divider>
+                    </Grid>
+                }
+
             </div>
-            <Footer></Footer>
-        </div>
+
+
+            <Divider></Divider>
+        </>
+
 
     );
 };

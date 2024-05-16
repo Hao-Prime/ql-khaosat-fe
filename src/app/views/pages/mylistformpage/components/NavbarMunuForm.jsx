@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import HomeIcon from '@mui/icons-material/Home';
 
@@ -18,9 +18,11 @@ import iconfile from 'app/assets/images/icons8-file-200.png'
 import iconvnpt from 'app/assets/images/vnptlogo.png'
 import PreviewIcon from '@mui/icons-material/Preview';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-const NavbarMunuForm = ({ content, type }) => {
+import Services from 'app/services';
+import { useSelector } from 'react-redux';
+const NavbarMunuForm = ({ content, type, children }) => {
     const settings = ['Thông tin cá nhân', 'Biểu mẫu của tôi', 'Đăng xuất'];
-
+    const taiKhoan = useSelector(state => state.taiKhoan)
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -48,7 +50,7 @@ const NavbarMunuForm = ({ content, type }) => {
                         {content?.type ?
                             <>
                                 {/* <a href='/'><HomeIcon className='icon-homex' /></a> */}
-                                <a href='/danh-sach-bieu-mau'><ArrowBackIosNewIcon className='icon-homex' /></a>
+                                <a href={taiKhoan?._id ? '/danh-sach-bieu-mau' : "/"}><ArrowBackIosNewIcon className='icon-homex' /></a>
 
                                 <div className='div-nav-flex'>
                                     <img className='img-nav' src={iconfile}></img>
@@ -60,6 +62,7 @@ const NavbarMunuForm = ({ content, type }) => {
                             </> :
                             <>
                                 <a href='/'><img className='img-nav' src={iconvnpt}></img></a>
+                                {children}
                             </>}
 
                     </Box>
@@ -123,7 +126,7 @@ const NavbarMunuForm = ({ content, type }) => {
                                 <div className='div-nav-flex-2'>
 
                                     <a href='/'><img className='img-nav-2' src={iconvnpt}></img></a>
-
+                                    {children}
                                 </div>
                             </Box>
                         </>}
@@ -170,10 +173,12 @@ const NavbarMunuForm = ({ content, type }) => {
                                             <Typography textAlign="center">Biểu mẫu của tôi</Typography>
                                         </a>
                                     </MenuItem>
-                                    <MenuItem >
-                                        <a href='/dang-nhap'>
-                                            <Typography textAlign="center">Đăng xuất</Typography>
-                                        </a>
+                                    <MenuItem onClick={() => {
+                                        Services.getTaiKhoanService().dangXuat()
+                                    }}>
+
+                                        <Typography textAlign="center">Đăng xuất</Typography>
+
 
                                     </MenuItem>
 

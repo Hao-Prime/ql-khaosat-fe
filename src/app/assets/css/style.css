@@ -670,9 +670,13 @@ a {
 }
 
 .w-100pt {
-    width: 100%;
+    width: 100% !important;
 }
 
+.MuiStack-root>:not(style)~:not(style) {
+    margin-top: 5px!important;
+    margin-left: 0px!important;
+}
 .sdqowueqp {
     vertical-align: -webkit-baseline-middle;
 }
@@ -1481,6 +1485,18 @@ a {
     border: 1px solid rgb(103, 232, 255);
     color: rgb(0, 141, 223)
 }
+.info{
+
+    color: rgb(0, 0, 192)
+}
+.cuccess{
+
+    color: rgb(26, 171, 0)
+}
+.cyan{
+
+    color: rgb(0, 141, 223)
+}
 .status-danger{
     padding: 3px 15px;
     border-radius: 30px;
@@ -1519,6 +1535,23 @@ a {
     right: 5px;
     
 }
+.yellow{
+    color: yellow
+}
+.type-phutro{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    /* padding: 12px 20px 20px 20px; */
+    display: flex;
+    border-top-left-radius: 5px;
+    background-color: red;
+    top: 10px;
+    left: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
 .btn-nhanban-css span{
     color: white;
 }
@@ -2286,7 +2319,14 @@ a {
 .tab-menu .ant-tabs-tab-btn{
     font-size: 17px;
 }
-
+.sadqwqeqweq{
+    padding: 10px;
+    width: 100%;
+}
+.sadqwqeqweq1{
+    margin: auto;
+    width: 100%;
+}
 @media (min-width: 760px) {
     .form-dashboard-detail {
         width: 80%;
@@ -2342,9 +2382,19 @@ a {
     }
     .tpn_card{
         padding: 10px 15px;
-        width: 80%;
-        margin-left: -35px;
+        margin-left: -15px;
       }
+      .sadqwqeqweq{
+        width: 90%;
+      }
+      .sadqwqeqweq1{
+        width: 90%;
+      }
+      .type-phutro{
+        top: 10px;
+        left: -5px;
+    }
+    
     .div-baithi {
         width: 100%;
     }
@@ -4257,3 +4307,35 @@ h1,h2,h3,h4,h5,h6,p,span,div,a ,input, textarea {
 .div-Timeline-cus{
     margin-top: 25px;
 }
+/* Style for scroll-top button */
+.backToTopBtn {
+    position: fixed;
+    bottom: 35px;
+    right: 35px;
+    z-index: 1;
+    height: 35px;
+    width: 35px;
+    font-size: 27px;
+    border: none;
+    color: #cccccc;
+    border-radius: 100%;
+    transition: 0.5s;
+    cursor: pointer;
+  }
+  .backToTopBtn:not(:hover) {
+    background: #7b7b7b7e;
+  }
+  .backToTopBtn:hover {
+    background: #3b3b3b80;
+  }
+  .backToTopBtn.active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .backToTopBtn:not(.active) {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+  

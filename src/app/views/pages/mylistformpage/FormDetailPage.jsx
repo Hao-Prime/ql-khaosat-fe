@@ -22,6 +22,7 @@ import Loading from 'app/components/Loading';
 import Services from 'app/services';
 import 'dayjs/locale/vi'; // Import locale tiếng Việt
 import dayjs from 'dayjs';
+import BackToTopButton from 'app/components/BackToTopButton';
 dayjs.locale('vi');
 
 const FormDetailPage = () => {
@@ -43,16 +44,18 @@ const FormDetailPage = () => {
         Services.getFormService().getFormDetail(idBieuMau).then(
             (res) => {
 
-                if (res?.data) {
+                if (res?.data?.error) {
+                    Modal.error({
+                        title: 'Lỗi',
+                        content: res?.data?.message,
+                    });
+                } else {
                     setBieuMau({ ...res?.data, thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [] })
                     setLoading(false)
-                    console.log(JSON?.parse(res?.data?.thanhPhan));
-                } else {
-                    // message.error();
-                    Modal.error({
-                        title: "Không tìm thấy biểu mẫu",
-                    });
+
                 }
+
+
             }
         )
     }
@@ -102,6 +105,7 @@ const FormDetailPage = () => {
                     <Divider></Divider>
                 </div>
             </>}
+            <BackToTopButton />
             <Footer></Footer>
         </div >
 

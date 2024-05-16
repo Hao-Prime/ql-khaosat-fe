@@ -73,10 +73,48 @@ const getComponentFormIO = () => {
                 default: true,
                 weight: 0,
                 components: {
+                    hoTen: {
+                        title: 'Họ Và Tên',
+                        key: '@hoTen',
+                        icon: 'terminal',
+                        schema: {
+                            label: 'Họ Và Tên',
+                            type: 'textfield',
+                            key: '@hoTen',
+                            input: true,
+
+                        },
+
+                    },
+                    phoneNumber: {
+                        title: 'Số điện thoại',
+                        key: '@soDienThoai',
+                        icon: 'phone-square',
+                        schema: {
+                            label: 'Số Điện Thoại',
+                            type: 'phoneNumber',
+                            key: '@soDienThoai',
+                            input: true,
+
+                        },
+
+                    },
+                    email: {
+                        title: 'Email',
+                        key: '@emailuser',
+                        icon: 'at',
+                        schema: {
+                            label: 'Email',
+                            type: 'email',
+                            key: '@emailuser',
+                            input: true,
+
+                        },
+
+                    },
+
                     textfield: true,
                     textarea: true,
-                    email: true,
-                    phoneNumber: true,
                     number: true,
                     checkbox: true,
                     selectboxes: true,

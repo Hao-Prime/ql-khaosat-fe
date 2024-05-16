@@ -15,11 +15,11 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
     useEffect(() => {
         if (open) {
             realoadListSelect()
-
         }
     }, [open]);
     async function realoadListSelect() {
         setLoading(true)
+        setSending(false)
         setDonVi(donViUp)
         let dataRSLisstDv = await Services.getDonViService().getAll("")
         if (dataRSLisstDv.data) {

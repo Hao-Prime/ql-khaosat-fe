@@ -96,16 +96,17 @@ function initInterceptor() {
                         return axios(error.config);
                     }
                 } else {
-                    Modal.error({
-                        title: 'Phiên đăng nhập đã hết hạn',
-                        content: 'Bạn cần đăng nhập lại',
-                        onOk() {
-                            window.location.href = "/dang-nhap";
-                        }
-                    });
+                    // Modal.error({
+                    //     title: 'Phiên đăng nhập đã hết hạn',
+                    //     content: 'Bạn cần đăng nhập lại',
+                    //     onOk() {
+                    //         window.location.href = "/dang-nhap";
+                    //     }
+                    // });
                     localStorage.removeItem('tkv')
                     localStorage.removeItem('tkfv')
                     axios.defaults.headers.common["Authorization"] = ""
+                    window.location.href = "/dang-nhap";
                 }
 
 

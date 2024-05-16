@@ -89,7 +89,8 @@ const EditForm = ({ bieuMau }) => {
                 rs.push({ ...element, components: generateKey(element?.components) })
             } else {
                 if (element?.key?.length < 20) {
-                    rs.push({ ...element, key: generateRandomString(20) + "-" + (element?.type || "") })
+
+                    rs.push({ ...element, key: generateRandomString(20) + "-" + (element?.key?.includes("@") ? element?.key?.substring(1) : element?.type) })
                 } else {
                     rs.push(element)
                 }

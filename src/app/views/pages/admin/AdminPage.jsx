@@ -18,6 +18,8 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import DonViPage from './donvi/DonViPage';
 import NguoiDungPage from './nguoidung/NguoiDungPage';
 import DangPhatTrienPage from './developer/DangPhatTrienPage';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import Services from 'app/services';
 const AdminPage = ({ user }) => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -152,16 +154,12 @@ const AdminPage = ({ user }) => {
             >
 
                 <div className='nav-top'>
-                    <div>
-                        {/* {collapsed ?
+                    <div className=' div-flex'>
+                        <div className='pointer div-flex' onClick={() => window.location.href = "/"}>
+                            <ArrowBackIosIcon className='f14 me-2' />
+                            <span>Về trang chủ</span>
+                        </div>
 
-                            <MenuOpenIcon onClick={toggleCollapsed} />
-
-                            :
-                            <MenuIcon onClick={toggleCollapsed} ></MenuIcon>
-
-
-                        } */}
                     </div>
                     <div>
                         <div onClick={handleOpenUserMenu} className='pointer'>
@@ -198,10 +196,12 @@ const AdminPage = ({ user }) => {
                                 <Typography textAlign="center">Thông tin cá nhân</Typography>
                             </MenuItem>
 
-                            <MenuItem >
-                                <a href='/dang-nhap'>
-                                    <Typography textAlign="center">Đăng xuất</Typography>
-                                </a>
+                            <MenuItem onClick={() => {
+                                Services.getTaiKhoanService().dangXuat()
+                            }}>
+
+                                <Typography textAlign="center">Đăng xuất</Typography>
+
 
                             </MenuItem>
 

@@ -9,7 +9,8 @@ import ReactApexChart from 'react-apexcharts';
 import BackupTableIcon from '@mui/icons-material/BackupTable';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import FormatDate from 'app/common/FormatDate';
-import DownloadIcon from '@mui/icons-material/Download';
+
+import DanhSachNguoiKhaoSat from './DanhSachNguoiKhaoSat';
 const { RangePicker } = DatePicker;
 
 const DashboardForm = ({ bieuMau }) => {
@@ -27,7 +28,7 @@ const DashboardForm = ({ bieuMau }) => {
                 reloadList(defaultDateValue[0], defaultDateValue[1])
             } else {
                 const [ngayBD, ngayKT] = findDates(bieuMau)
-                console.log(ngayBD);
+
                 setdefaultDateValue([ngayBD, ngayKT]);
             }
         }
@@ -222,22 +223,22 @@ const DashboardForm = ({ bieuMau }) => {
             {barChartValue2 && <Chart {...barChartValue2} height="360px" />}
 
             <div className='form-dashboard-detail'>
-                <div className='flex justify-between'>
+                <div className='flex justify-center'>
                     <p className='text-center bold f-30'>KẾT QUẢ KHẢO SÁT ({tongSoLuongKetQua})</p>
-                    <Button key="submit" title='Xuât chi tiết tất cả câu trả lời' type="primary">
-                        <span className='white'><DownloadIcon className='f-14 me-1' />Xuất chi tiết</span>
-                    </Button>
-
-
                 </div>
 
                 <Divider />
+                <div className='flex justify-between'>
+                    <p className='text-center bold f-22'>Biểu đồ</p>
+
+                </div>
                 {listDataRS?.map((e) =>
                     <DetailPhanTram object={e} level={0}></DetailPhanTram>
 
                 )}
+                <Divider />
 
-
+                <DanhSachNguoiKhaoSat bieuMau={bieuMau}></DanhSachNguoiKhaoSat>
 
             </div>
         </div >
