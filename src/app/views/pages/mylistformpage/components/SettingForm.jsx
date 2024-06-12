@@ -8,6 +8,7 @@ import locale from 'antd/lib/locale/vi_VN';
 import { CircularProgress } from '@mui/material';
 import Loading from 'app/components/Loading';
 
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 const SettingForm = ({ bieuMau, reloadList }) => {
     const [modal, contextHolder] = Modal.useModal();
@@ -20,34 +21,25 @@ const SettingForm = ({ bieuMau, reloadList }) => {
         // console.log('radio checked', e.target.value);
         // setValue(e.target.value);
     };
-    const [fileList, setFileList] = useState([]);
-
+    const [anhBia, setAnhBia] = useState([]);
+    const [imageUrl, setImageUrl] = useState();
+    const [loading2, setLoading2] = useState(false);
     useEffect(() => {
         if (bieuMau) {
+            if (bieuMau?.anhBia) {
+                setImageUrl(`${process.env.REACT_APP_URL_SERVER}/be-form/public/show-file?stringID=${bieuMau?.anhBia?._id}`)
+            }
+
+            setAnhBia()
+            setLoading2(false)
             setBieuMauUpdate(bieuMau)
         }
     }, [bieuMau]);
-    const onChangeUpload = ({ fileList: newFileList }) => {
-        setFileList(newFileList);
-    };
-    const onPreview = async (file) => {
-        let src = file.url;
-        if (!src) {
-            src = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file.originFileObj);
-                reader.onload = () => resolve(reader.result);
-            });
-        }
-        const image = new Image();
-        image.src = src;
-        const imgWindow = window.open(src);
-        imgWindow?.document.write(image.outerHTML);
-    };
+
     const handleVoHieuHoaBieuMau = () => {
         setSending(true);
         Services.getFormService().capNhatThongTinBieuMau({ ...bieuMauUpdate, thanhPhan: "", trangThai: bieuMauUpdate?.trangThai == 1 ? 0 : 1 }).then(
-            (res) => {
+            async (res) => {
                 setSending(false);
                 if (res?.data?.error) {
                     Modal.error({
@@ -56,6 +48,7 @@ const SettingForm = ({ bieuMau, reloadList }) => {
                     });
 
                 } else {
+
                     message.success("Lưu thành công")
                     reloadList()
                 }
@@ -98,7 +91,7 @@ const SettingForm = ({ bieuMau, reloadList }) => {
         setError("")
         if (checkBieuMau()) {
             Services.getFormService().capNhatThongTinBieuMau({ ...bieuMauUpdate, thanhPhan: "" }).then(
-                (res) => {
+                async (res) => {
                     setSending(false);
                     if (res?.data?.error) {
                         Modal.error({
@@ -106,6 +99,12 @@ const SettingForm = ({ bieuMau, reloadList }) => {
                             content: res?.data?.message,
                         });
                     } else {
+                        if (anhBia) {
+                            let formData = new FormData();
+                            formData.append('file', anhBia);
+                            formData.append("id", res?.data);
+                            await Services.getFormService().luuAnhBia(formData, res?.data)
+                        }
                         message.success("Lưu thành công")
                     }
                 }
@@ -161,6 +160,53 @@ const SettingForm = ({ bieuMau, reloadList }) => {
         }
         return <span className="status-info ">Đang diễn ra</span>;//Đâng diễn ra
     }
+    const uploadButton = (
+        <div>
+            {loading2 ? <LoadingOutlined /> : <PlusOutlined />}
+            <div
+                style={{
+                    marginTop: 8,
+                }}
+            >
+                Upload
+            </div>
+        </div>
+    );
+    const beforeUpload = (file) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            setError('Bạn chỉ có thể chọn ảnh là png hoặc jprg');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 10;
+        if (!isLt2M) {
+            setError('Ảnh phải bé hơn 10MB');
+        }
+        return isJpgOrPng && isLt2M;
+    };
+    const getBase64 = (img, callback) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(img);
+    };
+    const handleChange = (info) => {
+
+        if (info.file.status === 'uploading') {
+            setLoading2(true);
+            return;
+        }
+        if (info.file.status === 'done') {
+            setAnhBia(info?.file?.originFileObj);
+            getBase64(info.file.originFileObj, (url) => {
+                setLoading2(false);
+                setImageUrl(url);
+            });
+        }
+    };
+    const customRequest = ({ file, onSuccess, onError }) => {
+
+        onSuccess();
+
+    };
     return (
 
         <div className="div-setting-cus">
@@ -209,13 +255,29 @@ const SettingForm = ({ bieuMau, reloadList }) => {
                         <p className='bold'> Ảnh bìa: </p>
 
                         <Upload
-                            action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                            name="avatar"
                             listType="picture-card"
-                            fileList={fileList}
-                            onChange={onChangeUpload}
-                            onPreview={onPreview}
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            beforeUpload={beforeUpload}
+                            onChange={handleChange}
+                            multiple={false}
+                            accept='.jpg, .jpeg, .png'
+                            customRequest={customRequest}
+
                         >
-                            {fileList.length < 1 && '+ Upload'}
+                            {imageUrl ? (
+                                <img
+                                    src={imageUrl}
+                                    alt="avatar"
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                />
+                            ) : (
+                                uploadButton
+                            )}
                         </Upload>
 
                     </div>

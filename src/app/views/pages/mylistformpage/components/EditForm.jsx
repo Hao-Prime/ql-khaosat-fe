@@ -130,8 +130,8 @@ const EditForm = ({ bieuMau }) => {
             <div style={{ display: "none" }}>
                 <div id="formio-result" />
             </div>
-            <div className='flex justify-center' onClick={handleSave}>
-                <Button className='btn-success' type="primary" size="large" disabled={sending}>
+            <div className='flex justify-center' >
+                <Button className='btn-success' type="primary" size="large" disabled={sending} onClick={handleSave}>
                     <span style={{ display: sending ? 'inherit' : 'none' }}>
                         <CircularProgress className="span-sender" />
                     </span>

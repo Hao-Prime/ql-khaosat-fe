@@ -5,7 +5,7 @@ function getBanThan() {
 };
 
 function doiMatKhau(nhanVien) {
-  return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/change-pass", nhanVien);
+  return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/change-pas", nhanVien);
 };
 const dangNhap = ({ tenDangNhap, matKhau }) => {
   return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/login", {

@@ -11,7 +11,7 @@ const LoginPage = () => {
     const [user, setUser] = useState()
     const [error, setError] = useState("")
     const [sending, setSending] = useState(false)
-    const [path, setPath] = useState(new URLSearchParams(window.location.search).get("path"));
+    const [path, setPath] = useState(new URLSearchParams(window.location.search).get("url"));
     const handleChange = (arr, value) => {
         setError("")
         setUser({ ...user, [arr]: value })
@@ -41,7 +41,7 @@ const LoginPage = () => {
 
                     <form className="login">
                         <div className="login__field">
-                            <p className="bold f-30 nowrap">HỆ THỐNG ĐIỀU TRA, KHẢO SÁT</p>
+                            <p className="bold f-30"><span className="nowrap">HỆ THỐNG ĐIỀU TRA </span><br /><span className="nowrap">KHẢO SÁT THÔNG TIN</span></p>
                             <p className="bold f-24 ">Đăng nhập</p>
                         </div>
                         <div className="login__field">

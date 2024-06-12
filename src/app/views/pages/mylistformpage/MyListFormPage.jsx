@@ -23,9 +23,10 @@ import StarPurple500Icon from '@mui/icons-material/Star';
 // import StarIcon from '@mui/icons-material/Star';
 import BackToTopButton from 'app/components/BackToTopButton';
 import { useSelector } from 'react-redux';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+
 const { Search } = Input;
 const { TextArea } = Input;
-
 
 const MyListFormPage = () => {
     const [listForm, setListForm] = useState(
@@ -172,7 +173,7 @@ const MyListFormPage = () => {
 
                                                 <div className="tpn_card" >
                                                     <div onClick={() => window.location.href = `/chi-tiet-bieu-mau?id=${form?._id}`}>
-                                                        <img src={form?.anhBia || listAnhBia[convertIdToNumber(form?._id)]} className="w-100 mb-4 pointer" />
+                                                        <img src={form?.anhBia?._id ? `${process.env.REACT_APP_URL_SERVER}/be-form/public/show-file?stringID=${form?.anhBia?._id}` : listAnhBia[convertIdToNumber(form?._id)]} className="w-100 mb-4 pointer" />
                                                         <p className='gray m-0 f-13'><i>{dayjs(form?.ngayTao).format('DD/MM/YYYY')}</i></p>
                                                         <h5 className='bold pointer tieude-p' title={form?.tenBieuMau}>{form?.tenBieuMau}</h5>
                                                     </div>
@@ -232,23 +233,33 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
     const [newForm, setNewForm] = useState(bieuMauUp);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
+    const [anhBia, setAnhBia] = useState([]);
+    const [imageUrl, setImageUrl] = useState();
+    const [loading2, setLoading2] = useState(false);
     useEffect(() => {
         if (open) {
+            setImageUrl()
+            setAnhBia()
+            setLoading2(false)
             setNewForm(bieuMauUp)
         }
     }, [open]);
     const handleOk = () => {
         setSending(true);
         setError("")
-
-        console.log(newForm);
         if (checkBieuMau()) {
             Services.getFormService().taoMoiBieuMau(newForm).then(
-                (res) => {
+                async (res) => {
                     setSending(false);
                     if (res?.data?.error) {
                         setError(res?.data?.message)
                     } else {
+                        if (anhBia) {
+                            let formData = new FormData();
+                            formData.append('file', anhBia);
+                            formData.append("id", res?.data);
+                            await Services.getFormService().luuAnhBia(formData, res?.data)
+                        }
                         setOpen(false)
                         reloadList()
 
@@ -264,26 +275,8 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
         setError("")
         setNewForm({ ...newForm, [arr]: value })
     };
-    const [fileList, setFileList] = useState([
 
-    ]);
-    const onChangeUpload = ({ fileList: newFileList }) => {
-        setFileList(newFileList);
-    };
-    const onPreview = async (file) => {
-        let src = file.url;
-        if (!src) {
-            src = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file.originFileObj);
-                reader.onload = () => resolve(reader.result);
-            });
-        }
-        const image = new Image();
-        image.src = src;
-        const imgWindow = window.open(src);
-        imgWindow?.document.write(image.outerHTML);
-    };
+
     const checkBieuMau = () => {
         if (!newForm?.tenBieuMau) {
             setError("Tên biểu mẫu không được để trống")
@@ -303,6 +296,53 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
         }
         return true;
     }
+    const uploadButton = (
+        <div>
+            {loading2 ? <LoadingOutlined /> : <PlusOutlined />}
+            <div
+                style={{
+                    marginTop: 8,
+                }}
+            >
+                Upload
+            </div>
+        </div>
+    );
+    const beforeUpload = (file) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            setError('Bạn chỉ có thể chọn ảnh là png hoặc jprg');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 10;
+        if (!isLt2M) {
+            setError('Ảnh phải bé hơn 10MB');
+        }
+        return isJpgOrPng && isLt2M;
+    };
+    const getBase64 = (img, callback) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(img);
+    };
+    const handleChange = (info) => {
+
+        if (info.file.status === 'uploading') {
+            setLoading2(true);
+            return;
+        }
+        if (info.file.status === 'done') {
+            setAnhBia(info?.file?.originFileObj);
+            getBase64(info.file.originFileObj, (url) => {
+                setLoading2(false);
+                setImageUrl(url);
+            });
+        }
+    };
+    const customRequest = ({ file, onSuccess, onError }) => {
+
+        onSuccess();
+
+    };
     return (
         <Modal title="TẠO MỚI BIỂU MẪU" open={open} onOk={handleOk} onCancel={() => setOpen(!open)} okText=""
 
@@ -338,7 +378,7 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
                 </div>
                 <div className='pb-3'>
                     <p className='bold'> Ảnh bìa: </p>
-                    <Upload
+                    {/* <Upload
                         action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                         listType="picture-card"
                         fileList={fileList}
@@ -346,6 +386,31 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
                         onPreview={onPreview}
                     >
                         {fileList.length < 1 && '+ Upload'}
+                    </Upload> */}
+                    <Upload
+                        name="avatar"
+                        listType="picture-card"
+                        className="avatar-uploader"
+                        showUploadList={false}
+                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        beforeUpload={beforeUpload}
+                        onChange={handleChange}
+                        multiple={false}
+                        accept='.jpg, .jpeg, .png'
+                        customRequest={customRequest}
+
+                    >
+                        {imageUrl ? (
+                            <img
+                                src={imageUrl}
+                                alt="avatar"
+                                style={{
+                                    width: '100%',
+                                }}
+                            />
+                        ) : (
+                            uploadButton
+                        )}
                     </Upload>
                 </div>
                 <div className='pb-3'>

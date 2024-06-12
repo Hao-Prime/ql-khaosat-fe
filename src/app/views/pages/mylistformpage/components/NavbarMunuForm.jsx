@@ -20,10 +20,11 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Services from 'app/services';
 import { useSelector } from 'react-redux';
+import ChangePassModal from '../../profile/ChangePassModal';
 const NavbarMunuForm = ({ content, type, children }) => {
     const settings = ['Thông tin cá nhân', 'Biểu mẫu của tôi', 'Đăng xuất'];
     const taiKhoan = useSelector(state => state.taiKhoan)
-
+    const [openChangePassModal, setOpenChangePassModal] = useState(false);
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -44,6 +45,7 @@ const NavbarMunuForm = ({ content, type, children }) => {
 
     return (
         <AppBar position="static" className='bg-white' style={{ boxShadow: "rgba(0, 86, 202, 0.28) 0px 0px 20px 0px" }}>
+            <ChangePassModal open={openChangePassModal} setOpen={setOpenChangePassModal} />
             <Container maxWidth="xl" className='bg-white'>
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -137,10 +139,10 @@ const NavbarMunuForm = ({ content, type, children }) => {
                                 <div className='me-2'>
                                     {type != 1 && <a href={"/khao-sat-bieu-mau?key=" + content?.maBieuMau} target='_blank' className='div-flex text-tieude-nav'><PreviewIcon className='f-39 me-1' style={{ color: "#6782df" }} /> Xem nhanh</a>}
 
-                                </div>
+                                </div> <span className='black mt-1 me-1'>|</span>
                             </Box> : <></>}
                             {type != 1 && <>
-                                <span className='black me-2'>|</span>
+                                <span className='black me-2'>{taiKhoan?.hoTen}</span>
 
                                 <Tooltip title="Mở cài đặt">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -166,7 +168,7 @@ const NavbarMunuForm = ({ content, type, children }) => {
                                 >
 
                                     <MenuItem  >
-                                        <Typography textAlign="center">Thông tin cá nhân</Typography>
+                                        <Typography textAlign="center" onClick={() => { setOpenChangePassModal(true); handleCloseUserMenu() }}>Đổi mật khẩu</Typography>
                                     </MenuItem>
                                     <MenuItem >
                                         <a href='/danh-sach-bieu-mau'>

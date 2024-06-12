@@ -2327,6 +2327,9 @@ a {
     margin: auto;
     width: 100%;
 }
+.MuiMenu-root{
+    z-index: 0 !important ;
+}
 @media (min-width: 760px) {
     .form-dashboard-detail {
         width: 80%;

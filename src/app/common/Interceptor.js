@@ -3,11 +3,12 @@ import { Modal } from "antd";
 import Services from "app/services";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useLocation } from "react-router-dom";
 // import { toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 function initInterceptor() {
     // Đặt token
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("tkv");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("tkv")}`;
     // Lỗi 401 và 403
     axios.interceptors.request.use(async function (config) {
 
@@ -33,7 +34,7 @@ function initInterceptor() {
 
     axios.interceptors.response.use(
         (res) => {
-            if (201 === res.status) {
+            if (201 === res?.status) {
                 // toast.success('Thao tác thành công', {
                 //     position: "bottom-right",
                 //     autoClose: 4000,
@@ -49,7 +50,7 @@ function initInterceptor() {
         },
         async (error) => {
             // console.log(error);
-            if (400 === error.response.status) {
+            if (400 === error?.response?.status) {
                 if ((axios.defaults.headers.common['Authorization']) != undefined) {
                     // console.log(error.response);
                     // toast.error((error.response?.data?.noiDung ? error.response?.data?.noiDung : error.response?.data ? error.response?.data : 'Đã có lỗi xẩy ra'), {
@@ -70,47 +71,55 @@ function initInterceptor() {
             }
 
 
-            if (401 === error.response.status) {
+            if (401 === error?.response?.status) {
 
-                // alert("Lỗi xác thực, cần đăng nhập lại");
-                if (localStorage.getItem("tkfv")) {
-                    let token = await Services.getTaiKhoanService().refreshToken({ accessToken: localStorage.getItem("tkv"), refreshToken: localStorage.getItem("tkfv") })
+                // // alert("Lỗi xác thực, cần đăng nhập lại");
+                // if (localStorage.getItem("tkfv")) {
+                //     try {
+                //         let token = await Services.getTaiKhoanService().refreshToken({ accessToken: localStorage.getItem("tkv"), refreshToken: localStorage.getItem("tkfv") })
+                //         // console.log("XXX");
+                //         if (token?.data?.error) {
+                //             Modal.error({
+                //                 title: 'Phiên đăng nhập đã hết hạn',
+                //                 content: 'Bạn cần đăng nhập lại',
+                //                 onOk() {
+                //                     window.location.href = "/dang-nhap";
+                //                 }
+                //             });
+                //             localStorage.removeItem('tkv')
+                //             localStorage.removeItem('tkfv')
+                //             axios.defaults.headers.common["Authorization"] = ""
+                //         } else {
+                //             localStorage.setItem('tkv', token?.data?.access_token)
+                //             localStorage.setItem('tkfv', token?.data?.refresh_token)
+                //             axios.defaults.headers.common["Authorization"] = `Bearer ${token?.data?.access_token}`;
+                //             // axios.defaults.headers.common.Authorization = `${token?.data?.access_token}`
 
-                    if (token?.data?.error) {
-                        Modal.error({
-                            title: 'Phiên đăng nhập đã hết hạn',
-                            content: 'Bạn cần đăng nhập lại',
-                            onOk() {
-                                window.location.href = "/dang-nhap";
-                            }
-                        });
-                        localStorage.removeItem('tkv')
-                        localStorage.removeItem('tkfv')
-                        axios.defaults.headers.common["Authorization"] = ""
-                    } else {
-                        localStorage.setItem('tkv', token?.data?.access_token)
-                        localStorage.setItem('tkfv', token?.data?.refresh_token)
-                        // axios.defaults.headers.common["Authorization"] = token?.data?.access_token;
-                        axios.defaults.headers.common.Authorization = `${token?.data?.access_token}`
-                        console.log(token?.data?.access_token);
-                        return axios(error.config);
-                    }
-                } else {
-                    // Modal.error({
-                    //     title: 'Phiên đăng nhập đã hết hạn',
-                    //     content: 'Bạn cần đăng nhập lại',
-                    //     onOk() {
-                    //         window.location.href = "/dang-nhap";
-                    //     }
-                    // });
-                    localStorage.removeItem('tkv')
-                    localStorage.removeItem('tkfv')
-                    axios.defaults.headers.common["Authorization"] = ""
-                    window.location.href = "/dang-nhap";
-                }
+                //             error.config.headers['Authorization'] = `Bearer ${token?.data?.access_token}`;
+                //             console.log(error.config);
+                //             return axios(error.config);
+                //         }
+                //     } catch (error) {
+                //         console.log(error);
+                //         window.location.reload()
+                //     }
+                // } else {
+                // Modal.error({
+                //     title: 'Phiên đăng nhập đã hết hạn',
+                //     content: 'Bạn cần đăng nhập lại',
+                //     onOk() {
+                //         window.location.href = "/dang-nhap";
+                //     }
+                // });
+
+                localStorage.removeItem('tkv')
+                localStorage.removeItem('tkfv')
+                axios.defaults.headers.common["Authorization"] = ""
+                window.location.href = "/dang-nhap" + "?url=" + window.location.pathname;
+                // }
 
 
-            } if (403 === error.response.status) {
+            } if (403 === error?.response?.status) {
 
                 // toast.warn('Bạn không có quyên truy cập', {
                 //     position: "top-right",
@@ -131,7 +140,7 @@ function initInterceptor() {
                 // alert("Bạn không có quyền truy cập " + error.response.config.url)
                 // 
                 return Promise.reject(error);
-            } else if (413 === error.response.status) {
+            } else if (413 === error?.response?.status) {
                 Modal.error({
                     title: 'Tổng file cần lưu không được quá 25MB',
                     content: 'Vui lòng liên hệ quản trị viên để được hỗ trợ',

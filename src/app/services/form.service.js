@@ -21,6 +21,9 @@ function getListDonVi() {
 function taoMoiBieuMau(bieuMau) {
   return axios.post(process.env.REACT_APP_URL_SERVER + `/be-form/form/create`, bieuMau);
 };
+function luuAnhBia(file, id) {
+  return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/form/public/update-backround", file);
+};
 function capNhatBieuMau(bieuMau) {
   return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/form/update-form`, bieuMau);
 };
@@ -54,6 +57,7 @@ const formService = {
   capNhatThongTinBieuMau,
   capNhatQuyenBieuMau,
   capNhatBieuMau,
+  luuAnhBia,
   taoMoiBieuMau,
   xoaBieuMau,
   guiKetQua,
