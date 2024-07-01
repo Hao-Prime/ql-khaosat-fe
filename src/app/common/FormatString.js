@@ -16,7 +16,19 @@ function removeDTOFromKeys(obj) {
     }
     return obj;
 }
+function getMaKhaoSatTheoDonVi(cuocKhaoSat, idDonVi) {
+    console.log(cuocKhaoSat);
+    console.log(idDonVi);
+    let ma = cuocKhaoSat?.maKhaoSat
+    cuocKhaoSat?.listDonViPhuTrach?.forEach(element => {
+        if (element?.donVi?._id == idDonVi) {
+            ma = element?.maKhaoSat
+        }
+    });
+    return ma
+}
 export default {
+    getMaKhaoSatTheoDonVi,
     chiVietHoaChuCaiDau,
     removeDTOFromKeys
 }

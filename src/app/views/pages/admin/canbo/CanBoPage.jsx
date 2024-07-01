@@ -2,7 +2,7 @@
 import { Breadcrumb, Button, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState } from 'react'
-import NguoiDungModal from './NguoiDungModal';
+import CanBoModal from './CanBoModal';
 import Services from 'app/services';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -32,13 +32,13 @@ const items = [
         label: 'Xóa',
     },
 ];
-const NguoiDungPage = () => {
+const CanBoPage = () => {
     const [modal, contextHolder] = Modal.useModal();
-    const [listNguoiDung, setListNguoiDung] = useState([]);
+    const [listCanBo, setListCanBo] = useState([]);
     const [searchValue, setSearchValue] = useState("");
-    const [listNguoiDungMD, setListNguoiDungMD] = useState([]);
-    const [nguoiDungUp, setNguoiDungUp] = useState();
-    const [openNguoiDungModal, setOpenNguoiDungModal] = useState(false);
+    const [listCanBoMD, setListCanBoMD] = useState([]);
+    const [canBoUp, setCanBoUp] = useState();
+    const [openCanBoModal, setOpenCanBoModal] = useState(false);
 
     const [windowScreen, setWindowScreen] = useState(window.screen.width > 1000);
     const [limit, setLimit] = useState(30);
@@ -50,9 +50,9 @@ const NguoiDungPage = () => {
     }, [limit, page]);
     async function reLoadList(params) {
         setLoading(true)
-        let dataRSLisstDv = await Services.getNguoiDungService().getNguoiKhaoSat("", "", page - 1, limit)
+        let dataRSLisstDv = await Services.getNguoiDungService().getCanBo("", "", page - 1, limit)
         if (dataRSLisstDv?.data) {
-            setListNguoiDung(dataRSLisstDv?.data?.content)
+            setListCanBo(dataRSLisstDv?.data?.content)
             setTotalPage(dataRSLisstDv?.data?.totalElements)
         }
         setLoading(false)
@@ -64,8 +64,9 @@ const NguoiDungPage = () => {
     const onClick = async (key, data) => {
         switch (key?.key) {
             case "1":
-                setOpenNguoiDungModal(true)
-                setNguoiDungUp(data)
+                setOpenCanBoModal(true)
+                setCanBoUp({ ...data, vaiTroTaiKhoanList: data?.taiKhoan?.vaiTroTaiKhoanList?.map(obj => { return obj?.vaiTro?._id }) })
+                console.log({ ...data, vaiTroTaiKhoanList: data?.taiKhoan?.vaiTroTaiKhoanList?.map(obj => { return obj?.vaiTro?._id }) });
                 break;
             case "2":
                 const confirmed = await modal.confirm({
@@ -75,7 +76,7 @@ const NguoiDungPage = () => {
                 console.log(confirmed);
                 if (confirmed) {
                     setLoading(true);
-                    Services.getNguoiDungService().deleteByID(data?._id)?.then(
+                    Services.getCanBoService().deleteByID(data?._id)?.then(
                         (res) => {
                             if (res?.data?.error) {
                                 alert(res?.data?.message)
@@ -98,11 +99,11 @@ const NguoiDungPage = () => {
                 setSearchValue(e?.target?.value)
                 setPage(1)
             } else {
-                let dataRSLisstDv = await Services.getNguoiDungService().getNguoiKhaoSat(e?.target?.value, "", 0, limit)
+                let dataRSLisstDv = await Services.getCanBoService().getNguoiKhaoSat(e?.target?.value, "", 0, limit)
                 if (dataRSLisstDv?.data?.length == 0) {
                     message.error("Không tìm thấy đơn vị")
                 } else {
-                    setListNguoiDung(dataRSLisstDv?.data?.content)
+                    setListCanBo(dataRSLisstDv?.data?.content)
                     setTotalPage(dataRSLisstDv?.data?.totalElements)
                 }
             }
@@ -128,10 +129,10 @@ const NguoiDungPage = () => {
                 /></div>
 
             <div className="page-new">
-                <NguoiDungModal open={openNguoiDungModal} setOpen={setOpenNguoiDungModal} nguoiDungUp={nguoiDungUp} reLoadList={reLoadList} />
+                <CanBoModal open={openCanBoModal} setOpen={setOpenCanBoModal} canBoUp={canBoUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
-                        <Button onClick={() => { setOpenNguoiDungModal(true); setNguoiDungUp(); }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        <Button onClick={() => { setOpenCanBoModal(true); setCanBoUp(); }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
                     </div>
                     <div>
                         <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
@@ -173,11 +174,11 @@ const NguoiDungPage = () => {
                         //     render: (data) => (<p>{data?.donVi?.tenDonVi} </p>),
                         //     width: 200,
                         // },
-                        // {
-                        //     title: "Đơn vị quản lý",
-                        //     render: (data) => (<p>{data?.listDonViQuanLy?.map(obj => obj.donVi?.tenDonVi)?.join(', ')} </p>),
-                        //     width: 250,
-                        // },
+                        {
+                            title: "Đơn vị quản lý",
+                            render: (data) => (<p>{data?.donVi?.tenDonVi + " - " + data?.donVi?.donViTrucThuoc?.tenDonVi} </p>),
+                            width: 250,
+                        },
                         // {
                         //     title: "Loại dăng nhập",
                         //     render: (data) => (<p>{data?.taiKhoan?.provider} </p>),
@@ -226,7 +227,7 @@ const NguoiDungPage = () => {
                     scroll={{ x: '100%', y: 415 }}
                     locale={{ emptyText: 'Không có dữ liệu' }}
                     style={{ minHeight: 415 }}
-                    dataSource={listNguoiDung}
+                    dataSource={listCanBo}
                     pagination={false}
                     size='small'
                     className='pointer mt-1 table-cus-antd'
@@ -248,4 +249,4 @@ const NguoiDungPage = () => {
     );
 };
 
-export default NguoiDungPage;
+export default CanBoPage;

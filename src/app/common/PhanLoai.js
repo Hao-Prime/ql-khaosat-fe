@@ -19,17 +19,16 @@ function getSelectPhanLoaiYeuCau() {
     ]
 }
 function getPhanLoaiYeuCau(key) {
+    console.log(key);
     switch (key) {
         case 1:
             return "Chưa tiếp nhận"
         case 2:
-            return "Đang xử lý"
+            return "Đang thực hiện"
         case 3:
-            return "Đã xử lý"
-        case 4:
-            return "Không thay đổi yêu cầu"
+            return "Đã hoàn thành"
         default:
-            return "Không xác định"
+            return "Chưa phân phụ trách"
     }
 }
 function getSelectQuyenYCHT() {

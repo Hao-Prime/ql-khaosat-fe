@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, forwardRef } from 'react';
 import { Form } from "@formio/react";
-import NavbarMunuForm from './NavbarMunuForm';
+// import NavbarMunuForm from './NavbarMunuForm';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import { Button, Divider, Modal, Skeleton } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
@@ -9,12 +9,12 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Loading from 'app/components/Loading';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-const ViewForm = () => {
+const ViewKSForm = () => {
     // const formRef = useRef(null);
     const [modal, contextHolder] = Modal.useModal();
     const [listPageForm, setListPageForm] = React.useState([]);
     const [page, setPage] = useState(0);
-    const [bieuMau, setBieuMau] = React.useState();
+    const [cuocKhaoSat, setCuocKhaoSat] = React.useState();
     const key = new URLSearchParams(window.location.search).get("key");
     const iddonVi = new URLSearchParams(window.location.search).get("iddv");
     const [loading, setLoading] = useState(false);
@@ -26,26 +26,15 @@ const ViewForm = () => {
     var isMounted = true;
     useEffect(() => {
         isMounted = true;
-        // let rs = decodeJWT("eyJhbGciOiJIUzI1NiJ9.eyJ0cmFuZ1RoYWkiOjEsInRhaUtob2FuSUQiOiI2NjJhMGJlNTMwM2MwOTY3ODk1ZGY0MWUiLCJuZ2F5Q2FwTmhhdCI6IjIwMjQtMDQtMjVUMjE6NTM6MDkuODQzIiwiZXhwIjoxNzE1MzAzMTMzLCJuZ3VvaUR1bmdJZCI6IjY2MmEwYmU1MzAzYzA5Njc4OTVkZjQxZCJ9.Z69Em8OZbAFm-unT8pFirFbULRQQfvrQs3RZJQqD0kg")
-
         reloadList()
-
         return () => {
             isMounted = false;
         };
     }, [key]);
-    // useEffect(() => {
-    //     Services.getTaiKhoanService().getMe().then((res) => {
-    //         if (res?.data) {
-    //             dispatch(allActions.taiKhoanActions.setTaiKhoanNguoiDung(res?.data))
-    //         }
-    //     }, (err) => {
-    //     });
-    // }, []);
 
     function reloadList() {
         setLoading(true)
-        Services.getFormService().getFormDetailSubmit(key).then(
+        Services.getCuocKhaoSatService().getFormDetailSubmit(key).then(
             (res) => {
                 if (res?.data?.error) {
                     Modal.error({
@@ -55,16 +44,16 @@ const ViewForm = () => {
                         }
                     });
                 } else {
-                    setBieuMau({ ...res?.data, thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [] })
+                    setCuocKhaoSat({ ...res?.data, thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [] })
                     setListLabel(convertLabelFromListComponent(JSON?.parse(res?.data?.thanhPhan)));
-                    setListPageForm(convertBieuMauToListPage(JSON?.parse(res?.data?.thanhPhan)));
+                    setListPageForm(convertCuocKhaoSatToListPage(JSON?.parse(res?.data?.thanhPhan)));
                     setLoading(false)
 
                 }
             }
         )
     }
-    const convertBieuMauToListPage = (thanhPhan) => {
+    const convertCuocKhaoSatToListPage = (thanhPhan) => {
         let isContainer = true
         let rs = []
         thanhPhan.forEach(element => {
@@ -123,7 +112,7 @@ const ViewForm = () => {
     const onSubmitHandler = async (submission) => {
         if (page == (listPageForm?.length - 1)) {
             const confirmed = await modal.confirm({
-                title: "Bạn có chắc muốn xóa biểu mẫu này",
+                title: "Bạn có chắc muốn gửi kết quả này",
                 content: "",
             });
             if (confirmed) {
@@ -132,7 +121,13 @@ const ViewForm = () => {
                 rs = rs?.map(obj => {
                     return { ...obj, label: getLabelFromKey(obj?.key) };
                 })
-                Services.getFormService().guiKetQua({ bieuMau: { _id: bieuMau?._id }, ketQua: rs, donVi: iddonVi ? { _id: iddonVi } : null })?.then(
+                Services.getCuocKhaoSatService().guiKetQua(
+                    {
+                        cuocKhaoSat: { _id: cuocKhaoSat?._id },
+                        donVi: { _id: cuocKhaoSat?.donViId },
+                        ketQua: rs,
+                    }
+                )?.then(
                     (res) => {
                         setSending(false)
                         if (res.data?.error) {
@@ -163,9 +158,9 @@ const ViewForm = () => {
             // Parse phần payload thành một đối tượng JavaScript
             const decodedPayloadObj = JSON.parse(decodedPayload);
 
-            console.log('Decoded JWT payload:', decodedPayloadObj);
-            console.log(decodedPayloadObj?.exp);
-            console.log(dayjs.unix(decodedPayloadObj?.exp).format('DD/MM/YYYY HH:mm'))
+            // console.log('Decoded JWT payload:', decodedPayloadObj);
+            // console.log(decodedPayloadObj?.exp);
+            // console.log(dayjs.unix(decodedPayloadObj?.exp).format('DD/MM/YYYY HH:mm'))
             // console.log(dayjs(decodedPayloadObj?.exp)?.format())
             return decodedPayloadObj; // Trả về payload đã giải mã
         } catch (error) {
@@ -206,8 +201,8 @@ const ViewForm = () => {
             {contextHolder}
 
             {loading ? <Skeleton /> : <>
-                <NavbarMunuForm type={1} content={{ ...bieuMau, type: true, title: bieuMau?.tenBieuMau, history: "ĐƯỢC LƯU LÚC " + dayjs(bieuMau?.ngayLuuGanNhat)?.format('HH:mm dddd, D [THÁNG] M, YYYY') }} />
-                <div className='pos-relative'>
+                {/* <NavbarMunuForm type={1} content={{ ...cuocKhaoSat, type: true, title: cuocKhaoSat?.tenCuocKhaoSat, history: "ĐƯỢC LƯU LÚC " + dayjs(cuocKhaoSat?.ngayLuuGanNhat)?.format('HH:mm dddd, D [THÁNG] M, YYYY') }} /> */}
+                <div className='pos-relative pt-4'>
                     <div className='div-form-view-detail'>
                         {finish ?
                             <div className='div-finish mt-3'>
@@ -473,7 +468,7 @@ const ViewForm = () => {
                                                     "lazyLoad": false,
                                                     "id": "ep1wemg",
                                                     "components": [
-                                                        ...(bieuMau?.thanhPhan ? bieuMau?.thanhPhan : []),
+                                                        ...(cuocKhaoSat?.thanhPhan ? cuocKhaoSat?.thanhPhan : []),
                                                         {
                                                             "label": "Gửi kết quả",
                                                             "action": "submit",
@@ -584,4 +579,4 @@ const ViewForm = () => {
     );
 };
 
-export default ViewForm;
+export default ViewKSForm;

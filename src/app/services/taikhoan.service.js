@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function getBanThan() {
+function getMe() {
   return axios.get(process.env.REACT_APP_URL_SERVER + "/be-form/user/me");
 };
 
@@ -29,7 +29,7 @@ const refreshToken = async (token) => {
 const taiKhoanService = {
   dangNhap,
   dangXuat,
-  getBanThan,
+  getMe,
   doiMatKhau,
   refreshToken
 };

@@ -13,6 +13,10 @@
 }
 .ant-select-dropdown{
     z-index: 3000 !important;
+    max-height: 280px;
+}
+.ant-select-dropdown .ant-select-item-option-content {
+    white-space: normal  !important;
 }
 .ant-select .ant-select-selector {
     /* height: 37px !important; */

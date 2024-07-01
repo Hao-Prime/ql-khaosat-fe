@@ -1,17 +1,18 @@
 
 import { CircularProgress } from '@mui/material';
 import FormatDate from 'app/common/FormatDate';
-import React, { useEffect, useState } from 'react'
-import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Select, message } from 'antd';
+import React, { Children, useEffect, useState } from 'react'
+import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Select, message, TreeSelect } from 'antd';
 import Services from 'app/services';
 import Loading from 'app/components/Loading';
 import { useSelector } from 'react-redux';
 import locale from 'antd/lib/locale/vi_VN';
 import dayjs from 'dayjs';
 const { TextArea } = Input;
-const NguoiDungModal = ({ open, setOpen, nguoiDungUp, reLoadList }) => {
-    const [nguoiDung, setNguoiDung] = useState(nguoiDungUp);
-    const [listNguoiDungTT, setListNguoiDungTT] = useState([]);
+const CanBoModal = ({ open, setOpen, canBoUp, reLoadList }) => {
+    const [canBo, setCanBo] = useState(canBoUp);
+    const [listVaiTro, setListVaiTro] = useState([]);
+    const [listDonVi, setListDonVi] = useState([]);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -25,27 +26,35 @@ const NguoiDungModal = ({ open, setOpen, nguoiDungUp, reLoadList }) => {
     async function realoadListSelect() {
         setLoading(true)
         setSending(false)
-        setNguoiDung(nguoiDungUp)
+        setCanBo(canBoUp)
         let dataRSLisstDv = await Services.getNguoiDungService().getSelectVaiTro()
+        let resListAllDonVi = (await Services.getDonViService().getSelectToanBoDonViDuoi())?.data
         if (dataRSLisstDv.data) {
-            setListNguoiDungTT(dataRSLisstDv?.data?.map(obj => {
+            setListVaiTro(dataRSLisstDv?.data?.map(obj => {
                 return { value: obj._id, label: obj.tenVaiTro };
             }))
+            setListDonVi(formatDataDonVi(resListAllDonVi))
         }
         setLoading(false)
 
     }
     const handleOk = () => { }
     const onChange = (arr, value) => {
-        setNguoiDung({ ...nguoiDung, [arr]: value })
+        setCanBo({ ...canBo, [arr]: value })
+    }
+    function formatDataDonVi(list) {
+        let rs = []
+        list?.forEach(element => {
+            rs.push({ ...element, value: element?._id, title: element.tenDonVi, children: formatDataDonVi(element?.children) })
+        });
+        return rs;
     }
     const onSubmit = () => {
         setSending(true);
-        Services?.getNguoiDungService()?.saveNgKhaoSat(
+        Services?.getNguoiDungService()?.saveCanBo(
             {
-                ...nguoiDung,
-                donVi: taiKhoan?.donVi,
-                vaiTroTaiKhoanList: nguoiDung.taiKhoan?.vaiTroTaiKhoanList
+                ...canBo,
+                vaiTroTaiKhoanList: canBo?.vaiTroTaiKhoanList?.map(obj => { return { vaiTro: { _id: obj } } })
             })?.then(
                 (res) => {
                     if (res?.data?.error) {
@@ -55,12 +64,12 @@ const NguoiDungModal = ({ open, setOpen, nguoiDungUp, reLoadList }) => {
                         message.success("Lưu thành công")
                         reLoadList()
                     }
-                    setSending(false)
+
                 }
-            )
+            ).catch((e) => setSending(false))
     }
     return (
-        <Modal title="NGƯỜI KHẢO SÁT" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText=""
+        <Modal title="CÁN BỘ PHỤ TRÁCH" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText="" maskClosable={false}
 
             footer={[
                 <span className='me-1 red'>{error}</span>,
@@ -69,7 +78,7 @@ const NguoiDungModal = ({ open, setOpen, nguoiDungUp, reLoadList }) => {
                     <span style={{ display: sending ? 'inherit' : 'none' }}>
                         <CircularProgress className="span-sender" />
                     </span>
-                    {!nguoiDungUp?._id ? "Tạo mới" : "Cập nhật"}
+                    {!canBoUp?._id ? "Tạo mới" : "Cập nhật"}
                 </Button>,
                 <Button key="back" onClick={() => setOpen(!open)}>
                     Hủy
@@ -82,27 +91,41 @@ const NguoiDungModal = ({ open, setOpen, nguoiDungUp, reLoadList }) => {
                     {/* <div className='pb-3'>
                         <p className='bold'> Đơn vị trực thuộc: </p>
                         <Select
-                            defaultValue={nguoiDung?.nguoiDungTrucThuoc?._id}
+                            defaultValue={canBo?.canBoTrucThuoc?._id}
                             style={{ width: '100%' }}
-                            onChange={(value) => onChange("nguoiDungTrucThuoc", { _id: value })}
-                            options={listNguoiDungTT}
+                            onChange={(value) => onChange("canBoTrucThuoc", { _id: value })}
+                            options={listCanBoTT}
                         />
                     </div> */}
                     <div className='pb-3'>
-                        <p><span className='bold'>Thuộc đơn vị:</span> {taiKhoan?.donVi?.tenDonVi}</p>
+                        <p className='bold'><span className='red'>*</span> Thuộc đơn vị:</p>
+                        <TreeSelect
+                            style={{
+                                width: '100%',
+                            }}
+                            value={canBo?.donVi?._id}
+                            dropdownStyle={{
+                                maxHeight: 400,
+                                overflow: 'auto',
+                            }}
+                            treeData={listDonVi}
+                            placeholder="Chọn đơn vị"
+
+                            onChange={(newValue) => onChange("donVi", { _id: newValue })}
+                        />
                     </div>
                     <div className='pb-3'>
                         <p className='bold'><span className='red'>*</span> Họ và tên:</p>
-                        <Input defaultValue={nguoiDung?.hoTen} onChange={(e) => onChange("hoTen", e?.target?.value)} placeholder="Họ tên" />
+                        <Input defaultValue={canBo?.hoTen} onChange={(e) => onChange("hoTen", e?.target?.value)} placeholder="Họ tên" />
                     </div>
 
                     <div className='pb-3'>
-                        <p className='bold'><span className='red'>*</span> Số điện thoại: </p>
-                        <Input defaultValue={nguoiDung?.soDienThoai} onChange={(e) => onChange("soDienThoai", e?.target?.value)} placeholder="Nhập số điện thoại" />
+                        <p className='bold'><span className='red'>*</span> Số điện thoại:</p>
+                        <Input defaultValue={canBo?.soDienThoai} onChange={(e) => onChange("soDienThoai", e?.target?.value)} placeholder="Nhập số điện thoại" />
                     </div>
                     <div className='pb-3'>
                         <p className='bold'>Giới tính: </p>
-                        <Radio.Group onChange={(e) => onChange("gioiTinh", e?.target?.value)} defaultValue={nguoiDung?.gioiTinh ? 1 : 0}>
+                        <Radio.Group onChange={(e) => onChange("gioiTinh", e?.target?.value)} defaultValue={canBo?.gioiTinh ? 1 : 0}>
                             <Radio value={1}>Nam</Radio>
                             <Radio value={0}>Nữ</Radio>
 
@@ -110,7 +133,7 @@ const NguoiDungModal = ({ open, setOpen, nguoiDungUp, reLoadList }) => {
                     </div>
                     <div className='pb-3'>
                         <p className='bold'>Email: </p>
-                        <Input defaultValue={nguoiDung?.email} onChange={(e) => onChange("email", e?.target?.value)} placeholder="Nhập email" />
+                        <Input defaultValue={canBo?.email} onChange={(e) => onChange("email", e?.target?.value)} placeholder="Nhập email" />
                     </div>
                     <div className='pb-3'>
                         <p className='bold'> Ngày sinh: </p>
@@ -119,23 +142,24 @@ const NguoiDungModal = ({ open, setOpen, nguoiDungUp, reLoadList }) => {
                                 onChange={(e) => onChange("ngaySinh", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
                                 format="DD/MM/YYYY"
                                 locale={locale?.DatePicker}
-                                defaultValue={nguoiDung?.ngaySinh ? dayjs(nguoiDung?.ngaySinh) : null}
+                                defaultValue={canBo?.ngaySinh ? dayjs(canBo?.ngaySinh) : null}
 
                                 style={{ width: "100%", marginRight: "10px" }}
                             />
                         </div>
                     </div>
 
-                    {/* <div className='pb-3'>
-                        <p className='bold'> Vai trò: </p>
+                    <div className='pb-3'>
+                        <p className='bold'><span className='red'>*</span> Vai trò:</p>
                         <Select
                             mode="multiple"
-                            defaultValue={nguoiDung?.taiKhoan?.vaiTroTaiKhoanList?.map(obj => obj?.vaiTro?._id)}
+                            defaultValue={canBo?.taiKhoan?.vaiTroTaiKhoanList?.map(obj => obj?.vaiTro?._id)}
                             style={{ width: '100%' }}
-                            onChange={(value) => onChange("listVaiTro", { _id: value })}
-                            options={listNguoiDungTT}
+                            onChange={(value) => onChange("vaiTroTaiKhoanList", value)}
+                            options={listVaiTro}
+                            placeholder="Chọn vai trò cán bộ"
                         />
-                    </div> */}
+                    </div>
 
                 </div >
             }
@@ -144,4 +168,4 @@ const NguoiDungModal = ({ open, setOpen, nguoiDungUp, reLoadList }) => {
     );
 };
 
-export default NguoiDungModal;
+export default CanBoModal;

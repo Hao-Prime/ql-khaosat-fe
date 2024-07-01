@@ -14,10 +14,10 @@ const ShareForm = ({ bieuMau }) => {
     };
     return (
         <div className="">
-            <Tabs value={value} onChange={handleChange} centered>
+            {/* <Tabs value={value} onChange={handleChange} centered>
                 <Tab label="Link khảo sát" />
                 <Tab label="Chia sẻ đơn vị" />
-            </Tabs>
+            </Tabs> */}
             <div className='mt-3'>
 
                 {
@@ -84,7 +84,7 @@ const ShareQuyen = ({ bieuMau }) => {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         setLoading(true)
-        Services.getFormService().getListDonVi().then(
+        Services.getDonViService().getSelectToanBoDonViDuoi().then(
             (res) => {
                 if (res.data) {
                     console.log(res.data?.map(setKeyForObject));

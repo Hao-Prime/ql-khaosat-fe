@@ -9,7 +9,7 @@ import hoa03 from "app/assets/images/banner/hoa-3.jpg";
 import hoa04 from "app/assets/images/banner/hoa-4.jpg";
 import hoa05 from "app/assets/images/banner/hoa-5.jpg";
 import HomeIcon from '@mui/icons-material/Home';
-import { Button, Divider, Modal, Skeleton, Tabs, message } from 'antd';
+import { Breadcrumb, Button, Divider, Modal, Skeleton, Tabs, message } from 'antd';
 import { Input } from 'antd';
 import Footer from 'app/components/home-component/Footer';
 import EditForm from './components/EditForm';
@@ -65,11 +65,25 @@ const FormDetailPage = () => {
     return (
         <div className="">
             <div className='banner-top'>
-                <img src={banner} style={{ width: "100%" }}></img>
+                {/* <img src={banner} style={{ width: "100%" }}></img> */}
             </div>
             {loading ? <Skeleton /> : <>
-                <NavbarMunuForm content={{ ...bieuMau, type: true, title: bieuMau?.tenBieuMau, history: "ĐƯỢC LƯU LÚC " + dayjs(bieuMau?.ngayLuuGanNhat)?.format('HH:mm dddd, D [THÁNG] M, YYYY') }} />
-                <div className='w-lg-80pt'>
+                {/* <NavbarMunuForm content={{ ...bieuMau, type: true, title: bieuMau?.tenBieuMau, history: "ĐƯỢC LƯU LÚC " + dayjs(bieuMau?.ngayLuuGanNhat)?.format('HH:mm dddd, D [THÁNG] M, YYYY') }} /> */}
+                <div className='pb-2'>
+                    <Breadcrumb
+                        items={[
+                            {
+                                title: <p className='bold f-16 c-575762'>Danh sách biểu mẫu </p>,
+                                href: "/quan-tri/bieu-mau"
+                            },
+                            {
+                                title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> {bieuMau?.tenBieuMau}</p>,
+                                href: "/"
+                            }
+
+                        ]}
+                    /></div>
+                <div className=' sadqwrewqerqw'>
                     <Tabs
                         className='tab-menu'
                         defaultActiveKey="1"
@@ -84,16 +98,16 @@ const FormDetailPage = () => {
                                 label: 'Lịch sử chỉnh sửa',
                                 children: <HistoryForm bieuMau={bieuMau} />
                             },
-                            {
-                                key: '3',
-                                label: 'Thống kê',
-                                children: <DashboardForm bieuMau={bieuMau} />
-                            },
-                            {
-                                key: '4',
-                                label: 'Chia sẻ',
-                                children: <ShareForm bieuMau={bieuMau} />,
-                            },
+                            // {
+                            //     key: '3',
+                            //     label: 'Thống kê',
+                            //     children: <DashboardForm bieuMau={bieuMau} />
+                            // },
+                            // {
+                            //     key: '4',
+                            //     label: 'Chia sẻ quyền',
+                            //     children: <ShareForm bieuMau={bieuMau} />,
+                            // },
                             {
                                 key: '5',
                                 label: 'Cài đặt',
@@ -106,7 +120,7 @@ const FormDetailPage = () => {
                 </div>
             </>}
             <BackToTopButton />
-            <Footer></Footer>
+
         </div >
 
     );

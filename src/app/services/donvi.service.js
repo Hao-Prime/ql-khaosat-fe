@@ -13,7 +13,15 @@ function update(donVi) {
 function deleteByID(donVi) {
   return axios.delete(process.env.REACT_APP_URL_SERVER + "/be-form/don-vi?id=" + donVi);
 };
+function getSelectDonViThuocTrucTiep() {
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/don-vi/select/truc-tiep`);
+};
+function getSelectToanBoDonViDuoi() {
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/don-vi/select/gian-tiep`);
+};
 const donViService = {
+  getSelectDonViThuocTrucTiep,
+  getSelectToanBoDonViDuoi,
   getAll,
   save,
   update,

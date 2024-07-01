@@ -79,7 +79,7 @@ export const content = {
   },
   skills: {
     title: "VNPT Form",
-    subtitle: "hoạt động thế nào",
+    subtitle: "Hoạt động thế nào",
     skills_content: [
       {
         name: "Bước 1",
@@ -137,7 +137,7 @@ export const content = {
   },
   Projects: {
     title: "Các biểu mẫu",
-    subtitle: "Đã được phất triển",
+    subtitle: "Đã được phát triển",
     image: person_project,
     project_content: [
       {

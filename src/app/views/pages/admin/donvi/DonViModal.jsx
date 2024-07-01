@@ -2,7 +2,7 @@
 import { CircularProgress } from '@mui/material';
 import FormatDate from 'app/common/FormatDate';
 import React, { useEffect, useState } from 'react'
-import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Select, message } from 'antd';
+import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Select, message, TreeSelect } from 'antd';
 import Services from 'app/services';
 import Loading from 'app/components/Loading';
 const { TextArea } = Input;
@@ -21,13 +21,20 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
         setLoading(true)
         setSending(false)
         setDonVi(donViUp)
+        console.log(donViUp);
         let dataRSLisstDv = await Services.getDonViService().getAll("")
         if (dataRSLisstDv.data) {
             setListDonViTT(dataRSLisstDv?.data?.map(obj => {
-                return { value: obj._id, label: obj.tenDonVi };
+                return { value: obj._id, label: obj.tenDonVi, children: formatSelect(obj.children) };
             }))
         }
         setLoading(false)
+
+    }
+    function formatSelect(children) {
+        return (children?.map(obj => {
+            return { value: obj._id, label: obj.tenDonVi, children: formatSelect(obj.children) };
+        }))
 
     }
     const handleOk = () => { }
@@ -88,11 +95,14 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
                 <div className="div-setting-cus">
                     <div className='pb-3'>
                         <p className='bold'> Đơn vị trực thuộc: </p>
-                        <Select
+                        <TreeSelect
+                            showSearch
+                            treeDefaultExpandAll
+                            allowClear
                             defaultValue={donVi?.donViTrucThuoc?._id}
                             style={{ width: '100%' }}
                             onChange={(value) => onChange("donViTrucThuoc", { _id: value })}
-                            options={listDonViTT}
+                            treeData={listDonViTT}
                         />
                     </div>
                     <div className='pb-3'>

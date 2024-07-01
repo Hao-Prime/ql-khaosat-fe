@@ -1,5 +1,5 @@
 
-import { Button, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
+import { Breadcrumb, Button, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState } from 'react'
 import DonViModal from './DonViModal';
@@ -8,6 +8,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
 import { debounce } from "lodash";
 import SapXep from 'app/common/SapXep';
+import HomeIcon from '@mui/icons-material/Home';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 const { Search } = Input;
 const items = [
     {
@@ -51,10 +54,22 @@ const DonViPage = () => {
 
         let dataRSLisstDv = await Services.getDonViService().getAll("")
         if (dataRSLisstDv.data) {
-            setListDonViMD(dataRSLisstDv?.data)
+            setListDonViMD(formatData(dataRSLisstDv?.data))
             setPage(1)
         }
         setLoading(false)
+    }
+    function formatData(list) {
+        let rs = []
+        list?.forEach(element => {
+
+            if (element?.children?.length == 0) {
+                rs.push({ ...element, children: null })
+            } else {
+                rs.push({ ...element, children: formatData(element?.children) })
+            }
+        });
+        return rs
     }
     const onShowSizeChange = (current, pageSize) => {
         setPage(current)
@@ -65,7 +80,7 @@ const DonViPage = () => {
         switch (key?.key) {
             case "1":
                 setOpenDonViModal(true)
-                setDonViUp(data)
+                setDonViUp({ ...data, donViTrucThuoc: data?.donViTrucThuoc ? { _id: data?.donViTrucThuoc } : null })
                 break;
             case "2":
                 const confirmed = await modal.confirm({
@@ -107,92 +122,97 @@ const DonViPage = () => {
     );
 
     return (
-        <div className="page-new">
-            <DonViModal open={openDonViModal} setOpen={setOpenDonViModal} donViUp={donViUp} reLoadList={reLoadList} />
-            <div className='flex  ieoqwpesad'>
-                <div>
-                    <Button onClick={() => { setOpenDonViModal(true); setDonViUp() }} type="primary" className='btn-add btn-gra-blue bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+        <>
+            <div className='pb-2'>
+                <Breadcrumb
+                    items={[
+                        {
+                            title: <p className='bold f-16 c-575762'>Trang chủ </p>,
+                        },
+                        {
+                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> Đơn vị quản lý</p>,
+                            href: "/"
+                        }
+
+                    ]}
+                /></div>
+
+            <div className="page-new">
+                <DonViModal open={openDonViModal} setOpen={setOpenDonViModal} donViUp={donViUp} reLoadList={reLoadList} />
+                <div className='flex  ieoqwpesad'>
+                    <div>
+                        <Button onClick={() => { setOpenDonViModal(true); setDonViUp() }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                    </div>
+                    <div>
+                        <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
+                    </div>
                 </div>
-                <div>
-                    <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
-                </div>
-            </div>
-            {contextHolder}
-            <Table
-                rowKey="id"
-                loading={loading}
-                columns={[
-                    {
-                        title: "STT",
-                        width: 40,
-                        align: "center",
-                        render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
-                    },
-                    {
-                        title: "Đơn vị trực thuộc",
-                        render: (data) => (<p>{data?.donViTrucThuoc?.tenDonVi}</p>),
-                        width: 180,
-                    },
-                    {
-                        title: "Tên đơn vị",
-                        dataIndex: "tenDonVi",
-                        key: "tenDonVi",
-                        width: 200,
-                    },
-                    {
-                        title: "Mô tả",
-                        dataIndex: "moTa",
-                        key: "moTa",
-                        width: 250,
-                    },
+                {contextHolder}
+                <Table
+                    rowKey="_id"
+                    loading={loading}
+                    columns={[
+                        {
+                            title: "Tên đơn vị",
+                            dataIndex: "tenDonVi",
+                            key: "tenDonVi",
+                            width: 200,
+                        },
+                        {
+                            title: "Mô tả",
+                            dataIndex: "moTa",
+                            key: "moTa",
+                            width: 390,
+                        },
+                        {
+                            title: " ",
+                            render: (data, record) => (
+                                <div className='flex'>
+                                    {/* <Dropdown
+                                        menu={{
+                                            items,
+                                            onClick: (e) => onClick(e, data)
+                                        }}
+                                    // onClick={(e) => }
+                                    >
+                                        <a onClick={(e) => e.preventDefault()}>
+                                            <Space>
+                                                <MoreVertIcon className='f-13' />
+                                            </Space>
+                                        </a>
+                                    </Dropdown> */}
+                                    <Button onClick={() => { onClick({ key: "1" }, record) }} className='p-1'><EditIcon className='icon-btn blue f-16' /></Button>
+                                    <Button onClick={() => { onClick({ key: "2" }, data) }} className='ms-1 p-1'><DeleteIcon className='icon-btn red f-16' /></Button>
 
+                                </div>
+                            ),
+                            fixed: windowScreen ? 'right' : false,
+                            width: "50px"
+                        }
 
-                    {
-                        title: " ",
-                        render: (data) => (
-                            <div >
-                                <Dropdown
-                                    menu={{
-                                        items,
-                                        onClick: (e) => onClick(e, data)
-                                    }}
-                                // onClick={(e) => }
-                                >
-                                    <a onClick={(e) => e.preventDefault()}>
-                                        <Space>
-                                            <MoreVertIcon className='f-13' />
-                                        </Space>
-                                    </a>
-                                </Dropdown>
-                            </div>
-                        ),
-                        fixed: windowScreen ? 'right' : false,
-                        width: "50px"
-                    }
+                    ]}
+                    scroll={{ x: '100%', y: 415 }}
+                    locale={{ emptyText: 'Không có dữ liệu' }}
+                    style={{ minHeight: 415 }}
+                    dataSource={listDonVi}
+                    pagination={false}
+                    size='small'
+                    className='pointer mt-1 table-cus-antd'
 
-                ]}
-                scroll={{ x: '100%', y: 415 }}
-                locale={{ emptyText: 'Không có dữ liệu' }}
-                style={{ minHeight: 415 }}
-                dataSource={listDonVi}
-                pagination={false}
-                size='small'
-                className='pointer mt-1 table-cus-antd'
-
-            />
-
-            <div className='div-flex justify-between'>
-                <div></div>
-                <Pagination
-                    showSizeChanger
-                    onShowSizeChange={onShowSizeChange}
-
-                    total={listDonVi?.length}
-                    defaultPageSize={30}
                 />
-            </div>
-        </div >
 
+                <div className='div-flex justify-between'>
+                    <div></div>
+                    <Pagination
+                        showSizeChanger
+                        onShowSizeChange={onShowSizeChange}
+
+                        total={listDonVi?.length || 0}
+                        defaultPageSize={30}
+                    />
+                </div>
+            </div >
+        </>
     );
 };
 

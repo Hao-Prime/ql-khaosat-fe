@@ -11,16 +11,18 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import iconfile from 'app/assets/images/icons8-file-200.png'
-import iconvnpt from 'app/assets/images/vnptlogo.png'
+import iconvnpt from 'app/assets/images/H-TH-NG-QU-N-L-6-20-2024 (1).png'
 import PreviewIcon from '@mui/icons-material/Preview';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Services from 'app/services';
 import { useSelector } from 'react-redux';
 import ChangePassModal from '../../profile/ChangePassModal';
+import WebAssetIcon from '@mui/icons-material/WebAsset';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 const NavbarMunuForm = ({ content, type, children }) => {
     const settings = ['Thông tin cá nhân', 'Biểu mẫu của tôi', 'Đăng xuất'];
     const taiKhoan = useSelector(state => state.taiKhoan)
@@ -44,18 +46,20 @@ const NavbarMunuForm = ({ content, type, children }) => {
     };
 
     return (
-        <AppBar position="static" className='bg-white' style={{ boxShadow: "rgba(0, 86, 202, 0.28) 0px 0px 20px 0px" }}>
+        <AppBar position="static" className='xrqwdasd qqweqweeqr' >
             <ChangePassModal open={openChangePassModal} setOpen={setOpenChangePassModal} />
-            <Container maxWidth="xl" className='bg-white'>
-                <Toolbar disableGutters>
+            <Container maxWidth="xl" className='xrqwdasd'>
+                <Toolbar disableGutters className='xrqwdasdx'>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {content?.type ?
                             <>
                                 {/* <a href='/'><HomeIcon className='icon-homex' /></a> */}
-                                <a href={taiKhoan?._id ? '/danh-sach-bieu-mau' : "/"}><ArrowBackIosNewIcon className='icon-homex' /></a>
+                                <a href={taiKhoan?._id ? '/quan-tri/bieu-mau' : "/"}><ArrowBackIosNewIcon className='icon-homex' /></a>
 
                                 <div className='div-nav-flex'>
-                                    <img className='img-nav' src={iconfile}></img>
+                                    {/* <img className='img-nav' src={iconfile}></img> */}
+                                    <WebAssetIcon className='me-2 c-blue2' />
+                                    <StarBorderIcon className='me-2 c-blue2' />
                                     <div>
                                         <p className='text-tieude-nav'>{content?.title}</p>
                                         <p className='text-his-nav'>{content?.history}</p>
@@ -63,7 +67,11 @@ const NavbarMunuForm = ({ content, type, children }) => {
                                 </div>
                             </> :
                             <>
-                                <a href='/'><img className='img-nav' src={iconvnpt}></img></a>
+                                <a href='/' className='qxxeyqwopioprq'>
+                                    {/* <img className='img-nav' src={iconvnpt}></img> */}
+                                    <WebAssetIcon className='me-2 c-blue2' />
+                                    <StarBorderIcon className='me-2 c-blue2' />
+                                </a>
                                 {children}
                             </>}
 
@@ -115,8 +123,12 @@ const NavbarMunuForm = ({ content, type, children }) => {
                             </Box>
                             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                                 <div className='div-nav-flex-2'>
+                                    <div>
+                                        {/* <img className='img-nav-2' src={iconfile}></img> */}
+                                        <WebAssetIcon className='me-2 c-blue2' />
+                                        <StarBorderIcon className='me-2 c-blue2' />
+                                    </div>
 
-                                    <img className='img-nav-2' src={iconfile}></img>
                                     <div>
                                         <p className='text-tieude-nav-1'>{content?.title}</p>
                                     </div>
@@ -127,7 +139,9 @@ const NavbarMunuForm = ({ content, type, children }) => {
                             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                                 <div className='div-nav-flex-2'>
 
-                                    <a href='/'><img className='img-nav-2' src={iconvnpt}></img></a>
+                                    <WebAssetIcon className='me-2 c-blue2' />
+                                    <StarBorderIcon className='me-2 c-blue2' />
+                                    {/* <a href='/'><img className='img-nav-2' src={iconvnpt}></img></a> */}
                                     {children}
                                 </div>
                             </Box>
@@ -142,6 +156,7 @@ const NavbarMunuForm = ({ content, type, children }) => {
                                 </div> <span className='black mt-1 me-1'>|</span>
                             </Box> : <></>}
                             {type != 1 && <>
+                                <NotificationsNoneIcon className='red me-3' />
                                 <span className='black me-2'>{taiKhoan?.hoTen}</span>
 
                                 <Tooltip title="Mở cài đặt">
@@ -171,7 +186,7 @@ const NavbarMunuForm = ({ content, type, children }) => {
                                         <Typography textAlign="center" onClick={() => { setOpenChangePassModal(true); handleCloseUserMenu() }}>Đổi mật khẩu</Typography>
                                     </MenuItem>
                                     <MenuItem >
-                                        <a href='/danh-sach-bieu-mau'>
+                                        <a href='/quan-tri/bieu-mau'>
                                             <Typography textAlign="center">Biểu mẫu của tôi</Typography>
                                         </a>
                                     </MenuItem>

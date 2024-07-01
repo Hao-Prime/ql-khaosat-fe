@@ -10,14 +10,14 @@ import Loading from 'app/components/Loading';
 
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
-const SettingForm = ({ bieuMau, reloadList }) => {
+const SettingForm = ({ cuocKhaoSat, reloadList }) => {
     const [modal, contextHolder] = Modal.useModal();
     const [value, setValue] = useState(1);
-    const [bieuMauUpdate, setBieuMauUpdate] = useState(bieuMau);
+    const [cuocKhaoSatUpdate, setCuocKhaoSatUpdate] = useState(cuocKhaoSat);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
     const onChange = (arr, value) => {
-        setBieuMauUpdate({ ...bieuMauUpdate, [arr]: value })
+        setCuocKhaoSatUpdate({ ...cuocKhaoSatUpdate, [arr]: value })
         // console.log('radio checked', e.target.value);
         // setValue(e.target.value);
     };
@@ -25,20 +25,20 @@ const SettingForm = ({ bieuMau, reloadList }) => {
     const [imageUrl, setImageUrl] = useState();
     const [loading2, setLoading2] = useState(false);
     useEffect(() => {
-        if (bieuMau) {
-            if (bieuMau?.anhBia) {
-                setImageUrl(`${process.env.REACT_APP_URL_SERVER}/be-form/public/show-file?stringID=${bieuMau?.anhBia?._id}`)
+        if (cuocKhaoSat) {
+            if (cuocKhaoSat?.anhBia) {
+                setImageUrl(`${process.env.REACT_APP_URL_SERVER}/be-form/public/show-file?stringID=${cuocKhaoSat?.anhBia?._id}`)
             }
 
             setAnhBia()
             setLoading2(false)
-            setBieuMauUpdate(bieuMau)
+            setCuocKhaoSatUpdate(cuocKhaoSat)
         }
-    }, [bieuMau]);
+    }, [cuocKhaoSat]);
 
-    const handleVoHieuHoaBieuMau = () => {
+    const handleVoHieuHoaCuocKhaoSat = () => {
         setSending(true);
-        Services.getFormService().capNhatThongTinBieuMau({ ...bieuMauUpdate, thanhPhan: "", trangThai: bieuMauUpdate?.trangThai == 1 ? 0 : 1 }).then(
+        Services.getCuocKhaoSatService().capNhatThongTinKhaoSat({ ...cuocKhaoSatUpdate, thanhPhan: "", trangThai: cuocKhaoSatUpdate?.trangThai == 1 ? 0 : 1 }).then(
             async (res) => {
                 setSending(false);
                 if (res?.data?.error) {
@@ -62,7 +62,7 @@ const SettingForm = ({ bieuMau, reloadList }) => {
         });
         if (confirmed) {
             setSending(true);
-            Services.getFormService().xoaBieuMau(bieuMauUpdate?._id).then(
+            Services.getFormService().xoaCuocKhaoSat(cuocKhaoSatUpdate?._id).then(
                 (res) => {
                     setSending(false);
                     if (res?.data?.error) {
@@ -89,8 +89,8 @@ const SettingForm = ({ bieuMau, reloadList }) => {
     const handleOk = () => {
         setSending(true);
         setError("")
-        if (checkBieuMau()) {
-            Services.getFormService().capNhatThongTinBieuMau({ ...bieuMauUpdate, thanhPhan: "" }).then(
+        if (checkCuocKhaoSat()) {
+            Services.getCuocKhaoSatService().capNhatThongTinKhaoSat({ ...cuocKhaoSatUpdate, thanhPhan: "" }).then(
                 async (res) => {
                     setSending(false);
                     if (res?.data?.error) {
@@ -116,24 +116,17 @@ const SettingForm = ({ bieuMau, reloadList }) => {
         }
 
     };
-    const checkBieuMau = () => {
-        if (!bieuMauUpdate?.tenBieuMau) {
+    const checkCuocKhaoSat = () => {
+        if (!cuocKhaoSatUpdate?.tieuDe) {
             Modal.error({
                 title: 'Lỗi',
                 content: "Tên biểu mẫu không được để trống",
             });
             setError()
             return false;
-        } else if (!bieuMauUpdate?.loaiBieuMau) {
-            Modal.error({
-                title: 'Lỗi',
-                content: "Cần chọn loại biểu mẫu",
-            })
-            setError()
-            return false;
-        } else if (bieuMauUpdate?.ngayBD && bieuMauUpdate?.ngayKT) {
-            const ngayBD = dayjs(bieuMauUpdate?.ngayBD);
-            const ngayKT = dayjs(bieuMauUpdate?.ngayKT);
+        } else if (cuocKhaoSatUpdate?.ngayBD && cuocKhaoSatUpdate?.ngayKT) {
+            const ngayBD = dayjs(cuocKhaoSatUpdate?.ngayBD);
+            const ngayKT = dayjs(cuocKhaoSatUpdate?.ngayKT);
             // Kiểm tra nếu ngày bắt đầu trước ngày kết thúc
             if (!ngayBD.isBefore(ngayKT)) {
                 Modal.error({
@@ -147,14 +140,14 @@ const SettingForm = ({ bieuMau, reloadList }) => {
         }
         return true;
     }
-    function checkTrangThaiBieuMau(bieuMau) {
-        if (bieuMau?.ngayBD) {
-            if (dayjs(bieuMau?.ngayBD).isAfter(dayjs())) {
+    function checkTrangThaiCuocKhaoSat(cuocKhaoSat) {
+        if (cuocKhaoSat?.ngayBD) {
+            if (dayjs(cuocKhaoSat?.ngayBD).isAfter(dayjs())) {
                 return <span className="status-cyan ">Sắp diễn ra</span>// Sắp diễn ra
             }
         }
-        if (bieuMau?.ngayKT) {
-            if (dayjs(bieuMau?.ngayKT).isBefore(dayjs())) {
+        if (cuocKhaoSat?.ngayKT) {
+            if (dayjs(cuocKhaoSat?.ngayKT).isBefore(dayjs())) {
                 return <span className="status-cuccess ">Đã kết thúc</span>// Đã kết thúc
             }
         }
@@ -211,19 +204,19 @@ const SettingForm = ({ bieuMau, reloadList }) => {
 
         <div className="div-setting-cus">
             {contextHolder}
-            {!bieuMauUpdate ? <Loading></Loading> :
+            {!cuocKhaoSatUpdate ? <Loading></Loading> :
                 <>
                     <div className='flex justify-between pb-3'>
-                        {bieuMauUpdate?.trangThai == 1 ? <>
+                        {cuocKhaoSatUpdate?.trangThai == 1 ? <>
 
-                            <p className='bold'> Trạng thái: {checkTrangThaiBieuMau(bieuMau)} </p>
-                            <Button type="primary" danger className='bg-red flex align-center justify-center' onClick={handleVoHieuHoaBieuMau} disabled={sending}>
+                            <p className='bold'> Trạng thái: {checkTrangThaiCuocKhaoSat(cuocKhaoSat)} </p>
+                            <Button type="primary" danger className='bg-red flex align-center justify-center' onClick={handleVoHieuHoaCuocKhaoSat} disabled={sending}>
                                 <span style={{ display: sending ? 'inherit' : 'none' }}>
                                     <CircularProgress className="span-sender" />
                                 </span>Vô hiệu hóa</Button>
                         </> : <>
                             <p className='bold'> Trạng thái: <soan className="red">Đã vô hiệu</soan></p>
-                            <Button type="primary" success className='bg-green flex align-center justify-center' onClick={handleVoHieuHoaBieuMau} disabled={sending}>
+                            <Button type="primary" success className='bg-green flex align-center justify-center' onClick={handleVoHieuHoaCuocKhaoSat} disabled={sending}>
                                 <span style={{ display: sending ? 'inherit' : 'none' }}>
                                     <CircularProgress className="span-sender" />
                                 </span>Mở khảo sát</Button>
@@ -234,7 +227,7 @@ const SettingForm = ({ bieuMau, reloadList }) => {
                     </div>
                     {/* <div className='pb-3'>
                         <p className='bold'> Loại biểu mẫu: </p>
-                        <Radio.Group onChange={onChange} defaultValue={bieuMauUpdate?.loaiBieuMau}>
+                        <Radio.Group onChange={onChange} defaultValue={cuocKhaoSatUpdate?.loaiCuocKhaoSat}>
                             <Radio value={1}>Cá nhân</Radio>
                             <Radio value={2}>Tổ chức</Radio>
 
@@ -242,60 +235,33 @@ const SettingForm = ({ bieuMau, reloadList }) => {
 
                     </div> */}
                     <div className='pb-3'>
-                        <p className='bold'> Tên biểu mẫu: </p>
-                        <Input placeholder="Basic usage" onChange={(e) => onChange("tenBieuMau", e?.target?.value)} defaultValue={bieuMauUpdate?.tenBieuMau} />
+                        <p className='bold'><span className='red'>*</span> Tiêu đề: </p>
+                        <Input placeholder="Basic usage" onChange={(e) => onChange("tieuDe", e?.target?.value)} defaultValue={cuocKhaoSatUpdate?.tieuDe} />
 
                     </div>
                     <div className='pb-3'>
                         <p className='bold'> Mô tả: </p>
-                        <TextArea autoSize={{ minRows: 3 }} onChange={(e) => onChange("moTa", e?.target?.value)} defaultValue={bieuMauUpdate?.moTa} placeholder="Nhập tên biểu mẫu" />
+                        <TextArea autoSize={{ minRows: 3 }} onChange={(e) => onChange("moTa", e?.target?.value)} defaultValue={cuocKhaoSatUpdate?.moTa} placeholder="Nhập tên biểu mẫu" />
                     </div>
-
                     <div className='pb-3'>
-                        <p className='bold'> Ảnh bìa: </p>
-
-                        <Upload
-                            name="avatar"
-                            listType="picture-card"
-                            className="avatar-uploader"
-                            showUploadList={false}
-                            // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            beforeUpload={beforeUpload}
-                            onChange={handleChange}
-                            multiple={false}
-                            accept='.jpg, .jpeg, .png'
-                            customRequest={customRequest}
-
-                        >
-                            {imageUrl ? (
-                                <img
-                                    src={imageUrl}
-                                    alt="avatar"
-                                    style={{
-                                        width: '100%',
-                                    }}
-                                />
-                            ) : (
-                                uploadButton
-                            )}
-                        </Upload>
-
+                        <p className='bold'> Tổng chỉ tiêu khảo sát cần đạt: </p>
+                        <Input type="number" defaultValue={cuocKhaoSatUpdate?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ khảo sát cần đạt" />
                     </div>
-                    {/* <div className='pb-3'>
+                    <div className='pb-3'>
                         <p className='bold'> Giới hạn thời gian trả lời biểu mẫu: </p>
                         <div className='flex justify-between'>
                             <DatePicker
                                 onChange={(e) => onChange("ngayBD", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
                                 format="DD/MM/YYYY HH:mm"
                                 locale={locale?.DatePicker}
-                                defaultValue={bieuMauUpdate?.ngayBD ? dayjs(bieuMauUpdate?.ngayBD) : null}
+                                defaultValue={cuocKhaoSatUpdate?.ngayBD ? dayjs(cuocKhaoSatUpdate?.ngayBD) : null}
                                 showTime
                                 style={{ width: "100%", marginRight: "10px" }}
                             />
 
                             <DatePicker
                                 onChange={(e) => onChange("ngayKT", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
-                                defaultValue={bieuMauUpdate?.ngayKT ? dayjs(bieuMauUpdate?.ngayKT) : null}
+                                defaultValue={cuocKhaoSatUpdate?.ngayKT ? dayjs(cuocKhaoSatUpdate?.ngayKT) : null}
                                 format="DD/MM/YYYY HH:mm"
                                 showTime style={{ width: "100%" }}
                             />
@@ -304,7 +270,7 @@ const SettingForm = ({ bieuMau, reloadList }) => {
 
 
                     </div>
-                    */}
+
                     <div className='pb-3 flex justify-center' >
                         <Button key="submit" type="primary" className='mt-2 bg-info flex align-center justify-center' onClick={handleOk} disabled={sending}>
                             <span style={{ display: sending ? 'inherit' : 'none' }}>

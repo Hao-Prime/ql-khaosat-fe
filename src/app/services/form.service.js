@@ -1,22 +1,10 @@
 import axios from "axios";
 
 function getMyListForm(filter) {
-  console.log(filter);
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/my?isShare=${filter?.isShare || 0}&search=${filter?.search || ""}`);
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form?isShare=${filter?.isShare || 0}&search=${filter?.search || ""}`);
 };
-
 function getFormDetail(id) {
   return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/detail?idBieuMau=${id}`);
-};
-
-function getFormDetailSubmit(id) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/detail-submit?idBieuMau=${id}`);
-};
-function getAllResult(idbieumau, page, size) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/result?idBieuMau=${idbieumau}&page=${page}&size=${size}`);
-};
-function getListDonVi() {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/donvi`);
 };
 function taoMoiBieuMau(bieuMau) {
   return axios.post(process.env.REACT_APP_URL_SERVER + `/be-form/form/create`, bieuMau);
@@ -36,22 +24,9 @@ function capNhatThongTinBieuMau(bieuMau) {
 function xoaBieuMau(id) {
   return axios.delete(process.env.REACT_APP_URL_SERVER + `/be-form/form/delete?idBieuMau=${id}`);
 };
-function guiKetQua(rs) {
-  return axios.post(process.env.REACT_APP_URL_SERVER + `/be-form/form/send-result`, rs);
-};
 
-function thongKeKetQua(id) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/thongke-selectbox?idBieuMau=${id}`);
-};
-function thongKeSoLuongKhaoSatBieuMauTheoThoiGian(id, ngayBD, ngayKT) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/thongke-truycap?idBieuMau=${id}&ngayBD=${ngayBD}&ngayKT=${ngayKT}`);
-};
-function getListNguoiDungTheoDonVICuaToi(search, page, size) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/nguoidung?search=${search}&page=${page}&size=${size}`);
-};
+
 const formService = {
-  getListNguoiDungTheoDonVICuaToi,
-  getAllResult,
   getMyListForm,
   getFormDetail,
   capNhatThongTinBieuMau,
@@ -59,11 +34,6 @@ const formService = {
   capNhatBieuMau,
   luuAnhBia,
   taoMoiBieuMau,
-  xoaBieuMau,
-  guiKetQua,
-  getListDonVi,
-  thongKeKetQua,
-  thongKeSoLuongKhaoSatBieuMauTheoThoiGian,
-  getFormDetailSubmit
+  xoaBieuMau
 };
 export default formService;

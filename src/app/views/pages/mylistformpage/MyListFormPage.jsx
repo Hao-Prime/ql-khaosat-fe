@@ -8,7 +8,7 @@ import hoa02 from "app/assets/images/banner/hoa-2.jpg";
 import hoa03 from "app/assets/images/banner/hoa-3.jpg";
 import hoa04 from "app/assets/images/banner/hoa-4.jpg";
 import hoa05 from "app/assets/images/banner/hoa-5.jpg";
-import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Tooltip } from 'antd';
+import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Tooltip, Breadcrumb } from 'antd';
 import { Upload } from 'antd';
 import AddIcon from '@mui/icons-material/Add';
 import Contact from 'app/components/home-component/Contact';
@@ -24,11 +24,13 @@ import StarPurple500Icon from '@mui/icons-material/Star';
 import BackToTopButton from 'app/components/BackToTopButton';
 import { useSelector } from 'react-redux';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-
+import HomeIcon from '@mui/icons-material/Home';
+import { useNavigate } from 'react-router-dom';
 const { Search } = Input;
 const { TextArea } = Input;
 
 const MyListFormPage = () => {
+    const navigate = useNavigate();
     const [listForm, setListForm] = useState(
         [
 
@@ -116,19 +118,7 @@ const MyListFormPage = () => {
     function convertIdToNumber(id) {
         return Math.abs(id?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 5 + 1;
     }
-    function checkTrangThaiBieuMau(bieuMau) {
-        if (bieuMau?.ngayBD) {
-            if (dayjs(bieuMau?.ngayBD).isAfter(dayjs())) {
-                return <p className="status-cyan ">Sắp diễn ra</p>// Sắp diễn ra
-            }
-        }
-        if (bieuMau?.ngayKT) {
-            if (dayjs(bieuMau?.ngayKT).isBefore(dayjs())) {
-                return <p className="status-cuccess ">Đã kết thúc</p>// Đã kết thúc
-            }
-        }
-        return <p className="status-cyan ">Đang diễn ra</p>;//Đâng diễn ra
-    }
+
     function taoMoiBieuMauSaoChep(idBieuMauSaoChep) {
         setOpenAddModal(true)
         setBieuMauUp({ loaiBieuMau: 1, idBieuMauSaoChep: idBieuMauSaoChep })
@@ -139,6 +129,13 @@ const MyListFormPage = () => {
 
         <>
             <AddFormModal open={openAddModal} setOpen={setOpenAddModal} bieuMauUp={bieuMauUp} reloadList={reloadList} />
+            <div className='pb-2'>
+                <Breadcrumb
+                    items={[
+                        { title: <p className='bold f-16 c-575762'>Trang chủ </p> },
+                        { title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> Biểu mẫu</p>, href: "/" }
+                    ]}
+                /></div>
             <div className='tab-menu-list'>
                 <Stack
                     direction="row"
@@ -149,7 +146,7 @@ const MyListFormPage = () => {
                 >
 
                     <div>
-                        <Button onClick={() => setOpenAddModal(true)} type="primary" className='btn-add btn-gra-blue bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        <Button onClick={() => setOpenAddModal(true)} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
 
 
                     </div>
@@ -167,28 +164,28 @@ const MyListFormPage = () => {
                             <>
                                 {
                                     listForm?.map((form, i) =>
-                                        <Grid key={i} item xs={12} sm={6} md={3} className=" box-list-riqopwr d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2">
+                                        <Grid key={i} item xs={12} sm={6} md={4} lg={3} className=" box-list-riqopwr d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2">
                                             <div className="pos-relative  sadqwqeqweq">
 
 
-                                                <div className="tpn_card" >
-                                                    <div onClick={() => window.location.href = `/chi-tiet-bieu-mau?id=${form?._id}`}>
+                                                <div className="tpn_card" data-aos-delay={i * 200}>
+                                                    <div onClick={() => navigate(`/quan-tri/chi-tiet-bieu-mau?id=${form?._id}`)}>
                                                         <img src={form?.anhBia?._id ? `${process.env.REACT_APP_URL_SERVER}/be-form/public/show-file?stringID=${form?.anhBia?._id}` : listAnhBia[convertIdToNumber(form?._id)]} className="w-100 mb-4 pointer" />
                                                         <p className='gray m-0 f-13'><i>{dayjs(form?.ngayTao).format('DD/MM/YYYY')}</i></p>
                                                         <h5 className='bold pointer tieude-p' title={form?.tenBieuMau}>{form?.tenBieuMau}</h5>
                                                     </div>
                                                     <p className='moTa-p' title={form?.moTa}>{form?.moTa}</p>
-                                                    <div className='flex justify-between  pt-3'>
+                                                    {/* <div className='flex justify-between  pt-3'>
                                                         <p ><strong className='me-2'>Mã: {form?.maBieuMau}</strong></p>
                                                         {form?.trangThai ?
                                                             <>{checkTrangThaiBieuMau(form)} </>
                                                             :
                                                             <p className="status-danger ">Đã vô hiệu hóa</p>
                                                         }
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                                 {form?.donVi != taiKhoan?.donVi?._id &&
-                                                    <Tooltip placement="bottomLeft" title={"Biểu mẫu của đơn vị trực thuộc"}>
+                                                    <Tooltip placement="bottomLeft" title={"Biểu mẫu được chia sẽ"}>
                                                         <div className='type-phutro'>
                                                             <StarPurple500Icon className='yellow f-18' />
                                                         </div>
@@ -413,7 +410,7 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
                         )}
                     </Upload>
                 </div>
-                <div className='pb-3'>
+                {/* <div className='pb-3'>
                     <p className='bold'> Giới hạn thời gian trả lời biểu mẫu: </p>
                     <div className='flex justify-between'>
                         <DatePicker onChange={(e) => onChange("ngayBD", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))} format="DD/MM/YYYY HH:mm" showTime style={{ width: "100%", marginRight: "10px" }} />
@@ -421,7 +418,7 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
                     </div>
 
 
-                </div>
+                </div> */}
                 {/* <div className='pb-3'>
                     <p className='bold'> Thứ tự: </p>
                     <Input onChange={(e) => onChange("thuTu", e?.target?.value)} placeholder="Nhập thứ tự hiển thị" />

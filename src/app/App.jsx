@@ -14,7 +14,7 @@ import ProtectedRoute from './common/ProtectedRoute';
 import AdminPage from './views/pages/admin/AdminPage';
 import { useDispatch } from 'react-redux';
 import allActions from './actions';
-import HomeMenuPage from './views/pages/mylistformpage/HomeMenuPage';
+import HomeMenuPage from './views/pages/homepage/HomeMenuPage';
 
 const App = () => {
     const [user, setUser] = useState();
@@ -22,7 +22,7 @@ const App = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         setLoading(true)
-        Services.getTaiKhoanService().getBanThan().then((res) => {
+        Services.getTaiKhoanService().getMe().then((res) => {
             if (res?.data) {
                 setUser(res?.data);
                 dispatch(allActions.taiKhoanActions.setTaiKhoanNguoiDung(res?.data))
@@ -40,9 +40,9 @@ const App = () => {
                 <Loading />
             </> :
                 <Routes>
-                    <Route path="/admin/*" element={<AdminPage user={user} />} />
-                    <Route path="/chi-tiet-bieu-mau" element={<ProtectedRoute user={user} role="user"> <FormDetailPage /> </ProtectedRoute>} />
-                    <Route path="/danh-sach-bieu-mau" element={<ProtectedRoute user={user} role="user"> <HomeMenuPage /> </ProtectedRoute>} />
+                    <Route path="/quan-tri/*" element={<ProtectedRoute user={user} role="user"><HomeMenuPage user={user} /></ProtectedRoute>} />
+                    {/* <Route path="/chi-tiet-bieu-mau" element={<ProtectedRoute user={user} role="user"> <FormDetailPage /> </ProtectedRoute>} /> */}
+                    {/* <Route path="/quan-tri/bieu-mau" element={<ProtectedRoute user={user} role="user"> <HomeMenuPage /> </ProtectedRoute>} /> */}
                 </Routes>
 
             }

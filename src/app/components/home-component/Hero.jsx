@@ -43,7 +43,7 @@ const Hero = () => {
                     <h2>{hero.title}</h2>
                     <br />
                     <div className="flex justify-end">
-                        <button className="btn btn-create-bieumau" onClick={() => { window.location.href = "/danh-sach-bieu-mau" }}>{hero.btnText}</button>
+                        <button className="btn btn-create-bieumau" onClick={() => { window.location.href = "/quan-tri/khao-sat" }}>{hero.btnText}</button>
                     </div>
                     <div className="flex flex-col gap-10 mt-10">
                         {hero.hero_content.map((content, i) => (

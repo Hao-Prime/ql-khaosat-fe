@@ -115,7 +115,7 @@ const AdminPage = ({ user }) => {
         return openKeyList;
     }
     const handleMenuItemClick = (key) => {
-        console.log(key);
+
         navigate(`${key}`);
     };
     return (
@@ -210,14 +210,14 @@ const AdminPage = ({ user }) => {
 
                 </div>
                 <div className='sidpaa'>
-                    <Routes>
+                    {/* <Routes>
                         <Route path="/dashboard" element={<ProtectedRoute user={user} role="admin"> <DangPhatTrienPage /> </ProtectedRoute>} />
                         <Route path="/logs" element={<ProtectedRoute user={user} role="admin"> <DangPhatTrienPage /> </ProtectedRoute>} />
                         <Route path="/donvi" element={<ProtectedRoute user={user} role="admin"> <DonViPage /> </ProtectedRoute>} />
                         <Route path="/nguoidung" element={<ProtectedRoute user={user} role="admin"> <NguoiDungPage /> </ProtectedRoute>} />
                         <Route path="/cauhinh/form" element={<ProtectedRoute user={user} role="admin"> <DangPhatTrienPage /> </ProtectedRoute>} />
                     </Routes>
-                    <Footer></Footer>
+                    <Footer></Footer> */}
                 </div>
 
             </div>
