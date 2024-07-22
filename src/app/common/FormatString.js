@@ -17,8 +17,6 @@ function removeDTOFromKeys(obj) {
     return obj;
 }
 function getMaKhaoSatTheoDonVi(cuocKhaoSat, idDonVi) {
-    console.log(cuocKhaoSat);
-    console.log(idDonVi);
     let ma = cuocKhaoSat?.maKhaoSat
     cuocKhaoSat?.listDonViPhuTrach?.forEach(element => {
         if (element?.donVi?._id == idDonVi) {
@@ -27,8 +25,19 @@ function getMaKhaoSatTheoDonVi(cuocKhaoSat, idDonVi) {
     });
     return ma
 }
+function getTrangThaiKhaoSatTheoDonVi(cuocKhaoSat, idDonVi) {
+    let ma = ""
+    cuocKhaoSat?.listDonViPhuTrach?.forEach(element => {
+
+        if (element?.donVi?._id == idDonVi && element?.trangThai == 1) {
+            ma = element?.donVi?._id
+        }
+    });
+    return ma
+}
 export default {
     getMaKhaoSatTheoDonVi,
     chiVietHoaChuCaiDau,
-    removeDTOFromKeys
+    removeDTOFromKeys,
+    getTrangThaiKhaoSatTheoDonVi
 }

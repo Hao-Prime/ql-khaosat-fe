@@ -68,7 +68,7 @@ const EditForm = ({ cuocKhaoSat }) => {
     useEffect(() => {
         if (cuocKhaoSat?.thanhPhan) {
 
-            console.log(cuocKhaoSat);
+
         }
     }, [cuocKhaoSat]);
     return (
@@ -82,14 +82,13 @@ const EditForm = ({ cuocKhaoSat }) => {
                 }}
                 saveForm={(data) => setFormData(data)}
                 saveText="Save Form"
-                options={states.getComponentFormIO()}
-
+                options={cuocKhaoSat?.quyenThaoTac ? states.getComponentFormIO() : states.getComponentFormIONull()}
                 onSubmitDone={(data) => console.log(data)}
             />
             <div style={{ display: "none" }}>
                 <div id="formio-result" />
             </div>
-            <div className='flex justify-center' >
+            {cuocKhaoSat?.quyenThaoTac && <div className='flex justify-center' >
                 <Button className='btn-success' type="primary" size="large" disabled={sending} onClick={handleSave}>
                     <span style={{ display: sending ? 'inherit' : 'none' }}>
                         <CircularProgress className="span-sender" />
@@ -99,6 +98,7 @@ const EditForm = ({ cuocKhaoSat }) => {
                 </Button>
 
             </div>
+            }
 
 
 

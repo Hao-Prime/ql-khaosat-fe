@@ -1,6 +1,6 @@
 // import content
-import { createElement, useState } from "react";
-import { content } from "../../views/pages/homepage/Content";
+import { createElement, useContext, useState } from "react";
+import { ContentContext } from "app/context/ContentContext";
 // import modal package
 import Modal from "react-modal";
 
@@ -22,7 +22,7 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 const Skills = () => {
-  const { skills } = content;
+  const { content } = useContext(ContentContext);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [selectSkill, setSelectSkill] = useState(null);
 
@@ -70,14 +70,14 @@ const Skills = () => {
       {/* content */}
       <div className="md:container px-5  py-14">
         <h2 className="title" data-aos="fade-down">
-          {skills.title}
+          {content?.skills?.title}
         </h2>
         <h4 className="subtitle" data-aos="fade-down">
-          {skills.subtitle}
+          {content?.skills?.subtitle}
         </h4>
         <br />
         <div className="flex flex-wrap gap-4 justify-center">
-          {skills.skills_content.map((skill, i) => (
+          {content?.skills?.skills_content.map((skill, i) => (
             <div
               key={i}
               data-aos="fade-up"
@@ -103,7 +103,7 @@ const Skills = () => {
                   }}
                   className="text-xl absolute top-3 right-3"
                 >
-                  {createElement(skills.icon)}
+                  {createElement(content?.skills?.icon)}
                 </div>
               </div>
             </div>

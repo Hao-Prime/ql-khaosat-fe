@@ -13,6 +13,42 @@
     flex-direction: column;
     justify-content: space-between;
 }
+.show-hoverx{
+    display: none;
+}
+.qiweoqpw:hover .show-hoverx{
+    display: block;
+}
+.div-ttb{
+    overflow: hidden;
+    width: 400px;
+    max-width: calc(90vw);
+}
+.pos-delele-tb{
+    position: absolute;
+    width: 30px;
+    top: -5px;
+    right: -10px;
+    display: none;
+}
+.qiweoqpw:hover .pos-delele-tb{
+    display: block;
+}
+.tt-ttb{
+    align-items: center;
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+    padding: 10px 16px;
+    margin-bottom: 1rem
+}
+.qiweoqpw {
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 5px 8px;
+    padding: 10px;
+    width: 100%;
+}
 .page-new{
     padding: 15px 15px 30px 15px;
     background-color: #ffffffcf;
@@ -100,23 +136,33 @@ a {
 }
 .nav-bar-cus{
     width: 256px;
-    /* background: red; */
-    /* background-color: rgb(31, 59, 179); */
-    background-image: linear-gradient(to right, #021ab9df 0%, #24b1eddf 100%), url("/src/app/assets/images/bg-sidebar.jpg");
-    /* background-image: linear-gradient(359deg, rgba(35, 35, 138, 0) 25%, rgba(16, 89, 174, 0) 100%), url("/src/app/assets/images/bg-sidebar.jpg"); */
-}
+    background: white;
+    
+    /* background-image: linear-gradient(to right, #021ab9df 0%, #24b1eddf 100%), url("/src/app/assets/images/bg-sidebar.jpg"); */
+   }
 .ant-menu {
     background-color: rgba(255, 255, 255, 0);
 }
 .ant-menu-inline{
-    background-color: rgb(61 61 61 / 23%) !important;
+    /* background-color: rgb(61 61 61 / 23%) !important; */
+    background-color: #cadbfc45 !important;
     width: 225px;
+}
+.ant-menu-inline .ant-menu-submenu-arrow{
+    color: #494a52;
+}
+.ant-menu-item-selected{
+    background-color: #2e44ff !important ;
+   
+}
+.ant-menu-item-selected *{ 
+    color: white !important;
 }
 .ant-menu-submenu  .ant-menu-vertical{
     background-color: rgb(228, 232, 255) !important;
 }
 .nav-bar-cus *{
-    color: white;
+    color: #494a52;
 }
 .loading-hiden-all .dsaidopa{
     position: fixed;
@@ -226,6 +272,9 @@ a {
     white-space: unset;
     color: black;
     font-size: 13px;
+}
+.table-cus-antd .ant-table-content{
+    overflow: scroll;
 }
 .form-list-user {
     min-height: 100px;
@@ -425,10 +474,10 @@ a {
 
 .sroll-thongbao {
     margin-top: 5px;
-    overflow: auto scroll;
+    overflow: hidden scroll;
     height: calc(100vh - 150px);
-    min-height: calc(100vh - 150px);
-    max-height: calc(100vh - 150px);
+    min-height: calc(100vh - 110px);
+    max-height: calc(100vh - 110px);
     background-color: #f5f5f5;
     padding-top: 5px;
 }
@@ -648,7 +697,7 @@ a {
     /* box-shadow: 0px 1px 13px #d1d1d1; */
     /* border: 1px solid #c5c5c5; */
     padding: 10px;
-    width: 100%;
+    width: calc(100% - 10px);
     background-color: white;
 }
 
@@ -1088,7 +1137,9 @@ a {
     border-radius: 50%;
     margin-bottom: 15px;
 }
-
+.adqwueqoieuq{
+    line-height: 20px;
+}
 .gray01 {
     color: #949494;
 }
@@ -1599,6 +1650,9 @@ a {
 }
 .yellow{
     color: yellow
+}
+.yellow2{
+    color: rgb(207, 118, 3)
 }
 .type-phutro{
     position: absolute;
@@ -2323,7 +2377,11 @@ a {
         width: 100%;
 
     }
-
+    .sroll-thongbao {
+        height: calc(100vh - 160px);
+        max-height: calc(100vh - 160px);
+        min-height: calc(100vh - 160px);
+    }
     .img-modal {
         width: 100%;
         max-width: 100%;
@@ -2410,6 +2468,18 @@ a {
     font-size: 14px;
     font-weight: 500;
     color: #0ce210;
+}
+.ipowqrqrwq{
+    font-size: 20px;
+    color: #c8bf0d;
+}
+.ipowqrqrwq1{
+    font-size: 13px;
+    color: #757575;
+}
+.qtyqyqyqt{
+    font-size: 20px;
+    color: #cb0c0c;
 }
 .eqwqrqrqw{
     font-weight: 700;
@@ -2552,11 +2622,7 @@ th{
         flex-direction: column;
     }
 
-    .sroll-thongbao {
-        height: calc(100vh - 200px);
-        min-height: calc(100vh - 200px);
-        max-height: calc(100vh - 200px);
-    }
+
 
     .btn-dddoc {
         padding: 10px 20px 100px 20px;
@@ -4441,7 +4507,7 @@ menu {
 .social-login__icon:hover {
 	transform: scale(1.5);	
 }
-h1,h2,h3,h4,h5,h6,p,span,div,a ,input, textarea {
+h1,h2,h3,h4,h5,h6,p,span,div,a ,input, textarea,text {
     font-family: 'Roboto' !important;
 }
 .div-Timeline-cus .ant-timeline-item-label{

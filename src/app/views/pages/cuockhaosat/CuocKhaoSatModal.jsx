@@ -39,7 +39,7 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
     }
     const onSubmit = () => {
         setSending(true);
-        console.log(cuocKhaoSat);
+
         Services?.getCuocKhaoSatService()?.taoMoiKhaoSat(cuocKhaoSat)?.then(
             (res) => {
                 if (res?.data?.error) {

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ContentContext } from "app/context/ContentContext";
 import { content } from "../views/pages/homepage/Content";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { createElement } from "react";
 
 const Navbar = () => {
-  const { nav } = content;
+  const { content } = useContext(ContentContext);
   const [showMenu, setShowMenu] = useState(false);
   const [active, setActive] = useState(0);
 
@@ -20,7 +21,7 @@ const Navbar = () => {
         className={`fixed  z-[999] flex items-center gap-5 bg-slate-200/60 px-6 py-3 backdrop-blur-md rounded-full text-dark_primary duration-300 ${showMenu ? "bottom-10" : "bottom-[-100%]"
           }`}
       >
-        {nav.map((item, i) => (
+        {content?.nav?.map((item, i) => (
           <a
             href={item.link}
             key={i}

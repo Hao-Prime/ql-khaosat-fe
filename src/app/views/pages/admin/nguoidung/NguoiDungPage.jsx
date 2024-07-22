@@ -17,13 +17,12 @@ const items = [
         label: "Cập nhật",
     },
 
-
     {
-        key: '3',
+        key: '2',
         label: 'Reset mật khẩu',
     },
     {
-        key: '2',
+        key: '3',
         label: 'Khóa tài khoản',
     },
     {
@@ -67,14 +66,54 @@ const NguoiDungPage = () => {
                 setOpenNguoiDungModal(true)
                 setNguoiDungUp(data)
                 break;
-            case "2":
+            case "2"://reset 
                 const confirmed = await modal.confirm({
                     title: 'Bạn có chắc muốn xóa tài khoản này',
                     content: "",
                 });
-                console.log(confirmed);
                 if (confirmed) {
                     setLoading(true);
+                    Services.getNguoiDungService().resetNgKhaoSat(data)?.then(
+                        (res) => {
+                            setLoading(false);
+                            if (res?.data?.error) {
+                                alert(res?.data?.message)
+                            } else {
+
+                                reLoadList()
+                            }
+                        });
+                }
+
+                break;
+            case "3"://khóa
+                const confirmed2 = await modal.confirm({
+                    title: 'Bạn có chắc thay đổi trạng thái tài khoản này',
+                    content: "",
+                });
+                if (confirmed2) {
+                    setLoading(true);
+                    Services.getNguoiDungService().disableNgKhaoSat(data)?.then(
+                        (res) => {
+                            setLoading(false);
+                            if (res?.data?.error) {
+                                alert(res?.data?.message)
+                            } else {
+                                message.success("Lưu thành công")
+                                reLoadList()
+                            }
+                        });
+                }
+
+                break;
+            case "4"://xóa
+                const confirmed4 = await modal.confirm({
+                    title: 'Bạn có chắc xóa tài khoản này',
+                    content: "",
+                });
+                if (confirmed4) {
+                    setLoading(true);
+                    setLoading(false);
                     Services.getNguoiDungService().deleteByID(data?._id)?.then(
                         (res) => {
                             if (res?.data?.error) {
@@ -155,7 +194,7 @@ const NguoiDungPage = () => {
                         },
                         {
                             title: "Số điện thoại/email",
-                            render: (data) => (<p>{`${data?.soDienThoai}/${data?.email}`}</p>),
+                            render: (data) => (<p>{`${data?.soDienThoai}/${data?.email || "_"}`}</p>),
                             width: 280,
                         },
                         {

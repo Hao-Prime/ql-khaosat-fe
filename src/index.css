@@ -129,8 +129,7 @@ h4 {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   display: -webkit-box;
-  margin-bottom: 10px;
-  margin-top: 5px;
+
   overflow: hidden;
   text-align: justify;
   min-height: 68.2px;

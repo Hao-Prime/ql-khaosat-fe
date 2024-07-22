@@ -367,7 +367,7 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
                     <TextArea onChange={(e) => onChange("moTa", e?.target?.value)} placeholder="Nhập tên biểu mẫu" />
                 </div>
                 <div className='pb-3'>
-                    <p className='bold'> Loại biểu mẫu *: </p>
+                    <p className='bold'> Loại đối tượng khảo sát *: </p>
                     <Radio.Group onChange={(e) => onChange("loaiBieuMau", e?.target?.value)} >
                         <Radio value={1} defaultChecked>Cá nhân</Radio>
                         <Radio value={2}>Tổ chức</Radio>

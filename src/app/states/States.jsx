@@ -55,7 +55,7 @@ var hiddenDefault = [
 ]
 var hiddenDefault_2 = [
 
-    { key: 'api', ignore: true, },
+    { key: 'api', ignore: false, },
     { key: 'conditional', ignore: true, },
     { key: 'logic', ignore: true, },
     { key: 'layout', ignore: true, },
@@ -378,8 +378,262 @@ const getComponentFormIO = () => {
         }
     }
 };
+const getComponentFormIONull = () => {
+
+    return {
+        builder: {
+            basic: false,
+            advanced: false,
+            data: false,
+            customBasic: {
+                ignore: true,
+
+            },
+            layout: {
+                ignore: true,
+
+            },
+            premium: {
+                ignore: true,
+
+            }
+
+        },
+        editForm: {
+            textfield: [
+                ...hiddenDefault,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'unique', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'validate.minLength', ignore: false, },
+                        { key: 'validate.maxLength', ignore: false, },
+                        ...validation
+                    ]
+                },
+
+            ],
+            textarea: [
+                ...hiddenDefault,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'validate.maxLength', ignore: false, },
+                        ...validation
+                    ]
+                },
+            ],
+            email: [
+                ...hiddenDefault,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'unique', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'validate.maxLength', ignore: false, },
+                        ...validation
+                    ]
+                },
+            ],
+            phoneNumber: [
+                ...hiddenDefault,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'unique', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        ...validation
+                    ]
+                },
+            ],
+            number: [
+                ...hiddenDefault,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'validate.minLength', ignore: false, },
+                        { key: 'validate.maxLength', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'validate.pattern', ignore: true, },
+                        { key: 'validateOn', ignore: true, },
+                        { key: 'errorLabel', ignore: true, },
+                        { key: 'validate.customMessage', ignore: true, },
+                        { key: 'custom-validation-js', ignore: true, },
+                        { key: 'json-validation-json', ignore: true, },
+                        { key: 'errors', ignore: true, },
+                    ]
+                },
+            ],
+            checkbox: [
+                ...hiddenDefault,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'inputType', ignore: true, },
+                        ...validation
+                    ]
+                },
+            ],
+            selectboxes: [
+                ...hiddenDefault_2,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'validate.onlyAvailableItems', ignore: true, },
+                        { key: 'validate.minSelectedCount', ignore: true, },
+                        { key: 'validate.maxSelectedCount', ignore: true, },
+                        { key: 'minSelectedCountMessage', ignore: true, },
+                        { key: 'maxSelectedCountMessage', ignore: true, },
+                        ...validation
+                    ]
+                }, {
+                    key: 'data', components: [
+                        { key: 'dataSrc', ignore: true, },
+                        { key: 'data.url', ignore: true, },
+                        { key: 'data.headers', ignore: true, },
+                        { key: 'valueProperty', ignore: true, },
+                        { key: 'template', ignore: true, },
+                        { key: 'authenticate', ignore: true, },
+                        { key: 'persistent', ignore: true, },
+                        { key: 'protected', ignore: true, },
+                        { key: 'dbIndex', ignore: true, },
+                        { key: 'encrypted', ignore: true, },
+                        { key: 'redrawOn', ignore: true, },
+                        { key: 'calculateServer', ignore: true, },
+                        { key: 'allowCalculateOverride', ignore: true, },
+                        { key: 'clearOnHide', ignore: true, },
+                        { key: 'calculateValue', ignore: true, },
+                        { key: 'customDefaultValue', ignore: true, },
+                    ]
+                },
+
+            ],
+            select: [
+                ...hiddenDefault_2,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'validate.onlyAvailableItems', ignore: true, },
+                        { key: 'validate.minSelectedCount', ignore: true, },
+                        { key: 'validate.maxSelectedCount', ignore: true, },
+                        { key: 'minSelectedCountMessage', ignore: true, },
+                        { key: 'maxSelectedCountMessage', ignore: true, },
+                        ...validation
+                    ]
+                }, {
+                    key: 'data', components: [
+                        { key: 'dataSrc', ignore: true, },
+                        { key: 'data.url', ignore: true, },
+                        { key: 'data.headers', ignore: true, },
+                        { key: 'valueProperty', ignore: true, },
+                        { key: 'template', ignore: true, },
+                        { key: 'authenticate', ignore: true, },
+                        { key: 'persistent', ignore: true, },
+                        { key: 'protected', ignore: true, },
+                        { key: 'dbIndex', ignore: true, },
+                        { key: 'encrypted', ignore: true, },
+                        { key: 'redrawOn', ignore: true, },
+                        { key: 'calculateServer', ignore: true, },
+                        { key: 'allowCalculateOverride', ignore: true, },
+                        { key: 'clearOnHide', ignore: true, },
+                        { key: 'calculateValue', ignore: true, },
+                        { key: 'customDefaultValue', ignore: true, },
+                    ]
+                },
+
+            ],
+            radio: [
+                ...hiddenDefault_2,
+                { key: 'display', components: display },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'validate.onlyAvailableItems', ignore: true, },
+                        { key: 'validate.minSelectedCount', ignore: true, },
+                        { key: 'validate.maxSelectedCount', ignore: true, },
+                        { key: 'minSelectedCountMessage', ignore: true, },
+                        { key: 'maxSelectedCountMessage', ignore: true, },
+                        ...validation
+                    ]
+                }, {
+                    key: 'data', components: [
+                        { key: 'dataSrc', ignore: true, },
+                        { key: 'data.url', ignore: true, },
+                        { key: 'data.headers', ignore: true, },
+                        { key: 'valueProperty', ignore: true, },
+                        { key: 'template', ignore: true, },
+                        { key: 'authenticate', ignore: true, },
+                        { key: 'persistent', ignore: true, },
+                        { key: 'protected', ignore: true, },
+                        { key: 'dbIndex', ignore: true, },
+                        { key: 'encrypted', ignore: true, },
+                        { key: 'redrawOn', ignore: true, },
+                        { key: 'calculateServer', ignore: true, },
+                        { key: 'allowCalculateOverride', ignore: true, },
+                        { key: 'clearOnHide', ignore: true, },
+                        { key: 'calculateValue', ignore: true, },
+                        { key: 'customDefaultValue', ignore: true, },
+                    ]
+                },
+
+            ],
+            datetime: [
+                ...hiddenDefault,
+                {
+                    key: 'display', components: [
+                        { key: 'shortcutButtons', ignore: true, },
+                        { key: 'displayInTimezone', ignore: true, },
+                        { key: 'useLocaleSettings', ignore: true, },
+                        { key: 'allowInput', ignore: false, },
+                        ...display,
+                    ]
+                },
+                {
+                    key: 'validation', components: [
+                        { key: 'validate.required', ignore: false, },
+                        { key: 'errorLabel', ignore: false, },
+                        { key: 'validate.pattern', ignore: true, },
+                        { key: 'unique', ignore: true, },
+                        { key: 'validateOn', ignore: true, },
+                        { key: 'errorLabel', ignore: true, },
+                        { key: 'validate.customMessage', ignore: true, },
+                        { key: 'custom-validation-js', ignore: true, },
+                        { key: 'json-validation-json', ignore: true, },
+                        { key: 'enableMinDateInput', ignore: true, },
+                        { key: 'enableMaxDateInput', ignore: true, },
+                        { key: 'errors', ignore: true, }
+                    ]
+                },
+                {
+                    key: 'data', components: [
+                        { key: 'datePicker.disable', ignore: false, },
+                    ]
+                },
+            ],
+            content: [
+                { key: 'editor', value: 'quill', }
+            ]
+            // button: true,
+        }
+    }
+};
 const states = {
     getComponentFormIO,
+    getComponentFormIONull
 
 };
 export default states;

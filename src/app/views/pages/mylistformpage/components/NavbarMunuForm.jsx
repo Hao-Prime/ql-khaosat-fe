@@ -23,12 +23,42 @@ import { useSelector } from 'react-redux';
 import ChangePassModal from '../../profile/ChangePassModal';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { Badge, Modal } from 'antd';
+import { Drawer } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import dayjs from 'dayjs';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { useNavigate } from 'react-router-dom';
 const NavbarMunuForm = ({ content, type, children }) => {
     const settings = ['Thông tin cá nhân', 'Biểu mẫu của tôi', 'Đăng xuất'];
     const taiKhoan = useSelector(state => state.taiKhoan)
     const [openChangePassModal, setOpenChangePassModal] = useState(false);
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
+    const [listTB, setListTB] = useState([]);
+    const [soLuongThongBaoChuaDoc, setsoLuongThongBaoChuaDoc] = useState(0);
+    const [openDrawer, setOpenDrawer] = useState(false);
+    const [modal, contextHolder] = Modal.useModal();
+    const navigate = useNavigate();
+    useEffect(() => {
+        reLoadTB()
+    }, []);
+    function reLoadTB() {
+        Services.getTaiKhoanService().getThongBaoCuaToi(0, 10000).then(
+            (res) => {
+                if (res?.data) {
+                    setListTB(res?.data?.content)
+                    let sl = 0
+                    res?.data?.content.forEach(element => {
+                        if (element?.trangThai == 0) {
+                            sl++
+                        }
+                    });
+                    setsoLuongThongBaoChuaDoc(sl)
+                }
+            }
+        )
+    }
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -44,10 +74,107 @@ const NavbarMunuForm = ({ content, type, children }) => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+    const toggleDrawer = (newOpen) => () => {
+        setOpenDrawer(newOpen);
+    };
+    const danhDauDaDoc = (listTBDD) => {
+        Services.getTaiKhoanService().daDocThongBao(listTBDD).then(
+            (res) => {
+                if (res?.data) {
+                    reLoadTB()
+                }
+            }
+        )
+    }
+    const xoaThongBoa = async (idTB) => {
+        const confirmed = await modal.confirm({
+            title: "Bạn có chắc muốn xóa thông báo",
+            content: "",
 
+        });
+        if (confirmed) {
+
+            if (idTB) {
+                Services.getTaiKhoanService().xoaThongBao(idTB).then(
+                    (res) => {
+                        if (res?.data) {
+                            reLoadTB()
+                        }
+                    }
+                )
+            } else {
+                Services.getTaiKhoanService().xoaTatCaTB().then(
+                    (res) => {
+                        if (res?.data) {
+                            reLoadTB()
+                        }
+                    }
+                )
+            }
+        }
+
+    }
     return (
         <AppBar position="static" className='xrqwdasd qqweqweeqr' >
+            {contextHolder}
             <ChangePassModal open={openChangePassModal} setOpen={setOpenChangePassModal} />
+            <Drawer open={openDrawer} onClose={toggleDrawer(false)} anchor="right">
+                <div className='div-ttb'>
+                    <div className='tt-ttb'>
+                        <div>
+                            <NotificationsNoneIcon className='red me-2' /> Thông báo
+                        </div>
+                        <div>
+                            {listTB?.length > 0 && <p className='red pointer' onClick={() => xoaThongBoa()}>  Xóa tất cả</p>}
+
+                        </div>
+
+                    </div>
+                    <div className='sroll-thongbao'>
+                        {!listTB?.length > 0 && <p className='text-center gray01'>Không có thông báo</p>}
+                        {listTB?.map((tb =>
+                            <div class="qiweoqpw hover false pos-relative" >
+                                <Badge dot={tb?.trangThai == 0 ? true : false} className='w-100pt pe-4'>
+                                    <div className='mb-1' >
+                                        <i class="gray01 f-13">
+
+                                            <span>{dayjs(tb?.ngayTao)?.format('DD/MM/YYYY HH:mm')}</span>
+                                        </i>
+                                    </div>
+                                    <div className='mb-1 pointer' onClick={() => { navigate("/quan-tri/chi-tiet-khao-sat?id=" + tb?.url) }}>
+                                        <b className='adqwueqoieuq'>{tb?.tieuDe}</b>
+                                    </div>
+                                    <div >
+                                        <p className='adqwueqoieuq'>{tb?.noiDung}</p>
+                                    </div>
+                                    {tb?.trangThai == 0 && <div>
+                                        <p class="link pointer f-13 right mt-2 show-hoverx">
+                                            <i onClick={() => danhDauDaDoc([tb])}>
+                                                <CheckIcon className=' me-1' /> Đánh dấu đã đọc
+                                            </i>
+                                        </p>
+                                    </div>}
+                                    <div className='pos-delele-tb'>
+                                        <DeleteOutlineIcon className='red  pointer' onClick={() => {
+                                            xoaThongBoa([tb?._id])
+                                        }} />
+                                    </div>
+                                </Badge>
+
+                            </div>
+                        ))}
+
+
+                    </div>
+                    {soLuongThongBaoChuaDoc > 0 && <div class="MuiBox-root css-1ih1ysu">
+                        <div class="btn-dddoc pointer" onClick={() => danhDauDaDoc(listTB)} >
+                            <CheckIcon className=' me-1' /> Đánh dấu tất cả đã đọc</div>
+                    </div>}
+                </div>
+                {
+
+                }
+            </Drawer>
             <Container maxWidth="xl" className='xrqwdasd'>
                 <Toolbar disableGutters className='xrqwdasdx'>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -156,8 +283,16 @@ const NavbarMunuForm = ({ content, type, children }) => {
                                 </div> <span className='black mt-1 me-1'>|</span>
                             </Box> : <></>}
                             {type != 1 && <>
-                                <NotificationsNoneIcon className='red me-3' />
-                                <span className='black me-2'>{taiKhoan?.hoTen}</span>
+                                {soLuongThongBaoChuaDoc > 0 ?
+                                    <Badge count={soLuongThongBaoChuaDoc}>
+                                        <NotificationsNoneIcon className='red pointer' onClick={toggleDrawer(true)} />
+                                    </Badge>
+                                    :
+                                    <NotificationsNoneIcon className='red pointer' onClick={toggleDrawer(true)} />
+                                }
+
+
+                                <span className='black me-2 ms-3'>{taiKhoan?.hoTen}</span>
 
                                 <Tooltip title="Mở cài đặt">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -206,7 +341,7 @@ const NavbarMunuForm = ({ content, type, children }) => {
                     </Box>
                 </Toolbar>
             </Container>
-        </AppBar>
+        </AppBar >
 
 
     )

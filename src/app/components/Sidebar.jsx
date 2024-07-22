@@ -6,53 +6,56 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import MenuIcon from '@mui/icons-material/Menu';
-import logoVnpt from "app/assets/images/vnptlogo-white.png"
+import logoVnpt from "app/assets/images/vnptlogo.png"
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import { useSelector } from 'react-redux';
+
 const { SubMenu } = MenuNav;
 const Sidebar = ({ user }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const taiKhoan = useSelector(state => state.taiKhoan)
     const [defaultSelectedKeys, setDefaultSelectedKeys] = useState([]);
     const items = [
         {
             key: '/quan-tri/dashboard',
             icon: <DashboardIcon />,
             label: 'Dashboard',
-            roles: ['admin'],
+            roles: ["admin", "dashboard"],
         },
         {
             key: '/quan-tri/bieu-mau',
             icon: <EventAvailableIcon />,
             label: 'Danh sách biểu mẫu',
-            roles: ['admin'],
+            roles: ["admin", "bieumau"],
         },
         {
             key: 'sub11',
             icon: <EditCalendarIcon />,
             label: 'Cuộc khảo sát',
-            roles: ['admin'],
+            roles: ["admin", "khaosat"],
             children: [
                 {
                     key: '/quan-tri/khao-sat?trangThai=0',
                     label: 'Tất cả',
-                    roles: ['admin'],
+                    roles: ["admin", "khaosat"],
                 },
                 {
                     key: '/quan-tri/khao-sat?trangThai=1',
                     label: 'Chưa tiếp nhận',
-                    roles: ['admin'],
+                    roles: ["admin", "khaosat"],
                 },
                 {
                     key: '/quan-tri/khao-sat?trangThai=2',
                     label: 'Đang diễn ra',
-                    roles: ['admin'],
+                    roles: ["admin", "khaosat"],
                 },
                 {
                     key: '/quan-tri/khao-sat?trangThai=3',
                     label: 'Đã kết thúc',
-                    roles: ['admin'],
+                    roles: ["admin", "khaosat"],
                 }
 
             ],
@@ -62,71 +65,71 @@ const Sidebar = ({ user }) => {
             key: 'sub1',
             label: 'Quản trị hệ thống',
             icon: <AccountBalanceWalletIcon />,
-            roles: ['admin'],
+            roles: ["admin", "donvi", "nguoidung"],
             children: [
                 {
                     key: '/quan-tri/donvi',
                     label: 'Đơn vị',
-                    roles: ['admin'],
+                    roles: ["admin", "donvi"],
                 },
                 {
                     key: '/quan-tri/can-bo',
                     label: 'Cán bộ, nhân viên',
-                    roles: ['admin'],
+                    roles: ["admin", "canbo"],
                 },
                 {
                     key: '/quan-tri/nguoi-dung',
                     label: 'Tệp người khảo sát',
-                    roles: ['admin'],
+                    roles: ["admin", 'nguoidung'],
                 }
 
             ],
         },
-        {
-            key: 'sub12',
-            icon: <EditCalendarIcon />,
-            label: 'Thống kê',
-            roles: ['admin'],
-            children: [
-                {
-                    key: '/quan-tri/thong-ke/don-vi',
-                    label: 'Chỉ tiêu theo đơn vị',
-                    roles: ['admin'],
-                },
-                {
-                    key: '/quan-tri/thong-ke/khoa-sat',
-                    label: 'Khảo sát trong tháng',
-                    roles: ['admin'],
-                },
-                {
-                    key: '/quan-tri/thong-ke/ng-dung',
-                    label: 'Người dùng tham gia',
-                    roles: ['admin'],
-                }
+        // {
+        //     key: 'sub12',
+        //     icon: <EditCalendarIcon />,
+        //     label: 'Thống kê',
+        //     roles: ["admin", "thongke.donvi"],
+        //     children: [
+        //         {
+        //             key: '/quan-tri/thong-ke/don-vi',
+        //             label: 'Chỉ tiêu theo đơn vị',
+        //             roles: ["admin", "thongke.donvi"],
+        //         },
+        //         // {
+        //         //     key: '/quan-tri/thong-ke/khoa-sat',
+        //         //     label: 'Khảo sát trong tháng',
+        //         //     roles: ["admin"],
+        //         // },
+        //         // {
+        //         //     key: '/quan-tri/thong-ke/ng-dung',
+        //         //     label: 'Người dùng tham gia',
+        //         //     roles: ["admin"],
+        //         // }
 
-            ],
+        //     ],
 
-        },
+        // },
         {
             key: 'sub2',
             label: 'Quản lý cấu hình',
             icon: <AccountBalanceWalletIcon />,
-            roles: ['admin'],
+            roles: ["admin", "logs", "form", "role"],
             children: [
                 {
                     key: '/quan-tri/cau-hinh/form',
                     label: 'Cấu hình form',
-                    roles: ['admin'],
+                    roles: ["admin", "form"],
                 },
                 {
                     key: '/quan-tri/cau-hinh/logs',
                     label: 'Log hệ thống',
-                    roles: ['admin'],
+                    roles: ["admin", "logs"],
                 },
                 {
                     key: '/quan-tri/cau-hinh/role',
                     label: 'Quyền truy tập',
-                    roles: ['admin'],
+                    roles: ["admin", "role"],
                 }
             ],
         },
@@ -139,6 +142,7 @@ const Sidebar = ({ user }) => {
     useEffect(() => {
         // Lấy đường dẫn của URL hiện tại
         const path = location.pathname;
+        console.log(location.pathname, location.pathname + location?.search);
         setDefaultSelectedKeys([location.pathname, location.pathname + location?.search])
         // Xác định defaultOpenKeys và defaultSelectedKeys dựa trên đường dẫn URL
         let selectKey = []
@@ -179,8 +183,8 @@ const Sidebar = ({ user }) => {
                 return filteredItem;
             });
     };
-    const filteredMenuItems = filterMenuItems(items, ["admin"]);
-
+    const filteredMenuItems = filterMenuItems(items, taiKhoan?.listVaiTro);
+    console.log(filterMenuItems(items, taiKhoan?.listVaiTro));
     const renderMenuItems = items => {
         return items.map(item => {
             if (item.children) {

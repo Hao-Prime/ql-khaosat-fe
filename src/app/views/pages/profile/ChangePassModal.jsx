@@ -65,15 +65,15 @@ const ChangePassModal = ({ open, setOpen }) => {
 
                 <div className='pb-3'>
                     <p className='bold'> Mật khẩu cũ*: </p>
-                    <Input onChange={(e) => onChange("matKhauCu", e?.target?.value)} placeholder="Nhập mật khẩu cũ" />
+                    <Input type='password' onChange={(e) => onChange("matKhauCu", e?.target?.value)} placeholder="Nhập mật khẩu cũ" />
                 </div>
                 <div className='pb-3'>
                     <p className='bold'> Mật khẩu mới *: </p>
-                    <Input onChange={(e) => onChange("matKhauMoi", e?.target?.value)} placeholder="Nhập mật khẩu mới" />
+                    <Input type='password' onChange={(e) => onChange("matKhauMoi", e?.target?.value)} placeholder="Nhập mật khẩu mới" />
                 </div>
                 <div className='pb-3'>
                     <p className='bold'> Nhập lại Mật khẩu mới *: </p>
-                    <Input onChange={(e) => onChange("matKhauMoi2", e?.target?.value)} placeholder="Nhập lại mật khẩu mới" />
+                    <Input type='password' onChange={(e) => onChange("matKhauMoi2", e?.target?.value)} placeholder="Nhập lại mật khẩu mới" />
                 </div>
 
 

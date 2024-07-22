@@ -1,4 +1,5 @@
-import { content } from "../../views/pages/homepage/Content";
+import { useContext, useState } from "react";
+import { ContentContext } from "app/context/ContentContext";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -9,22 +10,22 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper";
 
 const Projects = () => {
-  const { Projects } = content;
+  const { content } = useContext(ContentContext);
   return (
     <section className="bg-bg_light_primary" id="projects">
       <div className="md:container px-5 pt-14 min-h-screen flex flex-col justify-between">
         <div>
           <h2 className="title" data-aos="fade-down">
-            {Projects.title}
+            {content?.Projects?.title}
           </h2>
           <h4 className="subtitle" data-aos="fade-down">
-            {Projects.subtitle}
+            {content?.Projects?.subtitle}
           </h4>
           <br />
         </div>
         <div className="flex items-center lg:flex-row flex-col-reverse gap-5" style={{ background: "white" }}>
           <img
-            src={Projects.image}
+            src={content?.Projects?.image}
             alt="..."
             data-aos="fade-right"
             className="max-w-[45vw] min-w-[22rem]"
@@ -38,7 +39,7 @@ const Projects = () => {
             modules={[Pagination]}
             className="rounded-3xl pb-16 max-w-xs drop-shadow-primary self-start"
           >
-            {Projects.project_content.map((content, i) => (
+            {content?.Projects?.project_content.map((content, i) => (
               <SwiperSlide
                 key={i}
                 className="bg-white rounded-3xl p-5 border-b-8 border-[#FAF9FD] h-fit"

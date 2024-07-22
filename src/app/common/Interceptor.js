@@ -63,7 +63,7 @@ function initInterceptor() {
                     //     progress: undefined,
                     // });
                     Modal.error({
-                        title: error.response?.data?.message ? error.response?.data?.message : error.response?.data ? error.response?.data : 'Đã có lỗi xẩy ra',
+                        title: error.response?.data?.message ? error.response?.data?.message : error.response?.data ? error.response?.data : "Rất tiếc, đã có sự cố nhỏ. Vui lòng thử lại sau.",
                     });
                 }
 

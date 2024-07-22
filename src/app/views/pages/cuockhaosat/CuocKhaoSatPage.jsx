@@ -75,7 +75,7 @@ const CuocKhaoSatPage = () => {
         setLimit(pageSize)
     };
     const onClick = async (key, data) => {
-        console.log(key?.key);
+
         switch (key?.key) {
             case "1":
                 setOpenCuocKhaoSatModal(true)
@@ -132,7 +132,16 @@ const CuocKhaoSatPage = () => {
     }
     function checkTrangThaiBieuMau(bieuMau) {
         if (bieuMau?.trangThai == 0) {
-            return <p className="status-danger ">Đã vô hiệu</p>// Sắp diễn ra
+            return <p className="status-danger ">Đã vô hiệu</p>
+        }
+        let donvTHPT = bieuMau.listDonViPhuTrach?.find(obj => obj?.donVi?._id == taiKhoan?.donVi?._id)
+        if (donvTHPT) {
+            if (bieuMau?.donViPhuTrach?.trangThai == 3) {
+                return <p className="status-cuccess ">Đã kết thúc</p>// Sắp diễn ra
+            }
+        }
+        if (bieuMau?.donViPhuTrach == 3) {
+            return <p className="status-cuccess ">Đã kết thúc</p>// Sắp diễn ra
         }
         if (bieuMau?.ngayBD) {
             if (dayjs(bieuMau?.ngayBD).isAfter(dayjs())) {
@@ -145,6 +154,32 @@ const CuocKhaoSatPage = () => {
             }
         }
         return <p className="status-cyan ">Đang diễn ra</p>;//Đâng diễn ra
+    }
+    async function tiepNhanKhaoSat(idDonVi, idKhaoSat) {
+        const confirmed = await modal.confirm({
+            title: 'Bạn muốn tiếp nhận khảo sát này',
+            content: "",
+        });
+
+        if (confirmed) {
+            setLoading(true)
+            Services.getCuocKhaoSatService().tiepNhanKhaoSat(idDonVi, idKhaoSat).then(
+                () => {
+                    reLoadList()
+                }
+            )
+        }
+    }
+    const TiepNhanComp = ({ record }) => {
+        const idDV = FormatString.getTrangThaiKhaoSatTheoDonVi(record, taiKhoan?.donVi?._id)
+        return (
+            <> {idDV &&
+                <div className='w-100pt'>
+                    <Button type="primary" className='mt-1  m-auto' onClick={(e) => { e.stopPropagation(); tiepNhanKhaoSat(idDV, record?._id) }}>Tiếp nhận</Button>
+                </div>
+            }
+            </>
+        )
     }
     return (
         <>
@@ -179,9 +214,17 @@ const CuocKhaoSatPage = () => {
                         },
                         {
                             title: "Mã",
+                            align: "center",
+                            render: (data, record) => (
+                                <div>
+                                    <p className='bold '>{FormatString.getMaKhaoSatTheoDonVi(record, taiKhoan?.donVi?._id)}
+                                    </p>
+                                    <TiepNhanComp record={record} />
 
-                            render: (data, record) => (<p className='bold '>{FormatString.getMaKhaoSatTheoDonVi(record, taiKhoan?.donVi?._id)}</p>),
-                            width: 70,
+
+                                </div>
+                            ),
+                            width: 120,
                         },
                         {
                             title: "Tiêu đề",
@@ -196,6 +239,16 @@ const CuocKhaoSatPage = () => {
                             render: (data) => (<p className='moTa-p'>{data?.moTa}</p>),
                         },
                         {
+                            title: "Đơn vị tạo",
+                            width: 120,
+                            render: (data) => (<p >{data?.donVi?.tenDonVi}</p>),
+                        },
+                        {
+                            title: "Thời gian",
+                            width: 120,
+                            render: (data) => (<p >{dayjs(data?.ngayBD)?.format('DD/MM/YYYY HH:mm')}<br />{dayjs(data?.ngayKT)?.format('DD/MM/YYYY HH:mm')}</p>),
+                        },
+                        {
                             title: "Tiến độ",
                             render: (data) => (<p>
                                 Số lượng: {(data?.chiTieuDaDat || "0") + "/" + (data?.chiTieu || "0")}<br />
@@ -205,13 +258,13 @@ const CuocKhaoSatPage = () => {
                             align: "center",
                             width: 120,
                         },
-                        {
-                            title: "Trạng thái",
-                            render: (data) => (<p>{checkTrangThaiBieuMau(data)}</p>),
-                            key: "trangThai",
-                            align: "center",
-                            width: 120,
-                        },
+                        // {
+                        //     title: "Trạng thái",
+                        //     render: (data) => (<div>{checkTrangThaiBieuMau(data)}</div>),
+                        //     key: "trangThai",
+                        //     align: "center",
+                        //     width: 120,
+                        // },
 
                         // {
                         //     title: " ",

@@ -9,6 +9,7 @@ import { CircularProgress } from '@mui/material';
 import Loading from 'app/components/Loading';
 
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 const { TextArea } = Input;
 const SettingForm = ({ cuocKhaoSat, reloadList }) => {
     const [modal, contextHolder] = Modal.useModal();
@@ -16,6 +17,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
     const [cuocKhaoSatUpdate, setCuocKhaoSatUpdate] = useState(cuocKhaoSat);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
+    const taiKhoan = useSelector(state => state.taiKhoan)
     const onChange = (arr, value) => {
         setCuocKhaoSatUpdate({ ...cuocKhaoSatUpdate, [arr]: value })
         // console.log('radio checked', e.target.value);
@@ -38,7 +40,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
 
     const handleVoHieuHoaCuocKhaoSat = () => {
         setSending(true);
-        Services.getCuocKhaoSatService().capNhatThongTinKhaoSat({ ...cuocKhaoSatUpdate, thanhPhan: "", trangThai: cuocKhaoSatUpdate?.trangThai == 1 ? 0 : 1 }).then(
+        Services.getCuocKhaoSatService().capNhatThongTinKhaoSat({ ...cuocKhaoSatUpdate, thanhPhan: "", trangThai: cuocKhaoSatUpdate?.trangThai > 0 ? 0 : 2 }).then(
             async (res) => {
                 setSending(false);
                 if (res?.data?.error) {
@@ -55,14 +57,33 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
             }
         )
     }
+    const handleChuaHoanThanhKhaoSat = () => {
+        setSending(false)
+        Services.getCuocKhaoSatService().chuaHoanThanhKhaoSat(cuocKhaoSat?._id, cuocKhaoSat?.donVi).then(
+            (res) => {
+                if (res.data) {
+                    setSending(false)
+                    if (res?.data?.error) {
+                        Modal.error({
+                            title: 'Lỗi',
+                            content: res?.data?.message,
+                        });
+                    } else {
+                        message.success("Lưu thành công")
+                        reloadList()
+                    }
+                }
+            }
+        )
+    }
     const handleDelete = async () => {
         const confirmed = await modal.confirm({
-            title: "Bạn có chắc muốn xóa biểu mẫu này",
+            title: "Bạn có chắc muốn xóa khảo sát này",
             content: "",
         });
         if (confirmed) {
             setSending(true);
-            Services.getFormService().xoaCuocKhaoSat(cuocKhaoSatUpdate?._id).then(
+            Services.getCuocKhaoSatService().xoaKhaoSat(cuocKhaoSatUpdate?._id).then(
                 (res) => {
                     setSending(false);
                     if (res?.data?.error) {
@@ -73,12 +94,12 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
                     } else {
                         Modal.success({
                             title: 'Success',
-                            content: "Biểu mẫu đã được xóa",
+                            content: "Khảo sát đã được xóa",
                             onOk() {
-                                window.location.href = "/quan-tri/bieu-mau";
+                                window.location.href = "/quan-tri/khao-sat?trangThai=0";
                             },
                             onCancel() {
-                                window.location.href = "/quan-tri/bieu-mau";
+                                window.location.href = "/quan-tri/khao-sat?trangThai=0";
                             }
                         });
                     }
@@ -120,7 +141,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
         if (!cuocKhaoSatUpdate?.tieuDe) {
             Modal.error({
                 title: 'Lỗi',
-                content: "Tên biểu mẫu không được để trống",
+                content: "Tên khảo sát không được để trống",
             });
             setError()
             return false;
@@ -141,6 +162,11 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
         return true;
     }
     function checkTrangThaiCuocKhaoSat(cuocKhaoSat) {
+        if (cuocKhaoSat?.trangThai == 0) {
+            return <span className="status-danger ">Đã vô hiệu</span>
+        } else if (cuocKhaoSat?.trangThai == 3) {
+            return <span className="status-cuccess ">Đã hoàn thành</span>// Đã hoàn thành
+        }
         if (cuocKhaoSat?.ngayBD) {
             if (dayjs(cuocKhaoSat?.ngayBD).isAfter(dayjs())) {
                 return <span className="status-cyan ">Sắp diễn ra</span>// Sắp diễn ra
@@ -151,7 +177,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
                 return <span className="status-cuccess ">Đã kết thúc</span>// Đã kết thúc
             }
         }
-        return <span className="status-info ">Đang diễn ra</span>;//Đâng diễn ra
+        return <span className="status-cyan ">Đang diễn ra</span>;//Đâng diễn ra
     }
     const uploadButton = (
         <div>
@@ -207,23 +233,28 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
             {!cuocKhaoSatUpdate ? <Loading></Loading> :
                 <>
                     <div className='flex justify-between pb-3'>
-                        {cuocKhaoSatUpdate?.trangThai == 1 ? <>
 
-                            <p className='bold'> Trạng thái: {checkTrangThaiCuocKhaoSat(cuocKhaoSat)} </p>
+
+                        <p className='bold'> Trạng thái: {checkTrangThaiCuocKhaoSat(cuocKhaoSat)} </p>
+                        <div className='div-flex'>
+
+
                             <Button type="primary" danger className='bg-red flex align-center justify-center' onClick={handleVoHieuHoaCuocKhaoSat} disabled={sending}>
                                 <span style={{ display: sending ? 'inherit' : 'none' }}>
                                     <CircularProgress className="span-sender" />
-                                </span>Vô hiệu hóa</Button>
-                        </> : <>
-                            <p className='bold'> Trạng thái: <soan className="red">Đã vô hiệu</soan></p>
-                            <Button type="primary" success className='bg-green flex align-center justify-center' onClick={handleVoHieuHoaCuocKhaoSat} disabled={sending}>
-                                <span style={{ display: sending ? 'inherit' : 'none' }}>
-                                    <CircularProgress className="span-sender" />
-                                </span>Mở khảo sát</Button>
+                                </span>
+                                {cuocKhaoSat?.trangThai > 0 ? "Khóa khảo sát" : "Mở khóa"}
 
-                        </>
-                        }
-
+                            </Button>
+                            {cuocKhaoSat?.trangThai > 2 &&
+                                <Button type="primary" info className='bg-red flex align-center justify-center ms-1' onClick={handleChuaHoanThanhKhaoSat} disabled={sending}>
+                                    <span style={{ display: sending ? 'inherit' : 'none' }}>
+                                        <CircularProgress className="span-sender" />
+                                    </span>
+                                    Mở lại tiếp tục khảo sát
+                                </Button>
+                            }
+                        </div>
                     </div>
                     {/* <div className='pb-3'>
                         <p className='bold'> Loại biểu mẫu: </p>
@@ -283,7 +314,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
                     <Divider ><p className='red' ></p></Divider>
                     <div className='flex justify-between pb-3 pt-3'>
                         <div >
-                            <p className='bold'>Xóa biểu mẫu này</p>
+                            <p className='bold'>Xóa khảo sát này</p>
                             <p>Một khi bạn xóa một kho lưu trữ, bạn sẽ không thể quay lại. Xin hãy chắc chắn.</p>
                         </div>
                         <Button type="primary" danger className='bg-red mt-2 flex align-center' onClick={handleDelete} disabled={sending}>

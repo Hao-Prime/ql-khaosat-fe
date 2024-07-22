@@ -12,8 +12,20 @@ function getSelectVaiTro() {
 function saveNgKhaoSat(nguoiDung) {
   return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/ng-khao-sat", nguoiDung);
 };
+function resetNgKhaoSat(nguoiDung) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + "/be-form/user/ng-khao-sat/reset", nguoiDung);
+};
+function disableNgKhaoSat(nguoiDung) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + "/be-form/user/ng-khao-sat/disable", nguoiDung);
+};
 function saveCanBo(nguoiDung) {
   return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/can-bo", nguoiDung);
+};
+function resetCanBo(nguoiDung) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + "/be-form/user/can-bo/reset", nguoiDung);
+};
+function disableCanBo(nguoiDung) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + "/be-form/user/can-bo/disable", nguoiDung);
 };
 function deleteByID(nguoiDung) {
   return axios.delete(process.env.REACT_APP_URL_SERVER + "/be-form/user?id=" + nguoiDung);
@@ -28,6 +40,10 @@ const nguoiDungService = {
   getSelect,
   saveNgKhaoSat,
   saveCanBo,
-  deleteByID
+  deleteByID,
+  resetNgKhaoSat,
+  disableNgKhaoSat,
+  resetCanBo,
+  disableCanBo
 };
 export default nguoiDungService;

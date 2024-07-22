@@ -1,19 +1,23 @@
 import { Autocomplete, CircularProgress, Grid, Tab, Tabs, TextField } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react'
 import { debounce, forEach } from "lodash";
-import { Divider, Input, QRCode, Table, Space, Switch, Button, Modal, message, Select, Form, InputNumber, Popconfirm, Typography } from 'antd';
+import { Divider, Input, QRCode, Table, Space, Switch, Button, Modal, message, Select, Form, InputNumber, Popconfirm, Typography, DatePicker } from 'antd';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import Services from 'app/services';
 import { useSelector } from 'react-redux';
 import PhanLoai from 'app/common/PhanLoai';
 import FormatString from 'app/common/FormatString';
+import dayjs from 'dayjs';
+import FormatDate from 'app/common/FormatDate';
+import DonViPhuTreachModal from './DonViPhuTreachModal';
 const ShareForm = ({ cuocKhaoSat, reloadDetail }) => {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
     return (
         <div className="">
             {/* <Tabs value={value} onChange={handleChange} centered>
@@ -42,6 +46,8 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
     const [loc, setLoc] = useState(false)
     const [sendingUptaiKhoan, setSendingUptaiKhoan] = useState(false)
     const [listDonVi, setlistDonVi] = useState([]);
+    const [openMModalDVPT, setOpenMModalDVPT] = useState(false)
+    const [donViPTUp, setDonViPTUp] = useState({});
     const [listDonViSave, setlistDonViSave] = useState([]);
     const [dataDonVi, setDataDonVi] = useState({ donVi: 0, donViDaPhan: 0 });
     const [checkStrictly, setCheckStrictly] = useState(false);
@@ -98,9 +104,9 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
     }
     const edit = (record) => {
         form.setFieldsValue({
-            name: '',
-            age: '',
-            address: '',
+            // name: '',
+            // age: '',
+            // address: '',
             ...record,
         });
         setEditingKey(record._id);
@@ -109,6 +115,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
         setEditingKey('');
     };
     function saveChild(list, key, newData) {
+        console.log(newData);
         // Helper function to update an item and its children recursively
         function updateItem(item, key, newData) {
             if (item._id === key) {
@@ -128,7 +135,9 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
     }
     const save = async (key) => {
 
-        const row = await form.validateFields();
+        const row1 = await form.validateFields();
+        console.log(row1);
+        let row = { ...row1, thoiHan: FormatDate.setTimeZoneUTC7(row1.thoiHan) }
 
         // const newData = [...listDonVi];
 
@@ -141,6 +150,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
         //         ...row,
         //     });
         let listNewData = saveChild(listDonVi, key, row)
+        console.log(listNewData);
         setlistDonVi(listNewData);
         setEditingKey('');
 
@@ -162,8 +172,29 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                 ...row
             })
         }
+        console.log(rsSave);
         setlistDonViSave(rsSave)
 
+    };
+    const khongDat = (key) => {
+        setSending(false)
+        console.log();
+        Services.getCuocKhaoSatService().chuaHoanThanhKhaoSat(cuocKhaoSat?._id, key).then(
+            (res) => {
+                if (res.data) {
+                    setSending(false)
+                    if (res?.data?.error) {
+                        Modal.error({
+                            title: 'Lỗi',
+                            content: res?.data?.message,
+                        });
+                    } else {
+                        message.success("Lưu thành công")
+                        reloadData()
+                    }
+                }
+            }
+        )
     };
     const columns = [
 
@@ -171,13 +202,13 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
             title: 'Tên đơn vị',
             dataIndex: 'tenDonVi',
             key: 'tenDonVi',
-            width: 700,
+            width: 240,
         },
         {
             title: 'Người phụ trách',
             width: '30%',
             render: (data) => (<p>{data?.listNguoiPhuTrach?.map(obj => obj.hoTen)?.join(', ')} </p>),
-            width: 400,
+            width: 240,
         },
         {
             title: 'Mã khảo sát',
@@ -189,7 +220,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
         {
             title: 'Trạng thái',
             key: 'trangThai',
-            render: (data) => (<p className={data?.trangThai > 0 && "blue"}>{PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)} </p>),
+            render: (data) => (<p className={data?.trangThai == 3 ? "green" : data?.trangThai == 2 ? "blue" : "black"}>{PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)} </p>),
             width: 180,
             align: "center",
         },
@@ -199,7 +230,17 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
             dataIndex: 'chiTieu',
             width: 130,
             editable: true,
+            inputType: "number",
             align: "center",
+        },
+        {
+            title: 'Thời hạn',
+            width: 160,
+            editable: true,
+            // dataIndex: 'thoiHan',
+            align: "center",
+            inputType: "date",
+            render: (data, record) => (<p>{record?.thoiHan ? dayjs(record?.thoiHan).format("DD/MM/YYYY HH:mm") : "-"} </p>),
         },
         {
             title: '',
@@ -218,15 +259,31 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                             Lưu
                         </Typography.Link>
 
+
                         <Popconfirm title="Bạn chắc muốn hủy?" onConfirm={cancel}>
                             <a>Hủy</a>
                         </Popconfirm>
+                        {(record?.trangThai == 3 && cuocKhaoSat?.donViPhuTrach?.trangThai == 2) &&
+
+                            <div
+                                onClick={() => khongDat(record._id)}
+                                style={{
+                                    marginRight: 8,
+                                }}
+                                className=' ms-1'
+                            >
+                                <p className='nowrap red'>Không đạt khảo sát lại</p>
+                            </div>
+                        }
                     </span>
                 ) : (
                     <>
                         {
-                            record?._id != taiKhoan?.donVi?._id &&
-                            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                            record?._id != taiKhoan?.donVi?._id && (cuocKhaoSat?.donViPhuTrach?.trangThai == 2) &&
+                            // <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                            //     Chỉnh
+                            // </Typography.Link>
+                            <Typography.Link disabled={editingKey !== ''} onClick={() => { setOpenMModalDVPT(true); setDonViPTUp(record) }}>
                                 Chỉnh
                             </Typography.Link>
                         }
@@ -245,7 +302,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
             ...col,
             onCell: (record) => ({
                 record,
-                inputType: col.dataIndex === 'chiTieu' ? 'number' : 'text',
+                inputType: col.inputType,
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
@@ -302,6 +359,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                     chiTieu: dvnpt?.chiTieu,
                     trangThai: dvnpt?.trangThai,
                     maKhaoSat: dvnpt?.maKhaoSat,
+                    thoiHan: dvnpt?.thoiHan,
                     // ...getContChild(element?.children, element?.listKhaoSat?.filter(obj => obj != cuocKhaoSat?._id)?.length),
                     children: formatData(element?.children, listSave)
                 })
@@ -311,6 +369,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                     chiTieu: dvnpt?.chiTieu,
                     trangThai: dvnpt?.trangThai,
                     maKhaoSat: dvnpt?.maKhaoSat,
+                    thoiHan: dvnpt?.thoiHan,
                     // ...getContChild(element?.children, element?.listKhaoSat?.filter(obj => obj != cuocKhaoSat?._id)?.length),
                     children: formatData(element?.children, listSave)
                 })
@@ -380,6 +439,15 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
 
     return (
         <div className=''>
+            <DonViPhuTreachModal open={openMModalDVPT}
+                donViPTUp={donViPTUp}
+                setOpen={setOpenMModalDVPT}
+                setlistDonViSave={setlistDonViSave}
+                setlistDonVi={setlistDonVi}
+                listDonViSave={listDonViSave}
+                khongDat={khongDat}
+                cuocKhaoSat={cuocKhaoSat}
+                listDonVi={listDonVi} />
             <div>
                 <p className='bold f-16'>Link chia sẻ mẫu khảo sát</p>
             </div>
@@ -406,32 +474,34 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
             <Grid container className='w-100pt' spacing={2}>
 
                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                    <div className='p-1'>
-                        <p className='bold f-16'>Danh sách tài khoản được cấp quyền</p>
-                        <div className='div-flex justify-between'>
-                            <Select
-                                allowClear
-                                style={{ width: '100%' }}
-                                showSearch
-                                // onChange={(value) => onChange("", value ? { _id: value } : null)}
-                                options={listTaiKhoan}
-                                // filterOption={(input, option) =>
-                                //     searchTaiKhoanTheoSDTHoacEmail(input)
-                                //     // (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                                // }
-                                filterOption={false}
-                                onSearch={handlSearch}
-                                value={idTaiKhoan}
-                                onChange={(value) => setIdTaiKhoan(value)}
-                                placeholder="Tìm theo email hoặc số điện thoại"
-                            />
+                    {cuocKhaoSat?.quyenThaoTac &&
 
-                            <Button type="primary" className='ms-1' onClick={() => handleAddUser()} disabled={!idTaiKhoan || sendingUptaiKhoan}>Thêm</Button>
+                        <div className='p-1'>
+                            <p className='bold f-16'>Danh sách tài khoản được cấp quyền</p>
+                            <div className='div-flex justify-between'>
+                                <Select
+                                    allowClear
+                                    style={{ width: '100%' }}
+                                    showSearch
+                                    // onChange={(value) => onChange("", value ? { _id: value } : null)}
+                                    options={listTaiKhoan}
+                                    // filterOption={(input, option) =>
+                                    //     searchTaiKhoanTheoSDTHoacEmail(input)
+                                    //     // (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                    // }
+                                    filterOption={false}
+                                    onSearch={handlSearch}
+                                    value={idTaiKhoan}
+                                    onChange={(value) => setIdTaiKhoan(value)}
+                                    placeholder="Tìm theo email hoặc số điện thoại"
+                                />
+
+                                <Button type="primary" className='ms-1' onClick={() => handleAddUser()} disabled={!idTaiKhoan || sendingUptaiKhoan}>Thêm</Button>
+                            </div>
+
+                            <ListUser handleDeleteUser={handleDeleteUser} listUser={cuocKhaoSat?.listTaiKhoanChinhSua} cuocKhaoSat={cuocKhaoSat} />
                         </div>
-
-                        <ListUser handleDeleteUser={handleDeleteUser} listUser={cuocKhaoSat?.listTaiKhoanChinhSua} cuocKhaoSat={cuocKhaoSat} />
-                    </div>
-
+                    }
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={12} >
                     <div className='p-1'>
@@ -463,21 +533,25 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                                     },
                                 }}
                                 className='pointer mt-1 table-cus-antd'
+                                scroll={{ x: 'max-content' }}
+                                tableLayout="fixed"
                                 loading={loading}
                                 dataSource={listDonVi}
                                 pagination={false}
                             />
                         </Form>
-                        <div className='flex justify-center w-100pt mt-3' >
-                            <Button className='btn-success' type="primary" size="middle" disabled={sending} onClick={handleSave}>
-                                <span style={{ display: sending ? 'inline-block' : 'none' }}>
-                                    <CircularProgress className="span-sender" />
-                                </span>
-                                <SaveIcon className='f-22 c-white me-2' style={{ display: sending ? 'none' : 'inline-block' }} />
-                                Lưu phụ trách
-                            </Button>
+                        {listDonVi[0]?.children?.length > 0 && (cuocKhaoSat?.donViPhuTrach?.trangThai == 2) &&
 
-                        </div>
+                            <div className='flex justify-center w-100pt mt-3' >
+                                <Button className='btn-success' type="primary" size="middle" disabled={sending} onClick={handleSave}>
+                                    <span style={{ display: sending ? 'inline-block' : 'none' }}>
+                                        <CircularProgress className="span-sender" />
+                                    </span>
+                                    <SaveIcon className='f-22 c-white me-2' style={{ display: sending ? 'none' : 'inline-block' }} />
+                                    Lưu phụ trách
+                                </Button>
+
+                            </div>}
                     </div>
                 </Grid>
             </Grid>
@@ -496,7 +570,9 @@ const EditableCell = ({
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+
+    const inputNode = inputType == 'date' ? <DatePicker format="DD/MM/YYYY HH:mm" showTime defaultValue={record[dataIndex] ? dayjs(record[dataIndex]) : null} /> :
+        inputType === 'number' ? <InputNumber /> : <Input />;
     return (
         <td {...restProps}>
             {editing ? (

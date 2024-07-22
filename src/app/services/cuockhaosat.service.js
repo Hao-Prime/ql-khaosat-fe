@@ -16,6 +16,21 @@ function getAllResult(idbieumau, idDonVi, page, size) {
 function taoMoiKhaoSat(khaoSat) {
   return axios.post(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/create`, khaoSat);
 };
+function tiepNhanKhaoSat(idDonVi, idKhaoSat) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/tiep-nhan?idKhaoSat=${idKhaoSat}&idDonVi=${idDonVi}`);
+};
+function hoanThanhKhaoSat(idKhaoSat, idDonVi) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/hoan-thanh?idKhaoSat=${idKhaoSat}&idDonVi=${idDonVi}`);
+};
+function chuaHoanThanhKhaoSat(idKhaoSat, idDonViKHT) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/khong-hoan-thanh?idKhaoSat=${idKhaoSat}&idDonViKHT=${idDonViKHT}`);
+};
+function capNhatKetQuaKS(idKhaoSat, listKQ) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/update-result?idKhaoSat=${idKhaoSat}`, listKQ);
+};
+function xoaKetQua(idKetQuaKhaoSat, idKhaoSat) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/update-result?idKetQuaKhaoSa=${idKetQuaKhaoSat}&idKhaoSat=${idKhaoSat}`);
+};
 function capNhatKhaoSat(khaoSat) {
   return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form`, khaoSat);
 };
@@ -60,6 +75,11 @@ const cuocKhaoSatService = {
   guiKetQua,
   thongKeKetQua,
   thongKeSoLuongKhaoSatKhaoSatTheoThoiGian,
-  getFormDetailSubmit
+  getFormDetailSubmit,
+  tiepNhanKhaoSat,
+  hoanThanhKhaoSat,
+  capNhatKetQuaKS,
+  chuaHoanThanhKhaoSat,
+  xoaKetQua
 };
 export default cuocKhaoSatService;

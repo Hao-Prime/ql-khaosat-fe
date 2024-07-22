@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts';
-import { Button, DatePicker, Divider, Space, Table } from 'antd';
+import { Button, DatePicker, Divider, message, Modal, Space, Table, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import PivotTableChartIcon from '@mui/icons-material/PivotTableChart';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -14,8 +14,9 @@ import DanhSachNguoiKhaoSat from './DanhSachNguoiKhaoSat';
 import PhanLoai from 'app/common/PhanLoai';
 const { RangePicker } = DatePicker;
 
-const DashboardForm = ({ cuocKhaoSat }) => {
+const DashboardForm = ({ cuocKhaoSat, reloadDetail }) => {
     const [thongKeChiTiet, setThongKeChiTiet] = useState([]);
+    const [donVi, setDonVi] = useState();
     const [barChartValue2, setBarChartValue2] = useState();
     const [listThongKe, setListThongKe] = useState();
     const [defaultDateValue, setdefaultDateValue] = useState();
@@ -23,8 +24,10 @@ const DashboardForm = ({ cuocKhaoSat }) => {
     const [listDataRS, setListDataRS] = useState();
     const [tongSoLuongKetQua, settongSoLuongKetQua] = useState();
     const listTypeAccept = ["radio", "select", "columns", "selectboxes", "container", "tabs"]
+
     useEffect(() => {
         if (cuocKhaoSat?.thanhPhan) {
+
             if (defaultDateValue?.length > 0) {
                 reloadList(defaultDateValue[0], defaultDateValue[1])
             } else {
@@ -216,35 +219,38 @@ const DashboardForm = ({ cuocKhaoSat }) => {
         <div className="pt-3">
 
             <div className='flex justify-center'>
-                {defaultDateValue && <RangePicker valueFormat="YYYY-MM-DDTHH:mm:ss.SSSZ" defaultValue={defaultDateValue} format="DD/MM/YYYY" onChange={(dates, dateStrings) => { console.log(dateStrings[1]); setdefaultDateValue([dayjs(dateStrings[0], 'DD/MM/YYYY'), dayjs(dateStrings[1], 'DD/MM/YYYY').endOf('day')]) }} />}
+                {defaultDateValue && <RangePicker valueFormat="YYYY-MM-DDTHH:mm:ss.SSSZ" defaultValue={defaultDateValue} format="DD/MM/YYYY" onChange={(dates, dateStrings) => { setdefaultDateValue([dayjs(dateStrings[0], 'DD/MM/YYYY'), dayjs(dateStrings[1], 'DD/MM/YYYY').endOf('day')]) }} />}
             </div>
             <div className="" >
                 <p className='p-2 f-16'><b>Tần suất tham gia khảo sát</b></p>
             </div>
             {barChartValue2 && <Chart {...barChartValue2} height="360px" />}
 
-            <div className='form-dashboard-detail'>
+            <div className=''>
                 <div className='flex justify-center'>
                     <p className='text-center bold f-22'>KẾT QUẢ KHẢO SÁT ({tongSoLuongKetQua})</p>
                 </div>
 
+
+
+                <Divider />
+                <div className='pt-2 pb-2'>
+                    <p className=' bold f-16'>Danh sách đơn vị khảo sát:</p>
+                    <DetailDonVi cuocKhaoSat={cuocKhaoSat} setDonVi={setDonVi} reloadDetail={reloadDetail} />
+                </div>
+                <Divider />
+                <DanhSachNguoiKhaoSat cuocKhaoSat={cuocKhaoSat} donVi={donVi} reloadDetail={reloadDetail}></DanhSachNguoiKhaoSat>
                 <Divider />
                 <div className='flex justify-between'>
                     <p className='text-center bold f-16'>Biểu đồ</p>
 
                 </div>
-                {listDataRS?.map((e) =>
-                    <DetailPhanTram object={e} level={0}></DetailPhanTram>
+                <div className='form-dashboard-detail'>
+                    {listDataRS?.map((e) =>
+                        <DetailPhanTram object={e} level={0}></DetailPhanTram>
 
-                )}
-                <Divider />
-                <div className='pt-2 pb-2'>
-                    <p className=' bold f-16'>Danh sách đơn vị khảo sát:</p>
-                    <DetailDonVi cuocKhaoSat={cuocKhaoSat} />
+                    )}
                 </div>
-                <Divider />
-                <DanhSachNguoiKhaoSat cuocKhaoSat={cuocKhaoSat}></DanhSachNguoiKhaoSat>
-
             </div>
         </div >
 
@@ -255,6 +261,7 @@ export default DashboardForm;
 const DetailPhanTram = ({ object, level, typeParrent }) => {
     const [typeView, settypeView] = useState(1);
     useEffect(() => {
+
         if (typeParrent) {
             settypeView(typeParrent)
         }
@@ -498,12 +505,14 @@ const DetailSoLuongTR = ({ object, typeParrent }) => {
 
     )
 }
-const DetailDonVi = ({ cuocKhaoSat }) => {
+const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false)
     const [sendingUptaiKhoan, setSendingUptaiKhoan] = useState(false)
     const [listDonVi, setlistDonVi] = useState([]);
     const [listDonViSave, setlistDonViSave] = useState([]);
+    const [windowScreen, setWindowScreen] = useState(window.screen.width > 1000);
+    const [modal, contextHolder] = Modal.useModal();
     useEffect(() => {
 
         reloadData()
@@ -523,11 +532,16 @@ const DetailDonVi = ({ cuocKhaoSat }) => {
             let dvnpt = listSave?.find(obj => element?._id == obj?.donVi?._id)
 
             if (dvnpt) {
-                console.log(dvnpt?.tenDonVi + "-" + dvnpt.chiTieuDaDat);
                 rs.push({
                     ...element,
                     chiTieu: dvnpt?.chiTieu,
+                    chiTieuDaDat: dvnpt?.chiTieuDaDat,
                     trangThai: dvnpt?.trangThai,
+                    ngayBD: dvnpt.ngayBD,
+                    ngayTiepNhan: dvnpt.ngayTiepNhan,
+                    ngayHT: dvnpt.ngayHT,
+                    thoiHan: dvnpt?.thoiHan,
+                    chiTieuBaoCao: dvnpt?.chiTieuBaoCao || 0,
                     soLuongTong: dvnpt.chiTieuDaDat || 0,
                     // ...getContChild(element?.children, dvnpt.chiTieuDaDat || 0, 0),
                     children: formatData(element?.children, listSave)
@@ -551,62 +565,120 @@ const DetailDonVi = ({ cuocKhaoSat }) => {
         });
         return { soLuongTong: rs + slParent }
     }
+    const handleComplete = async (idDonVi) => {
+        const confirmed = await modal.confirm({
+            title: "Bạn có chắc muốn kết thúc khảo sát của đơn vị này",
+            content: "Các kết quả sẽ chuyển lên đơn vị trên - Các đơn vị dưới đều sẽ kết thúc, ngời dùng không thể khảo sát cho đơn vi này nữa",
+
+
+        });
+        if (confirmed) {
+            Services.getCuocKhaoSatService().hoanThanhKhaoSat(cuocKhaoSat?._id, idDonVi)?.then(
+                (res) => {
+                    setSending(false)
+                    message.success("Lưu thành công")
+                    reloadDetail()
+                    reloadData()
+                }
+            )
+        }
+    }
     return (
-        <Table
-            rowKey="_id"
-            columns={[
+        <>{contextHolder}
 
-                {
-                    title: 'Tên đơn vị',
-                    render: (data) => (<p>{data?.tenDonVi} </p>),
-                    width: 300
-                },
+            <Table
+                rowKey="_id"
+                columns={[
+                    // {
+                    //     title: '',
+                    //     width: '10px'
+                    // },
+                    {
+                        title: 'Tên đơn vị',
+                        render: (data) => (<p className=''>{data?.tenDonVi} </p>),
+                        width: 280,
+                        fixed: windowScreen ? 'left' : false
+                    },
 
-                {
-                    title: 'Ngày giao',
-                    render: (data) => (<p>{dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm")} </p>),
+                    {
+                        title: 'Ngày giao',
+                        render: (data) => (<p>{data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : "-"} </p>),
+                    },
 
-                },
-                {
-                    title: 'Ngày tiếp nhận',
+                    {
+                        title: 'Ngày tiếp nhận',
+                        render: (data) => (<p>{data?.ngayTiepNhan ? dayjs(data?.ngayTiepNhan).format("DD/MM/YYYY HH:mm") : "-"} </p>),
+                    },
+                    {
+                        title: 'Thời hạn',
+                        render: (data) => (<p>{data?.thoiHan ? dayjs(data?.thoiHan).format("DD/MM/YYYY HH:mm") : "-"} </p>),
+                    },
+                    {
+                        title: 'Ngày hoàn thành',
+                        render: (data) => (<p>{data?.ngayHT ? dayjs(data?.ngayHT).format("DD/MM/YYYY HH:mm") : "-"} </p>),
+                    },
+                    {
+                        title: 'Trạng thái',
+                        key: 'trangThai',
+                        render: (data) => (<p className={data?.trangThai == 3 ? "green" : data?.trangThai == 2 ? "blue" : "black"}>{PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)} </p>),
+                        className: 'nowrap',
+                        align: "center",
+                    },
+                    {
+                        title: 'Chỉ tiêu',
+                        dataIndex: 'chiTieu',
+                        className: 'nowrap',
+                        align: "center",
+                    },
+                    {
+                        title: <p>Số khảo sát<br /> đã tạo</p>,
+                        dataIndex: 'soLuongTong',
+                        align: "center",
+                        className: 'nowrap',
+                        render: (data, record) => (<p>{
+                            record?.chiTieu > 0 ?
+                                `${record?.chiTieuDaDat}(${Math.floor(record?.chiTieuDaDat * 100 / record?.chiTieu)}%)`
+                                : "0(0%)"} </p>),
+                    },
+                    {
+                        title: 'Đã báo cáo',
 
-                    render: (data) => (<p>{dayjs(data?.ngayTiepNhan).format("DD/MM/YYYY HH:mm")} </p>),
+                        className: 'nowrap',
+                        align: "center",
+                        render: (data) => (<p className=''>
+                            {data?.chiTieuBaoCao || 0}
+                        </p>),
+                    },
+                    {
+                        title: <p>Cập nhật <br /> hoàn thành</p>,
 
-                },
-                {
-                    title: 'Ngày hoàn thành',
-                    render: (data) => (<p>{dayjs(data?.ngayHT).format("DD/MM/YYYY HH:mm")} </p>),
+                        className: 'nowrap',
+                        align: "center",
+                        render: (data, record) => (
+                            <div className='w-100pt'>
+                                {(record?.trangThai < 3 && record?._id != cuocKhaoSat?.donViPhuTrach?.donVi?._id) &&
+                                    <Tooltip placement="bottom" title={"Hoàn thành giúp đơn vị - khi đơn vị trực thuộc đã đạt chỉ tiêu."} >
+                                        <Button type="primary" className='mt-1  m-auto' onClick={(e) => { e.stopPropagation(); handleComplete(record?._id) }}>Hoàn thành</Button>
+                                    </Tooltip>
+                                }
+                            </div>),
+                    },
 
-                },
-                {
-                    title: 'Trạng thái',
-                    key: 'trangThai',
-
-                    render: (data) => (<p>{PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)} </p>),
-                    className: 'nowrap',
-                    align: "center",
-                },
-                {
-                    title: 'Chỉ tiêu',
-                    dataIndex: 'chiTieu',
-
-                    className: 'nowrap',
-                    align: "center",
-                },
-                {
-                    title: 'Đã đạt',
-                    dataIndex: 'soLuongTong',
-
-                    align: "center",
-                    className: 'nowrap',
-                    render: (data, record) => (<p>{record?.chiTieu > 0 ? `${record?.soLuongTong}(${Math.floor(record?.soLuongTong * 100 / record?.chiTieu)}%)` : "0(0%)"} </p>),
-                },
-
-            ]}
-            className='pointer mt-1 table-cus-antd'
-            loading={loading}
-            dataSource={listDonVi}
-            pagination={false}
-        />
+                ]}
+                className='pointer mt-1 table-cus-antd'
+                loading={loading}
+                dataSource={listDonVi}
+                pagination={false}
+                scroll={{ x: 'max-content' }}
+                tableLayout="fixed"
+                onRow={(record, rowIndex) => {
+                    return {
+                        onClick: (event) => {
+                            setDonVi(record)
+                        },
+                    };
+                }}
+            />
+        </>
     )
 }

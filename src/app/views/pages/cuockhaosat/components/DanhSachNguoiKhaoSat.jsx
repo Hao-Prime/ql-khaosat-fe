@@ -1,32 +1,44 @@
 
-import { Button, Dropdown, Input, Modal, Pagination, Space, Table, message, Form } from 'antd';
+import { Button, Dropdown, Input, Modal, Pagination, Space, Table, message, Form, Tooltip } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState, useRef, useContext } from 'react'
 import Services from 'app/services';
 import DownloadIcon from '@mui/icons-material/Download';
 import dayjs from 'dayjs';
+import { CircularProgress } from '@mui/material';
 import * as XLSX from 'xlsx';
 import { useSelector } from 'react-redux';
-const DanhSachNguoiKhaoSat = ({ cuocKhaoSat }) => {
-    const [listNguoiDung, setListNguoiDung] = useState([]);
+import SaveIcon from '@mui/icons-material/Save';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+const DanhSachNguoiKhaoSat = ({ cuocKhaoSat, donVi, reloadDetail }) => {
+    const [listKetQua, setListKetQua] = useState([]);
+    const [listKetQuaChinhSua, setListKetQuaChinhSua] = useState([]);
     const [limit, setLimit] = useState(30);
+    const [modal, contextHolder] = Modal.useModal();
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const [sending, setSending] = useState(false);
     const [totalPage, setTotalPage] = useState(0);
     const taiKhoan = useSelector(state => state.taiKhoan)
     const onShowSizeChange = (current, pageSize) => {
         setPage(current)
         setLimit(pageSize)
     };
-
+    useEffect(() => {
+        if (donVi && page == 1) {
+            reLoadList()
+        } else {
+            setPage(1)
+        }
+    }, [donVi]);
     useEffect(() => {
         reLoadList()
     }, [limit, page]);
     async function reLoadList(params) {
         setLoading(true)
-        let dataRSLisstDv = await Services.getCuocKhaoSatService().getAllResult(cuocKhaoSat?._id, taiKhoan?.donVi?._id, page - 1, limit)
+        let dataRSLisstDv = await Services.getCuocKhaoSatService().getAllResult(cuocKhaoSat?._id, donVi?._id || taiKhoan?.donVi?._id, page - 1, limit)
         if (dataRSLisstDv?.data?.content) {
-            setListNguoiDung(dataRSLisstDv?.data?.content)
+            setListKetQua(dataRSLisstDv?.data?.content)
             setTotalPage(dataRSLisstDv?.data?.totalElements)
         }
         setLoading(false)
@@ -39,14 +51,13 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat }) => {
             } else if (e?.columns?.length > 0) {
                 rs = [...rs, ...getColumnFromEditFormIO(e?.columns)]
             } else if (!["content", "container", "column", "tab"]?.includes(e?.type)) {
-
                 rs.push({
                     title: e?.label,
                     width: 180,
                     key: e?.key,
                     // dataIndex: e?.key,
                     render: (data, record, index) => (<p>{getValueFromKey(data, e?.key)}</p>),
-                    editable: true,
+                    editable: ["textfield", "phoneNumber", "email", "textarea"]?.includes(e?.type) && (!donVi?._id || donVi?._id == taiKhoan?.donVi?._id),
                 })
             }
         });
@@ -110,7 +121,8 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat }) => {
     };
     const handleSave = (row) => {
         let rs = []
-        listNguoiDung.forEach(kq => {
+        let rsSave = []
+        listKetQua.forEach(kq => {
             if (kq?._id == row?._id) {
                 let ketQua = []
                 row?.ketQua.forEach(element => {
@@ -121,11 +133,13 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat }) => {
                     }
                 });
                 rs.push({ ...kq, ketQua: ketQua })
+                rsSave.push({ ...kq, ketQua: ketQua })
             } else {
                 rs.push(kq)
             }
         });
-        setListNguoiDung(rs)
+        setListKetQua(rs)
+        setListKetQuaChinhSua(rsSave)
         // const newData = [...dataSource];
         // const index = newData.findIndex((item) => row.key === item.key);
         // const item = newData[index];
@@ -135,10 +149,59 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat }) => {
         // });
         // setDataSource(newData);
     };
+    const handleComplete = async () => {
+        const confirmed = await modal.confirm({
+            title: "Bạn muốn gửi và hoàn thành khảo sát",
+            content: "Các kết quả sẽ chuyển lên đơn vị trên - Các đơn vị dưới đều sẽ kết thúc, ngời dùng không thể khảo sát cho đơn vi này nữa",
+
+        });
+        if (confirmed) {
+            Services.getCuocKhaoSatService().hoanThanhKhaoSat(cuocKhaoSat?._id, taiKhoan?.donVi?._id)?.then(
+                (res) => {
+                    setSending(false)
+                    message.success("Lưu thành công")
+                    reloadDetail()
+                }
+            )
+        }
+    }
+    const handleSaveResult = async () => {
+        const confirmed = await modal.confirm({
+            title: "Bạn muốn lưu kết quả chỉnh sữa này ",
+            content: "",
+        });
+        if (confirmed) {
+            setSending(true)
+            Services.getCuocKhaoSatService().capNhatKetQuaKS(cuocKhaoSat?._id, listKetQuaChinhSua)?.then(
+                (res) => {
+                    setSending(false)
+                    message.success("Lưu thành công")
+                }
+            )
+        }
+    }
+    const handleXoaKetQua = async (idKetQua) => {
+        const confirmed = await modal.confirm({
+            title: "Bạn muốn xóa kết quả này",
+            content: "",
+
+        });
+        if (confirmed) {
+            setSending(true)
+            Services.getCuocKhaoSatService().xoaKetQua(idKetQua, cuocKhaoSat?._id)?.then(
+                (res) => {
+                    setSending(false)
+                    message.success("Lưu thành công")
+                    reLoadList()
+                }
+            )
+        }
+    }
     return (
         <div >
+            {contextHolder}
             <div className='flex justify-between'>
-                <p className='text-center bold f-16'>Danh sách khảo sát:{/*  */}</p>
+                <p className='text-center bold f-16'>Danh sách khảo sát <span className='red'>{donVi?.tenDonVi}</span>:{/*  */}</p>
                 <Button key="submit" title='Xuât chi tiết tất cả câu trả lời' type="primary" onClick={() => downloadExcel()}>
                     <span className='white'><DownloadIcon className='f-14 me-1' />Xuất toàn bộ</span>
                 </Button>
@@ -160,6 +223,17 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat }) => {
                         width: 180,
                     },
                     ...getColumnFromEditFormIO(cuocKhaoSat?.thanhPhan),
+                    ...((cuocKhaoSat?.donViPhuTrach?.trangThai == 2 && (donVi?._id == taiKhoan?.donVi?._id || !donVi)) ?
+                        [{
+                            title: "",
+                            render: (data) => (<Tooltip title="Xóa kết quả này">
+
+                                <DeleteOutlineIcon className='red' onClick={() => handleXoaKetQua(data?._id)} />
+                            </Tooltip>),
+                            align: "center",
+                            width: 50,
+
+                        }] : [])
                 ].map((col) => {
                     if (!col.editable) {
                         return col;
@@ -177,9 +251,9 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat }) => {
                 })}
                 scroll={{ x: '100%', y: 415 }}
                 locale={{ emptyText: 'Không có dữ liệu' }}
-                style={{ minHeight: 415 }}
+                style={{ minHeight: 200 }}
                 components={components}
-                dataSource={listNguoiDung}
+                dataSource={listKetQua}
                 pagination={false}
                 size='small'
                 className='pointer mt-1 table-cus-antd'
@@ -195,6 +269,25 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat }) => {
                     defaultPageSize={limit}
                 />
             </div>
+            {(cuocKhaoSat?.donViPhuTrach?.trangThai == 2 && (donVi?._id == taiKhoan?.donVi?._id || !donVi)) &&
+
+                <div className='flex justify-center w-100pt mt-3' >
+                    <Button type="primary" size="middle" disabled={sending} onClick={handleSaveResult} className='me-1'>
+                        <span style={{ display: sending ? 'inline-block' : 'none' }}>
+                            <CircularProgress className="span-sender" />
+                        </span>
+                        <SaveIcon className='f-22 c-white me-2' style={{ display: sending ? 'none' : 'inline-block' }} />
+                        Lưu kết quả
+                    </Button>
+                    <Button type="primary" size="middle" disabled={sending} onClick={handleComplete} >
+                        <span style={{ display: sending ? 'inline-block' : 'none' }}>
+                            <CircularProgress className="span-sender" />
+                        </span>
+                        <SaveIcon className='f-22 c-white me-2' style={{ display: sending ? 'none' : 'inline-block' }} />
+                        Hoàn thành khảo sát
+                    </Button>
+                </div>
+            }
         </div >
 
     );

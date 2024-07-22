@@ -11,6 +11,7 @@ import LoginPage from 'app/views/pages/loginpage/LoginPage';
 import HomePage from 'app/views/pages/homepage/HomePage';
 import ReactDOM from 'react-dom/client';
 import ViewKSForm from 'app/views/pages/cuockhaosat/components/ViewKSForm';
+import { ContentContext, ContentProvider } from 'app/context/ContentContext';
 const store = createStore(
   rootReducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
@@ -21,14 +22,19 @@ Interceptor.initInterceptor();
 const Root = () => (
   <BrowserRouter>
     <Provider store={store}>
-      <Routes>
-        <Route exact path="/khao-sat" element={<ViewKSForm />} />
-        <Route exact path="/bieu-mauu" element={<ViewForm />} />
-        <Route exact path="/dang-nhap" element={<LoginPage />} />
-        <Route exact path="/" element={<HomePage />} />
-        <Route exact path="/*" element={<App />} />
-      </Routes>
+      <ContentProvider>
+        <Routes>
+
+          <Route exact path="/khao-sat" element={<ViewKSForm />} />
+          <Route exact path="/bieu-mauu" element={<ViewForm />} />
+          <Route exact path="/dang-nhap" element={<LoginPage />} />
+          <Route exact path="/" element={<HomePage />} />
+          <Route exact path="/*" element={<App />} />
+
+        </Routes>
+      </ContentProvider>
     </Provider>
+
   </BrowserRouter>
 );
 

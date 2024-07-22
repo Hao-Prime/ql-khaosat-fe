@@ -198,7 +198,7 @@ const DonViPage = () => {
                     pagination={false}
                     size='small'
                     className='pointer mt-1 table-cus-antd'
-
+                    defaultExpandedRowKeys={["662a0be5303c0967895df41b"]}
                 />
 
                 <div className='div-flex justify-between'>

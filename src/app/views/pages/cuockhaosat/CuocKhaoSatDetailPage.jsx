@@ -1,6 +1,6 @@
 
 import { Breadcrumb, Button, Divider, Dropdown, Input, Modal, Pagination, Skeleton, Space, Table, Tabs, message } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import BackToTopButton from 'app/components/BackToTopButton';
 import Services from 'app/services';
@@ -15,6 +15,7 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import FormatString from 'app/common/FormatString';
 import { useSelector } from 'react-redux';
 const CuocKhaoSatDetailPage = () => {
+
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
     const [cuocKhaoSat, setCuocKhaoSat] = React.useState();
@@ -32,7 +33,7 @@ const CuocKhaoSatDetailPage = () => {
         };
     }, [idCuocKhaoSat]);
     function reloadList() {
-        console.log("XXXXX");
+
         setLoading(true)
         Services.getCuocKhaoSatService().getAll({ idKhaoSat: idCuocKhaoSat }).then(
             (res) => {
@@ -42,8 +43,33 @@ const CuocKhaoSatDetailPage = () => {
                         content: res?.data?.message,
                     });
                 } else {
-                    setCuocKhaoSat({ ...res?.data, thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [] })
-                    setLoading(false)
+
+                    if (!res?.data) {
+                        Modal.error({
+                            title: 'Lỗi',
+                            content: "Không tìm thấy khảo sát",
+                        });
+                        setLoading(true)
+                    } else {
+                        let quyen = false;
+                        if (res?.data?.nguoiTao == taiKhoan?._id) {
+                            quyen = true;
+                        } else {
+                            res?.data?.listTaiKhoanChinhSua?.forEach(element => {
+                                if (element?.taiKhoan == taiKhoan?.taiKhoanId) {
+                                    quyen = true;
+                                }
+                            });
+                        }
+                        setCuocKhaoSat({
+                            ...res?.data,
+                            thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [],
+                            quyenThaoTac: quyen,
+                            donViPhuTrach: res?.data?.listDonViPhuTrach?.find(obj => obj?.donVi?._id == taiKhoan?.donVi?._id)
+                        })
+                        setLoading(false)
+                    }
+
 
                 }
 
@@ -60,7 +86,22 @@ const CuocKhaoSatDetailPage = () => {
                         content: res?.data?.message,
                     });
                 } else {
-                    setCuocKhaoSat({ ...res?.data, thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [] })
+                    let quyen = false;
+                    if (res?.data?.nguoiTao == taiKhoan?._id) {
+                        quyen = true;
+                    } else {
+                        res?.data?.listTaiKhoanChinhSua?.forEach(element => {
+                            if (element?.taiKhoan == taiKhoan?._id) {
+                                quyen = true;
+                            }
+                        });
+                    }
+                    setCuocKhaoSat({
+                        ...res?.data,
+                        thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [],
+                        quyenThaoTac: quyen,
+                        donViPhuTrach: res?.data?.listDonViPhuTrach?.find(obj => obj?.donVi?._id == taiKhoan?.donVi?._id)
+                    })
                 }
 
 
@@ -80,7 +121,7 @@ const CuocKhaoSatDetailPage = () => {
                     ]}
                 /></div>
 
-            <div className="page-new">
+            <div className="page-new" id="topxssx">
                 <div className='div-flex justify-between'>
                     <div className='ps-1 div-flex'>
                         <ArrowBackIcon className='bold pointer me-1 f-22' onClick={() => navigate(`/quan-tri/khao-sat?trangThai=0`)} />
@@ -113,19 +154,21 @@ const CuocKhaoSatDetailPage = () => {
                             {
                                 key: '3',
                                 label: 'Thống kê',
-                                children: <DashboardForm cuocKhaoSat={cuocKhaoSat} />
+                                children: <DashboardForm cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />
                             },
-                            {
-                                key: '2',
-                                label: 'Lịch sử chỉnh sửa',
-                                children: <HistoryForm cuocKhaoSat={cuocKhaoSat} />
-                            },
-
-                            {
-                                key: '5',
-                                label: 'Cài đặt',
-                                children: <SettingForm cuocKhaoSat={cuocKhaoSat} reloadList={reloadList} />,
-                            },
+                            ...(cuocKhaoSat?.quyenThaoTac ? [
+                                {
+                                    key: '2',
+                                    label: 'Lịch sử chỉnh sửa',
+                                    children: <HistoryForm cuocKhaoSat={cuocKhaoSat} />,
+                                },
+                                {
+                                    key: '5',
+                                    label: 'Cài đặt',
+                                    children: <SettingForm cuocKhaoSat={cuocKhaoSat} reloadList={reloadList} />,
+                                }
+                            ] : [])
+                            ,
                         ]}
                         onChange={onChange}
                     />

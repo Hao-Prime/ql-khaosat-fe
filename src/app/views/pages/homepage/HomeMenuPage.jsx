@@ -20,6 +20,10 @@ import FormDetailPage from '../mylistformpage/FormDetailPage';
 import CuocKhaoSatPage from '../cuockhaosat/CuocKhaoSatPage';
 import CuocKhaoSatDetailPage from '../cuockhaosat/CuocKhaoSatDetailPage';
 import CanBoPage from '../admin/canbo/CanBoPage';
+import CauHinhPage from '../admin/cauhinh/CauHinhPage';
+import LogsHeThongPage from '../admin/logs/LogsHeThongPage';
+import QuyenTruyCapPage from '../admin/quyentruycap/QuyenTruyCapPage';
+import ThongKeTheoDonViPage from '../admin/thongke/ThongKeTheoDonViPage';
 
 
 const HomeMenuPage = ({ user }) => {
@@ -51,16 +55,25 @@ const HomeMenuPage = ({ user }) => {
                         // }
                         />
                         <Routes>
-                            <Route path="/dashboard" element={<ProtectedRoute user={user} role="user"> <DashboardPage /> </ProtectedRoute>} />
-                            <Route path="/chi-tiet-bieu-mau" element={<ProtectedRoute user={user} role="user"> <FormDetailPage /> </ProtectedRoute>} />
-                            <Route path="/chi-tiet-khao-sat" element={<ProtectedRoute user={user} role="user"> <CuocKhaoSatDetailPage /> </ProtectedRoute>} />
-                            <Route path="/bieu-mau" element={<ProtectedRoute user={user} role="user"> <MyListFormPage /> </ProtectedRoute>} />
-                            <Route path="/khao-sat" element={<ProtectedRoute user={user} role="user"> <CuocKhaoSatPage /> </ProtectedRoute>} />
-                            <Route path="/logs" element={<ProtectedRoute user={user} role="admin"> <DangPhatTrienPage /> </ProtectedRoute>} />
-                            <Route path="/donvi" element={<ProtectedRoute user={user} role="admin"> <DonViPage /> </ProtectedRoute>} />
-                            <Route path="/nguoi-dung" element={<ProtectedRoute user={user} role="admin"> <NguoiDungPage /> </ProtectedRoute>} />
-                            <Route path="/can-bo" element={<ProtectedRoute user={user} role="admin"> <CanBoPage /> </ProtectedRoute>} />
-                            <Route path="/cauhinh/form" element={<ProtectedRoute user={user} role="admin"> <DangPhatTrienPage /> </ProtectedRoute>} />
+                            <Route path="/dashboard" element={<ProtectedRoute user={user} role="dashboard"> <DashboardPage /> </ProtectedRoute>} />
+
+                            <Route path="/chi-tiet-bieu-mau" element={<ProtectedRoute user={user} role="bieumau"> <FormDetailPage /> </ProtectedRoute>} />
+                            <Route path="/chi-tiet-khao-sat" element={<ProtectedRoute user={user} role="khaosat"> <CuocKhaoSatDetailPage /> </ProtectedRoute>} />
+                            <Route path="/bieu-mau" element={<ProtectedRoute user={user} role="bieumau"> <MyListFormPage /> </ProtectedRoute>} />
+                            <Route path="/khao-sat" element={<ProtectedRoute user={user} role="khaosat"> <CuocKhaoSatPage /> </ProtectedRoute>} />
+
+                            <Route path="/donvi" element={<ProtectedRoute user={user} role="donvi"> <DonViPage /> </ProtectedRoute>} />
+                            <Route path="/nguoi-dung" element={<ProtectedRoute user={user} role="nguoidung"> <NguoiDungPage /> </ProtectedRoute>} />
+                            <Route path="/can-bo" element={<ProtectedRoute user={user} role="canbo"> <CanBoPage /> </ProtectedRoute>} />
+
+                            <Route path="/cau-hinh/role" element={<ProtectedRoute user={user} role="admin"> <QuyenTruyCapPage /> </ProtectedRoute>} />
+                            <Route path="/cau-hinh/logs" element={<ProtectedRoute user={user} role="logs"> <LogsHeThongPage /> </ProtectedRoute>} />
+                            <Route path="/cau-hinh/form" element={<ProtectedRoute user={user} role="admin"> <CauHinhPage /> </ProtectedRoute>} />
+
+                            <Route path="/thong-ke/don-vi" element={<ProtectedRoute user={user} role="thongke.donvi"> <ThongKeTheoDonViPage /> </ProtectedRoute>} />
+
+
+
                         </Routes>
                         <Footer></Footer>
 

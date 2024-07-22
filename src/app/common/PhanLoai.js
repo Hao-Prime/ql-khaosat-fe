@@ -19,7 +19,6 @@ function getSelectPhanLoaiYeuCau() {
     ]
 }
 function getPhanLoaiYeuCau(key) {
-    console.log(key);
     switch (key) {
         case 1:
             return "Chưa tiếp nhận"
