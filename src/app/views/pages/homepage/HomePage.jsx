@@ -127,13 +127,13 @@ const HomePage = () => {
             <Hero />
             <Skills />
             <Service />
-            <Projects />
+            {/* <Projects /> */}
             {/* <Testimonials /> */}
             {/* <Hireme /> */}
             {/* <Contact /> */}
             <footer className="p-3 text-center">
-                <h6 className="mb-3">VNPT Long An</h6>
-                <p>Trung tâm CNTT © Phát  triển 2024</p>
+                {/* <h6 className="mb-3">VNPT Long An</h6> */}
+                <p>VNPT Long An © Phát  triển 2024</p>
             </footer>
         </div>
 

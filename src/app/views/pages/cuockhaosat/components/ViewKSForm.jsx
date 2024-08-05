@@ -46,6 +46,7 @@ const ViewKSForm = () => {
                 } else {
                     setCuocKhaoSat({ ...res?.data, thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [] })
                     setListLabel(convertLabelFromListComponent(JSON?.parse(res?.data?.thanhPhan)));
+                    console.log(JSON?.parse(res?.data?.thanhPhan));
                     setListPageForm(convertCuocKhaoSatToListPage(JSON?.parse(res?.data?.thanhPhan)));
                     setLoading(false)
 
@@ -70,6 +71,7 @@ const ViewKSForm = () => {
     }
     const convertObject = (obj) => {
         let list = []
+        console.log(obj);
         for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
                 if (key?.includes("container")) {
@@ -77,11 +79,12 @@ const ViewKSForm = () => {
                 } else {
                     if (key?.includes('-select') && !key?.includes('-selectboxes')) {
                         let listString = obj[key];
-                        console.log(listString?.length > 0);
                         if (Array.isArray(listString)) {
                             listString?.forEach(element => {
                                 list.push({ key: key + "_" + element, valueCount: 1, type: 2 });
                             });
+                        } else if (listString?.value) {// nó là object của api data
+                            list.push({ key: key + "_" + obj[key]?.value, label: listString?.label, valueCount: 1, type: 2 });
                         } else {
                             list.push({ key: key + "_" + obj[key], valueCount: 1, type: 2 });
                         }
@@ -119,13 +122,14 @@ const ViewKSForm = () => {
                 setSending(true)
                 let rs = convertObject({ ...dataSubmit, ...submission?.data })
                 rs = rs?.map(obj => {
-                    return { ...obj, label: getLabelFromKey(obj?.key) };
+                    return { ...obj, label: obj?.label ? obj?.label : getLabelFromKey(obj?.key) };
                 })
                 Services.getCuocKhaoSatService().guiKetQua(
                     {
                         cuocKhaoSat: { _id: cuocKhaoSat?._id },
                         donVi: { _id: cuocKhaoSat?.donViId },
                         ketQua: rs,
+                        ketQuaFormIO: JSON.stringify({ ...dataSubmit, ...submission?.data })
                     }
                 )?.then(
                     (res) => {

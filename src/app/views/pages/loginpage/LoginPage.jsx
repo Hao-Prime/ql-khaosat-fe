@@ -41,8 +41,8 @@ const LoginPage = () => {
 
                     <form className="login">
                         <div className="login__field">
-                            <p className="bold f-30"><span className="nowrap">HỆ THỐNG ĐIỀU TRA </span><br /><span className="nowrap">KHẢO SÁT THÔNG TIN</span></p>
-                            <p className="bold f-24 ">Đăng nhập</p>
+                            <p className="bold f-18 mt-2 mb-4"><span className="nowrap">HỆ THỐNG QUẢN LÝ ĐIỀU TRA</span><br /><span className="nowrap">KHẢO SÁT THÔNG TIN</span></p>
+                            <p className="bold f-17 mt-2">Đăng nhập</p>
                         </div>
                         <div className="login__field">
                             <i className="login__icon fas fa-user"></i>
@@ -72,7 +72,7 @@ const LoginPage = () => {
                         </div>
                         <Checkbox>Lưu mật khẩu</Checkbox>
                         <br />
-                        <Button variant="contained" className="mt-2" disabled={sending}
+                        <Button variant="contained" className="mt-4" disabled={sending}
                             onClick={() => {
                                 handleLogin()
                             }}
@@ -84,7 +84,7 @@ const LoginPage = () => {
                         </Button>
                         <p className='red mt-3 f-13'><i className="errlg">{error}</i></p>
                     </form>
-                    <div className="social-login">
+                    {/* <div className="social-login">
                         <a href="/#">Quên mật khẩu •</a>
                         <br />
 
@@ -92,7 +92,7 @@ const LoginPage = () => {
                         <br />
 
                         <a href="/" ><ArrowBackIcon className="f-13 me-1" />Quay lại</a>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="screen__background">
                     <span className="screen__background__shape screen__background__shape4"></span>

@@ -42,10 +42,10 @@ const Hero = () => {
                             />
                         </span></div>
                     </div>
-                    <h2>{content?.hero?.title}</h2>
+                    <p className="h2-title">{content?.hero?.title}</p>
                     <br />
                     <div className="flex justify-end">
-                        <button className="btn btn-create-bieumau" onClick={() => { window.location.href = "/quan-tri/khao-sat?trangThai=0" }}>{content?.hero?.btnText}</button>
+                        <button className="btn btn-create-bieumau" onClick={() => { window.location.href = "/quan-tri/dashboard" }}>{content?.hero?.btnText}</button>
                     </div>
                     <div className="flex flex-col gap-10 mt-10">
                         {content?.hero?.hero_content.map((content, i) => (

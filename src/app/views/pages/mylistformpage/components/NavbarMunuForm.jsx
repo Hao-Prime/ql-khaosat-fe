@@ -114,6 +114,51 @@ const NavbarMunuForm = ({ content, type, children }) => {
         }
 
     }
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const toggleFullscreen = () => {
+        console.log('XXXXXXXX');
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+            // Nếu đang trong chế độ toàn màn hình, thì thoát
+            exitFullscreen();
+            setIsFullscreen(false);
+        } else {
+            // Nếu không trong chế độ toàn màn hình, thì vào chế độ toàn màn hình
+            enterFullscreen();
+            setIsFullscreen(true);
+        }
+    };
+
+    const enterFullscreen = () => {
+        const element = document.documentElement;
+
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    };
+
+    const exitFullscreen = () => {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    };
+    function togglePage() {
+        // messageApi.open({
+        //     type: 'warning',
+        //     content: 'Chức năng đang phát triển',
+        // });
+    }
     return (
         <AppBar position="static" className='xrqwdasd qqweqweeqr' >
             {contextHolder}
@@ -194,11 +239,11 @@ const NavbarMunuForm = ({ content, type, children }) => {
                                 </div>
                             </> :
                             <>
-                                <a href='/' className='qxxeyqwopioprq'>
+                                <div className='qxxeyqwopioprq pointer'>
                                     {/* <img className='img-nav' src={iconvnpt}></img> */}
-                                    <WebAssetIcon className='me-2 c-blue2' />
-                                    <StarBorderIcon className='me-2 c-blue2' />
-                                </a>
+                                    <WebAssetIcon className='me-2 c-blue2' onClick={() => toggleFullscreen()} />
+                                    {/* <StarBorderIcon className='me-2 c-blue2' onClick={() => togglePage()} /> */}
+                                </div>
                                 {children}
                             </>}
 
@@ -252,8 +297,8 @@ const NavbarMunuForm = ({ content, type, children }) => {
                                 <div className='div-nav-flex-2'>
                                     <div>
                                         {/* <img className='img-nav-2' src={iconfile}></img> */}
-                                        <WebAssetIcon className='me-2 c-blue2' />
-                                        <StarBorderIcon className='me-2 c-blue2' />
+                                        <WebAssetIcon className='me-2 c-blue2' onClick={() => toggleFullscreen()} />
+                                        <StarBorderIcon className='me-2 c-blue2' onClick={() => togglePage()} />
                                     </div>
 
                                     <div>
@@ -266,8 +311,8 @@ const NavbarMunuForm = ({ content, type, children }) => {
                             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                                 <div className='div-nav-flex-2'>
 
-                                    <WebAssetIcon className='me-2 c-blue2' />
-                                    <StarBorderIcon className='me-2 c-blue2' />
+                                    <WebAssetIcon className='me-2 c-blue2' onClick={() => toggleFullscreen()} />
+                                    <StarBorderIcon className='me-2 c-blue2' onClick={() => togglePage()} />
                                     {/* <a href='/'><img className='img-nav-2' src={iconvnpt}></img></a> */}
                                     {children}
                                 </div>

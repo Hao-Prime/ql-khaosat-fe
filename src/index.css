@@ -26,6 +26,15 @@
 .formio-component-datePicker\.disable {
   display: none;
 }
+.w-400{
+  width: 400px;
+}
+.w-30pt{
+  width: 30%;
+}
+.w-70pt{
+  width: 70%;
+}
 /*Ẩn các component formio*/
 .div-form-view-detail{
   margin: auto;

@@ -48,30 +48,21 @@ const Skills = () => {
         </div>
         <br />
         <ul className="list-decimal px-4 font-Poppins sm:text-sm text-xs !leading-7">
-          <li>Lorem ipsum dolor sit, amet consectetur adipisicing.</li>
-          <li>Lorem ipsum dolor sit, ame.</li>
-          <li>Lorem ipsum dolor sit, amet consectetur</li>
-          <li>
-            Lorem ipsum dolor sit, amet dolor sit, amet consectetur adipisicing.
-          </li>
-          <li>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad est
-            beatae quos rem.
-          </li>
+
         </ul>
         <br />
         <div className="flex justify-end">
           <button onClick={closeModal} className="btn">
-            Close
+            Đóng
           </button>
         </div>
       </Modal>
 
       {/* content */}
       <div className="md:container px-5  py-14">
-        <h2 className="title" data-aos="fade-down">
+        <h4 className=" bold" data-aos="fade-down">
           {content?.skills?.title}
-        </h2>
+        </h4>
         <h4 className="subtitle" data-aos="fade-down">
           {content?.skills?.subtitle}
         </h4>
@@ -86,20 +77,20 @@ const Skills = () => {
                relative group w-full flex items-center
                 gap-5 p-5 max-w-sm rounded-md border-2 border-slate-200"
             >
-              <div>
+              <div className="w-30pt">
                 <img
                   src={skill.logo}
                   alt="..."
                   className="w-10 group-hover:scale-125 duration-200 w-xsadwqq"
                 />
               </div>
-              <div>
+              <div className="w-70pt">
                 <h6>{skill.name}</h6>
                 <p className="italic">{skill.para}</p>
                 <div
                   onClick={() => {
                     setSelectSkill(skill);
-                    openModal();
+                    // openModal();
                   }}
                   className="text-xl absolute top-3 right-3"
                 >

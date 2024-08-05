@@ -6,9 +6,9 @@ const Services = () => {
   return (
     <section id="services">
       <div className="md:container px-5 py-14">
-        <h2 className="title" data-aos="fade-down">
+        <h4 className="bold" data-aos="fade-down">
           {content?.services?.title}
-        </h2>
+        </h4>
         <h4 className="subtitle" data-aos="fade-down">
           {content?.services?.subtitle}
         </h4>

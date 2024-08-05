@@ -22,6 +22,7 @@ var display = [
     { key: 'mask', ignore: true, },
     { key: 'spellcheck', ignore: true, },
     { key: 'tableView', ignore: true, },
+    { key: 'inputMaskPlaceholderChar', ignore: true, },
 
 
 ]
@@ -55,7 +56,7 @@ var hiddenDefault = [
 ]
 var hiddenDefault_2 = [
 
-    { key: 'api', ignore: false, },
+    { key: 'api', ignore: true, },
     { key: 'conditional', ignore: true, },
     { key: 'logic', ignore: true, },
     { key: 'layout', ignore: true, },
@@ -69,7 +70,7 @@ const getComponentFormIO = () => {
             advanced: false,
             data: false,
             customBasic: {
-                title: 'Basic',
+                title: 'Thành phần',
                 default: true,
                 weight: 0,
                 components: {
@@ -112,7 +113,54 @@ const getComponentFormIO = () => {
                         },
 
                     },
+                    danToc: {
+                        title: 'Dân tộc',
+                        key: '@danToc-select',
+                        icon: 'th-list',
+                        "schema": {
+                            "label": "Dân tộc",
+                            "type": "select",
+                            "key": "@danToc-select",
+                            "dataSrc": "custom",
+                            "data": {
+                                custom: `var script = document.createElement('script');
+                                    script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+                                    script.type = 'text/javascript';
+                                    document.getElementsByTagName('head')[0].appendChild(script);
 
+                                    function getCookie(name) {
+                                        var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+                                        return v ? v[2] : null;
+                                    }
+
+                                    var requestURL = 'https://apidemo.vnptigate.vn/ba/ethnic/name/--limit';
+
+
+                                    $.ajax({ 
+                                            type: 'GET', 
+                                            headers: {
+                                                
+                                            },
+                                            url: requestURL, 
+                                            data: {
+                                            }, 
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: 'json',
+                                            success: function (data) { 
+                                                $.each(data, function(index, value) {
+                                                    values.push({ label: value.name, value: value.id });
+                                                });
+                                            }, 
+                                            error: function(){
+                                                console.log("Error");
+                                                }
+                                            , 
+                                            async: false
+                                        });
+                                    `}
+                        },
+
+                    },
                     textfield: true,
                     textarea: true,
                     number: true,
@@ -125,12 +173,51 @@ const getComponentFormIO = () => {
                 }
             },
             layout: {
-                title: 'Layout',
+                title: 'Giao diện',
                 weight: 0,
                 components: {
-                    content: true,
-                    container: true,
-                    columns: true,
+                    // content: true,
+                    // container: true,
+                    // columns: true,
+                    content: {
+                        title: 'Nhãn - nội dung',
+                        key: '@content',
+                        icon: 'html5',
+                        schema: {
+                            label: 'Nhãn - nội dung',
+                            type: 'content',
+                            key: '@content',
+                            input: true,
+
+                        },
+
+                    },
+                    container: {
+                        title: 'Trang',
+                        key: '@container',
+                        icon: 'folder-open',
+                        schema: {
+                            label: 'Trang',
+                            type: 'container',
+                            key: '@container',
+                            input: true,
+
+                        },
+
+                    },
+                    columns: {
+                        title: 'Bảng - cột',
+                        key: '@columns',
+                        icon: 'columns',
+                        schema: {
+                            label: 'Bảng - cột',
+                            type: 'columns',
+                            key: '@columns',
+                            input: true,
+
+                        },
+
+                    },
                     tabs: true,
                     htmlelement: false,
                     fieldset: false,
@@ -153,7 +240,7 @@ const getComponentFormIO = () => {
                 {
                     key: 'validation', components: [
                         { key: 'validate.required', ignore: false, },
-                        { key: 'unique', ignore: false, },
+                        { key: 'unique', ignore: true, },
                         { key: 'errorLabel', ignore: false, },
                         { key: 'validate.minLength', ignore: false, },
                         { key: 'validate.maxLength', ignore: false, },
@@ -180,7 +267,7 @@ const getComponentFormIO = () => {
                 {
                     key: 'validation', components: [
                         { key: 'validate.required', ignore: false, },
-                        { key: 'unique', ignore: false, },
+                        { key: 'unique', ignore: true, },
                         { key: 'errorLabel', ignore: false, },
                         { key: 'validate.maxLength', ignore: false, },
                         ...validation
@@ -193,7 +280,7 @@ const getComponentFormIO = () => {
                 {
                     key: 'validation', components: [
                         { key: 'validate.required', ignore: false, },
-                        { key: 'unique', ignore: false, },
+                        { key: 'unique', ignore: true, },
                         { key: 'errorLabel', ignore: false, },
                         ...validation
                     ]
@@ -298,6 +385,17 @@ const getComponentFormIO = () => {
                         { key: 'clearOnHide', ignore: true, },
                         { key: 'calculateValue', ignore: true, },
                         { key: 'customDefaultValue', ignore: true, },
+                        { key: 'dataType', ignore: true, },
+                        { key: 'idPath', ignore: true, },
+                        { key: 'refreshOn', ignore: true, },
+                        { key: 'selectThreshold', ignore: true, },
+                        { key: 'readOnlyValue', ignore: true, },
+                        { key: 'customOptions', ignore: true, },
+                        { key: 'useExactSearch', ignore: true, },
+                        { key: 'refreshOnBlur', ignore: true, },
+                        { key: 'clearOnRefresh', ignore: true, },
+
+
                     ]
                 },
 
@@ -372,7 +470,55 @@ const getComponentFormIO = () => {
                 },
             ],
             content: [
-                { key: 'editor', value: 'quill', }
+                ...hiddenDefault,
+                { key: 'editor', value: 'quill', },
+                {
+                    key: 'display', components: [
+                        { key: 'refreshOnChange', ignore: true, },
+                        { key: 'modalEdit', ignore: true, },
+                    ]
+                },
+
+            ],
+            container: [
+                ...hiddenDefault,
+                { key: 'validation', ignore: true, },
+                {
+                    key: 'display', components: [
+                        { key: 'labelPosition', ignore: true, },
+                        { key: 'modalEdit', ignore: true, },
+                        { key: 'disabled', ignore: true, },
+                        { key: 'tableView', ignore: true, },
+
+                    ]
+                },
+            ],
+            columns: [
+                ...hiddenDefault,
+                { key: 'validation', ignore: true, },
+                {
+                    key: 'display', components: [
+                        { key: 'labelPosition', ignore: true, },
+                        { key: 'modalEdit', ignore: true, },
+                        { key: 'disabled', ignore: true, },
+                        { key: 'tableView', ignore: true, },
+                        { key: 'autoAdjust', ignore: true, },
+
+                    ]
+                },
+            ],
+            tabs: [
+                ...hiddenDefault,
+                { key: 'validation', ignore: true, },
+                {
+                    key: 'display', components: [
+                        { key: 'labelPosition', ignore: true, },
+                        { key: 'modalEdit', ignore: true, },
+                        { key: 'disabled', ignore: true, },
+                        { key: 'tableView', ignore: true, },
+
+                    ]
+                },
             ]
             // button: true,
         }

@@ -114,3 +114,11 @@
     width: 100%;
     margin-bottom: 16px;
 }
+
+@media (max-width: 768px) {
+
+    .ant-picker-panels{
+        display: flex !important;
+        flex-direction: column !important;
+    }
+}

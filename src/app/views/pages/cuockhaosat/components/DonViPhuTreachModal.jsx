@@ -80,7 +80,7 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
             footer={[
                 <span className='me-1 red'>{error}</span>,
                 ...((donViPTUp?.trangThai == 3 && cuocKhaoSat?.donViPhuTrach?.trangThai == 2) ?
-                    [<Button key="submit" type="primary" onClick={() => { khongDat(donViPTUp?._id), setOpen(false) }} disabled={sending}>
+                    [<Button key="submit" type="primary" onClick={() => { khongDat(donViPTUp?._id); setOpen(false) }} disabled={sending}>
                         <span style={{ display: sending ? 'inherit' : 'none' }}>
                             <CircularProgress className="span-sender" />
                         </span>

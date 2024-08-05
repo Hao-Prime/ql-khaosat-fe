@@ -13,8 +13,18 @@
     flex-direction: column;
     justify-content: space-between;
 }
+.h2-title{
+    font-size: 27px;
+    line-height: 1;
+    --tw-text-opacity: 1;
+    font-weight: 700;
+    color: rgb(6 34 63 / var(--tw-text-opacity));
+}
 .show-hoverx{
     display: none;
+}
+.ant-table-body{
+    overflow: auto auto !important;
 }
 .qiweoqpw:hover .show-hoverx{
     display: block;
@@ -223,6 +233,9 @@ a {
     display: flex;
     align-items: center;
 
+}
+.component-settings-button-edit-json{
+    display: none;
 }
 .img-nav{
     height: 48px;
