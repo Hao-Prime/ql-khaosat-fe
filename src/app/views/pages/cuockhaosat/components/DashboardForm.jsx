@@ -601,26 +601,36 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                     },
 
                     {
-                        title: 'Ngày giao',
-                        render: (data) => (<p>{data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : "-"} </p>),
+                        title: <p>Ngày bắt đầu <br /> Ngày kết thúc</p>,
+                        render: (data) => (
+                            <p>{data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : <>{dayjs(cuocKhaoSat?.ngayBD).format("DD/MM/YYYY HH:mm")}<br /></>}
+                                 {data?.ngayBD && <br />}
+                                {data?.thoiHan ? dayjs(data?.thoiHan).format("DD/MM/YYYY HH:mm") : "-"}
+                            </p>),
                     },
 
                     {
-                        title: 'Ngày tiếp nhận',
-                        render: (data) => (<p>{data?.ngayTiepNhan ? dayjs(data?.ngayTiepNhan).format("DD/MM/YYYY HH:mm") : "-"} </p>),
-                    },
-                    {
-                        title: 'Thời hạn',
-                        render: (data) => (<p>{data?.thoiHan ? dayjs(data?.thoiHan).format("DD/MM/YYYY HH:mm") : "-"} </p>),
-                    },
-                    {
-                        title: 'Ngày hoàn thành',
-                        render: (data) => (<p>{data?.ngayHT ? dayjs(data?.ngayHT).format("DD/MM/YYYY HH:mm") : "-"} </p>),
+                        title: <p>Ngày tiếp nhận <br /> Ngày hoàn thành</p>,
+                        render: (data) => (
+                            <p>
+
+                                {data?.ngayTiepNhan ? dayjs(data?.ngayTiepNhan).format("DD/MM/YYYY HH:mm") : "-"}
+                                {data?.ngayTiepNhan && <br />}
+                                {data?.ngayHT ? dayjs(data?.ngayHT).format("DD/MM/YYYY HH:mm") : "-"}
+                            </p>),
                     },
                     {
                         title: 'Trạng thái',
                         key: 'trangThai',
-                        render: (data) => (<p className={data?.trangThai == 3 ? "green" : data?.trangThai == 2 ? "blue" : "black"}>{PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)} </p>),
+                        render: (data) => (
+                            <>
+
+                                {PhanLoai.getTimeStatus(data?.ngayBD, data?.thoiHan, data?.ngayTiepNhan, data?.ngayHT)}
+                                <br />
+                                <p className={data?.trangThai == 3 ? "green" : data?.trangThai == 2 ? "blue" : "black"}>
+                                    {PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)}
+                                </p></>
+                        ),
                         className: 'nowrap',
                         align: "center",
                     },

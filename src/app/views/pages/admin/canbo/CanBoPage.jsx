@@ -216,7 +216,7 @@ const CanBoPage = () => {
                         // },
                         {
                             title: "Đơn vị quản lý",
-                            render: (data) => (<p>{data?.donVi?.tenDonVi + " - " + data?.donVi?.donViTrucThuoc?.tenDonVi} </p>),
+                            render: (data) => (<p>{data?.donVi?.tenDonVi + " - " + (data?.donVi?.donViTrucThuoc?.tenDonVi ||"")} </p>),
                             width: 250,
                         },
                         // {

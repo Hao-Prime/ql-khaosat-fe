@@ -240,7 +240,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
             // dataIndex: 'thoiHan',
             align: "center",
             inputType: "date",
-            render: (data, record) => (<p>{record?.thoiHan ? dayjs(record?.thoiHan).format("DD/MM/YYYY HH:mm") : "-"} </p>),
+            render: (data, record) => (<p>{data?.thoiHanEdit ? dayjs(data?.thoiHanEdit).subtract(7, 'hour').format("DD/MM/YYYY HH:mm") : data?.thoiHan ? dayjs(data?.thoiHan).format("DD/MM/YYYY HH:mm") : "-"} </p>),
         },
         {
             title: '',
@@ -513,7 +513,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                             </div>
 
                             <div>
-                                Lọc đơn vị phụ trách
+                                Lọc đơn vị đã phụ trách
                                 <Switch onChange={(e) => { setLoc(e) }} className='ms-1' />
                             </div>
 

@@ -27,7 +27,7 @@ import ThongKeTheoDonViPage from '../admin/thongke/ThongKeTheoDonViPage';
 
 
 const HomeMenuPage = ({ user }) => {
-
+    const [hiddenSidebar, setHiddenSidebar] = useState(false);
     const [fillter, setFillter] = React.useState({ type: 0 });
     const handleChange = (arr, newValue) => {
         setFillter({ ...fillter, [arr]: newValue });
@@ -43,9 +43,9 @@ const HomeMenuPage = ({ user }) => {
 
             <div className=''>
                 <div className=' main-s'>
-                    <Sidebar />
+                    {hiddenSidebar?<></>:<Sidebar user={user}/>} 
                     <div className='body-main'>
-                        <NavbarMunuForm
+                        <NavbarMunuForm  setHiddenSidebar={setHiddenSidebar} hiddenSidebar={hiddenSidebar}
                         // children={
                         //     <Tabs className='ms-2' value={fillter?.type} onChange={(e, value) => handleChange("type", value)} centered>
                         //         <Tab label="Biểu mẫu của tôi" />
@@ -63,7 +63,7 @@ const HomeMenuPage = ({ user }) => {
                             <Route path="/khao-sat" element={<ProtectedRoute user={user} role="khaosat"> <CuocKhaoSatPage /> </ProtectedRoute>} />
 
                             <Route path="/donvi" element={<ProtectedRoute user={user} role="donvi"> <DonViPage /> </ProtectedRoute>} />
-                            <Route path="/nguoi-dung" element={<ProtectedRoute user={user} role="nguoidung"> <NguoiDungPage /> </ProtectedRoute>} />
+                            <Route path="/nguoi-dung" element={<ProtectedRoute user={user} role="nguoikhaosat"> <NguoiDungPage /> </ProtectedRoute>} />
                             <Route path="/can-bo" element={<ProtectedRoute user={user} role="canbo"> <CanBoPage /> </ProtectedRoute>} />
 
                             <Route path="/cau-hinh/role" element={<ProtectedRoute user={user} role="admin"> <QuyenTruyCapPage /> </ProtectedRoute>} />

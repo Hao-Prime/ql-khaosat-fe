@@ -7,11 +7,8 @@ function getMe() {
 function doiMatKhau(nhanVien) {
   return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/change-pas", nhanVien);
 };
-const dangNhap = ({ tenDangNhap, matKhau }) => {
-  return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/login", {
-    "tenDangNhap": tenDangNhap,
-    "matKhau": matKhau
-  })
+const dangNhap = (user) => {
+  return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/user/login", user)
 };
 const dangXuat = () => {
   localStorage.removeItem('tkv')

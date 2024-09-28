@@ -8,4 +8,4 @@ RUN npm install -g serve
 # start app
 CMD serve -s build -p 3001
 # Xóa cache nodemoduule mới chạy đc
-# docker build -t haohi/qlks-fe-vnpt:0.1.3 .
+# docker build -t haohi/qlks-fe-vnpt:0.1.7 .

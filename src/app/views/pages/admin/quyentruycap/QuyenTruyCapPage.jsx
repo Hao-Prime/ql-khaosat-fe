@@ -182,7 +182,7 @@ const QuyenTruyCapPage = () => {
                 </div>
                 {contextHolder}
                 <Table
-                    rowKey="_id"
+                    rowKey="key"
                     loading={loading}
                     columns={columns}
                     scroll={{ x: '100%', y: 415 }}

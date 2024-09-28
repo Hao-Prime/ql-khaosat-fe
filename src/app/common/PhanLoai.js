@@ -1,3 +1,43 @@
+import dayjs from "dayjs";
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
+const getTimeStatus = (ngayBD, ngayKT, ngayBDTT, ngayKTTT) => {
+    const now = ngayKTTT ? dayjs(ngayKTTT) : dayjs();
+    const endTime = dayjs(ngayKT);
+
+    if (!endTime.isValid()) return null;
+
+    const diff = endTime.diff(now);
+
+    if (diff >= 0) {
+        const daysRemaining = Math.floor(dayjs.duration(diff).asDays());
+
+        if (daysRemaining >= 1) {
+            if (ngayKTTT) {
+                return <span className="mb-0 green">Đúng hẹn trước {daysRemaining} ngày</span>;
+            } else {
+                return <span className="mb-0 green">Còn {daysRemaining} ngày</span>;
+            }
+
+        }
+        const hoursRemaining = Math.floor(dayjs.duration(diff).asHours());
+        if (ngayKTTT) {
+            return <span className="mb-0 green">Đúng hẹn trước {hoursRemaining} giờ</span>;
+        } else {
+            return <span className="mb-0 yellow-l">Còn {hoursRemaining} giờ</span>
+        }
+    } else {
+        const overdueDiff = Math.abs(diff);
+        const overdueDays = Math.floor(dayjs.duration(overdueDiff).asDays());
+
+        if (overdueDays >= 1) {
+            return <span className="mb-0 red">{ngayKTTT?"Đã trễ":"Đang trễ"} {overdueDays} ngày</span>;
+        }
+
+        const overdueHours = Math.floor(dayjs.duration(overdueDiff).asHours());
+        return <span className="mb-0 red">{ngayKTTT?"Đã trễ":"Đang trễ"} {overdueHours} giờ</span>;
+    }
+};
 function getSelectTrangThaiXuLy() {
     return [
         { value: 1, label: "Chưa tiếp nhận" },
@@ -78,5 +118,6 @@ export default {
     getQuyenYCHT,
     getSelectQuyenYCHT,
     getSelectQuyenYCHTThapHon,
-    getSelectTrangThaiXuLy
+    getSelectTrangThaiXuLy,
+    getTimeStatus
 }

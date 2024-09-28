@@ -365,9 +365,29 @@ h4 {
 }
 
 
-
+.has-feedback .form-control{
+  min-width: 150px !important;
+}
+.checkbox{
+  min-width: 100px !important;
+}
+.red{
+  color: red !important;
+}
+.red *{
+  color: red !important;
+}
 code {
   
+}
+.yellow{
+  color: #b78103;
+}
+.yellow-l{
+  color: #f0d908;
+}
+.green {
+  color: #10f01b
 }
 .img-animazom{
   animation-name: zoom-cycle;

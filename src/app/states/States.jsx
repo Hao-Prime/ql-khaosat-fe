@@ -169,6 +169,9 @@ const getComponentFormIO = () => {
                     select: true,
                     radio: true,
                     datetime: true,
+                    currency:true,
+                    survey:true,
+                    datagrid:true
                     // button: true,
                 }
             },

@@ -65,7 +65,7 @@ const Sidebar = ({ user }) => {
             key: 'sub1',
             label: 'Quản trị hệ thống',
             icon: <AccountBalanceWalletIcon />,
-            roles: ["admin", "donvi", "nguoidung"],
+            roles: ["admin", "donvi", "nguoidung","nguoikhaosat"],
             children: [
                 {
                     key: '/quan-tri/donvi',
@@ -80,7 +80,7 @@ const Sidebar = ({ user }) => {
                 {
                     key: '/quan-tri/nguoi-dung',
                     label: 'Tệp người khảo sát',
-                    roles: ["admin", 'nguoidung'],
+                    roles: ["admin", 'nguoikhaosat'],
                 }
 
             ],
@@ -142,7 +142,7 @@ const Sidebar = ({ user }) => {
     useEffect(() => {
         // Lấy đường dẫn của URL hiện tại
         const path = location.pathname;
-        console.log(location.pathname, location.pathname + location?.search);
+        // console.log(location.pathname, location.pathname + location?.search);
         setDefaultSelectedKeys([location.pathname, location.pathname + location?.search])
         // Xác định defaultOpenKeys và defaultSelectedKeys dựa trên đường dẫn URL
         let selectKey = []
@@ -184,7 +184,7 @@ const Sidebar = ({ user }) => {
             });
     };
     const filteredMenuItems = filterMenuItems(items, taiKhoan?.listVaiTro);
-    console.log(filterMenuItems(items, taiKhoan?.listVaiTro));
+    // console.log(filterMenuItems(items, taiKhoan?.listVaiTro));
     const renderMenuItems = items => {
         return items.map(item => {
             if (item.children) {

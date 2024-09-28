@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Select, message, TreeSelect } from 'antd';
 import Services from 'app/services';
 import Loading from 'app/components/Loading';
+import { useSelector } from 'react-redux';
 const { TextArea } = Input;
 const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
     const [donVi, setDonVi] = useState(donViUp);
@@ -12,6 +13,7 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
     const [loading, setLoading] = useState(true);
+    const taiKhoan = useSelector(state => state.taiKhoan)
     useEffect(() => {
         if (open) {
             realoadListSelect()
@@ -43,8 +45,12 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
     }
     const onSubmit = () => {
         setSending(true);
+        let donViRS= donVi
+        if(!taiKhoan?.listVaiTro?.includes("admin") && !donVi?.donViTrucThuoc){
+            donViRS = {...donVi, donViTrucThuoc: taiKhoan?.donVi}
+        }
         if (!donViUp?._id) {
-            Services?.getDonViService()?.save(donVi)?.then(
+            Services?.getDonViService()?.save(donViRS)?.then(
                 (res) => {
 
                     if (res?.data?.error) {

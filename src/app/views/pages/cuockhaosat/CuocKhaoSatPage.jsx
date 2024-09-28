@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import FormatString from 'app/common/FormatString';
 import { useSelector } from 'react-redux';
+import PhanLoai from 'app/common/PhanLoai';
 const { Search } = Input;
 const items = [
     {
@@ -60,7 +61,7 @@ const CuocKhaoSatPage = () => {
     async function reLoadList(params) {
         setLoading(true)
 
-        let dataRSLisstDv = await Services.getCuocKhaoSatService().getAll({ isShare: 0, search: searchValue, trangThai: trangThai })
+        let dataRSLisstDv = await Services.getCuocKhaoSatService().getAll({ isShare: 1, search: searchValue, trangThai: trangThai })
         if (dataRSLisstDv.data) {
             setListCuocKhaoSatMD(dataRSLisstDv?.data)
             setPage(1)
@@ -181,6 +182,70 @@ const CuocKhaoSatPage = () => {
             </>
         )
     }
+    function getPhuTrac(cuocKhaoSat) {
+        let rs
+        if (cuocKhaoSat?.donVi?._id == taiKhoan?.donVi?._id) {
+            return (
+                <>
+                    <p >
+                        {cuocKhaoSat?.ngayBD ? dayjs(cuocKhaoSat?.ngayBD)?.format('DD/MM/YYYY HH:mm') : ""}
+                        <br />
+                        {cuocKhaoSat?.ngayKT ? dayjs(cuocKhaoSat?.ngayKT)?.format('DD/MM/YYYY HH:mm') : ""}
+                    </p>
+                </>
+            );
+        }
+        cuocKhaoSat?.listDonViPhuTrach?.forEach(element => {
+            if (element?.donVi?._id == taiKhoan?.donVi?._id) {
+                rs = element
+            }
+        });
+        if (rs) {
+            return (
+                <>
+                    <p >
+                        {rs?.ngayBD ? dayjs(rs?.ngayBD)?.format('DD/MM/YYYY HH:mm') : ""}
+                        <br />
+                        {rs?.thoiHan ? dayjs(rs?.thoiHan)?.format('DD/MM/YYYY HH:mm') : ""}
+                    </p>
+                </>
+            );
+        }
+
+    }
+    function getPhuTrac1(cuocKhaoSat) {
+        let rs
+        if (cuocKhaoSat?.donVi?._id == taiKhoan?.donVi?._id) {
+            return (
+                <>
+                    <p >
+                        <>{cuocKhaoSat?.ngayKT &&
+                            PhanLoai.getTimeStatus(cuocKhaoSat?.ngayBD, cuocKhaoSat?.ngayKT, null, cuocKhaoSat?.ngayHT)}</>
+                        <br />
+                        {cuocKhaoSat?.ngayHT ? dayjs(cuocKhaoSat?.ngayHT)?.format('DD/MM/YYYY HH:mm') : ""}
+                    </p>
+                </>
+            );
+        }
+        cuocKhaoSat?.listDonViPhuTrach?.forEach(element => {
+            if (element?.donVi?._id == taiKhoan?.donVi?._id) {
+                rs = element
+            }
+        });
+        if (rs) {
+            return (
+                <>
+                    <p >
+                        <>{rs?.thoiHan &&
+                            PhanLoai.getTimeStatus(rs?.ngayBD, rs?.thoiHan, null, rs?.ngayHT)}</>
+                        <br />
+                        {rs?.ngayHT ? dayjs(rs?.ngayHT)?.format('DD/MM/YYYY HH:mm') : ""}
+                    </p>
+                </>
+            );
+        }
+
+    }
     return (
         <>
             <div className='pb-2'>
@@ -224,7 +289,7 @@ const CuocKhaoSatPage = () => {
 
                                 </div>
                             ),
-                            width: 120,
+                            width: 80,
                         },
                         {
                             title: "Tiêu đề",
@@ -244,9 +309,26 @@ const CuocKhaoSatPage = () => {
                             render: (data) => (<p >{data?.donVi?.tenDonVi}</p>),
                         },
                         {
-                            title: "Thời gian",
+                            title: "Bắt đầu/thời hạn",
                             width: 120,
-                            render: (data) => (<p >{dayjs(data?.ngayBD)?.format('DD/MM/YYYY HH:mm')}<br />{dayjs(data?.ngayKT)?.format('DD/MM/YYYY HH:mm')}</p>),
+                            render: (data) => (
+                                <>{getPhuTrac(data,taiKhoan?.donVi)}</>
+                                // <p >{data?.ngayBD ? dayjs(data?.ngayBD)?.format('DD/MM/YYYY HH:mm') : ""}
+                                //     <br />
+                                //     {data?.ngayKT ? dayjs(data?.ngayKT)?.format('DD/MM/YYYY HH:mm') : ""}
+                                // </p>
+                            ),
+                        },
+                        {
+                            title: "Ngày hoàn thành",
+                            width: 120,
+                            render: (data) => (
+                                <>{getPhuTrac1(data,taiKhoan?.donVi)}</>
+                                // <p >{data?.ngayBD ? dayjs(data?.ngayBD)?.format('DD/MM/YYYY HH:mm') : ""}
+                                //     <br />
+                                //     {data?.ngayKT ? dayjs(data?.ngayKT)?.format('DD/MM/YYYY HH:mm') : ""}
+                                // </p>
+                            ),
                         },
                         {
                             title: "Tiến độ",

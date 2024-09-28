@@ -53,7 +53,9 @@ const CauHinhPage = () => {
 
         let dataRSLisstDv = (await Services.getCauHinhService().getAll("", "", ""))?.data
         setListCauHinhMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "_id", -1))
-        // setListCauHinhMD(dataRSLisstDv)
+        if(dataRSLisstDv?.length==0){
+            setListCauHinh([])
+        }
         setLoading(false)
     }
 

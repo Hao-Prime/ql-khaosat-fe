@@ -48,7 +48,7 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
         return list.map((item) => updateItem(item, key, newData));
     }
     const save = async (key) => {
-        let row = donVIPT
+        let row = {...donVIPT,thoiHanEdit: donVIPT.thoiHan}
         let listNewData = saveChild(listDonVi, key, row)
         setlistDonVi(listNewData);
         console.log(listNewData);
@@ -109,7 +109,8 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
                     <div className='pb-3'>
                         <p className='bold'> Thời hạn: </p>
                         <DatePicker
-                            onChange={(e) => onChange("thoiHan", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
+                            onChange={(e) => onChange("thoiHan", FormatDate.setTimeZoneUTC7(dayjs(e).toDate())
+                            )}
                             defaultValue={donViPTUp?.thoiHan ? dayjs(donViPTUp?.thoiHan) : null}
                             format="DD/MM/YYYY HH:mm"
                             showTime style={{ width: "100%" }}

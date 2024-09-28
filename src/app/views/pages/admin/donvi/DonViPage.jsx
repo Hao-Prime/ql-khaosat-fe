@@ -11,6 +11,7 @@ import SapXep from 'app/common/SapXep';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useSelector } from 'react-redux';
 const { Search } = Input;
 const items = [
     {
@@ -55,6 +56,9 @@ const DonViPage = () => {
         let dataRSLisstDv = await Services.getDonViService().getAll("")
         if (dataRSLisstDv.data) {
             setListDonViMD(formatData(dataRSLisstDv?.data))
+            if(dataRSLisstDv?.data?.length==0){
+                setListDonVi([])
+            }
             setPage(1)
         }
         setLoading(false)
