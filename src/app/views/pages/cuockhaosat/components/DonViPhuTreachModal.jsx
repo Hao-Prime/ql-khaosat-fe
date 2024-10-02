@@ -48,7 +48,7 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
         return list.map((item) => updateItem(item, key, newData));
     }
     const save = async (key) => {
-        let row = {...donVIPT,thoiHanEdit: donVIPT.thoiHan}
+        let row = {...donVIPT,ngayKTEdit: donVIPT.ngayKT}
         let listNewData = saveChild(listDonVi, key, row)
         setlistDonVi(listNewData);
         console.log(listNewData);
@@ -102,16 +102,16 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
                 <div className="div-setting-cus">
 
                     <div className='pb-3'>
-                        <p className='bold'> Chỉ tiêu *: </p>
-                        <Input type='number' defaultValue={donViPTUp?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Nhập chỉ tiêu" />
+                        <p className='bold'> Số phiếu *: </p>
+                        <Input type='number' defaultValue={donViPTUp?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Nhập số phiếu" />
                     </div>
 
                     <div className='pb-3'>
                         <p className='bold'> Thời hạn: </p>
                         <DatePicker
-                            onChange={(e) => onChange("thoiHan", FormatDate.setTimeZoneUTC7(dayjs(e).toDate())
+                            onChange={(e) => onChange("ngayKT", FormatDate.setTimeZoneUTC7(dayjs(e).toDate())
                             )}
-                            defaultValue={donViPTUp?.thoiHan ? dayjs(donViPTUp?.thoiHan) : null}
+                            defaultValue={donViPTUp?.ngayKT ? dayjs(donViPTUp?.ngayKT) : null}
                             format="DD/MM/YYYY HH:mm"
                             showTime style={{ width: "100%" }}
                         />

@@ -33,14 +33,16 @@ const FormDetailPage = () => {
     var isMounted = true;
     useEffect(() => {
         isMounted = true;
-        reloadList()
+        reloadDetail()
 
         return () => {
             isMounted = false;
         };
     }, [idBieuMau]);
-    function reloadList() {
-        setLoading(true)
+    function reloadDetail(reload) {
+        if(reload!=false){
+            setLoading(true)
+        }
         Services.getFormService().getFormDetail(idBieuMau).then(
             (res) => {
 
@@ -103,15 +105,15 @@ const FormDetailPage = () => {
                             //     label: 'Thống kê',
                             //     children: <DashboardForm bieuMau={bieuMau} />
                             // },
-                            // {
-                            //     key: '4',
-                            //     label: 'Chia sẻ quyền',
-                            //     children: <ShareForm bieuMau={bieuMau} />,
-                            // },
+                            {
+                                key: '4',
+                                label: 'Chia sẻ quyền',
+                                children: <ShareForm bieuMau={bieuMau} reloadDetail={reloadDetail}/>,
+                            },
                             {
                                 key: '5',
                                 label: 'Cài đặt',
-                                children: <SettingForm bieuMau={bieuMau} reloadList={reloadList} />,
+                                children: <SettingForm bieuMau={bieuMau} reloadList={reloadDetail} />,
                             },
                         ]}
                         onChange={onChange}

@@ -88,7 +88,7 @@ const EditForm = ({ cuocKhaoSat }) => {
             <div style={{ display: "none" }}>
                 <div id="formio-result" />
             </div>
-            {cuocKhaoSat?.quyenThaoTac && <div className='flex justify-center' >
+            {/* {cuocKhaoSat?.quyenThaoTac && <div className='flex justify-center' >
                 <Button className='btn-success' type="primary" size="large" disabled={sending} onClick={handleSave}>
                     <span style={{ display: sending ? 'inherit' : 'none' }}>
                         <CircularProgress className="span-sender" />
@@ -98,7 +98,7 @@ const EditForm = ({ cuocKhaoSat }) => {
                 </Button>
 
             </div>
-            }
+            } */}
 
 
 

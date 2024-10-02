@@ -142,18 +142,28 @@ const CuocKhaoSatDetailPage = () => {
                         defaultActiveKey="1"
                         items={[
                             {
+                                key: '0',
+                                label: 'Thông tin khảo sát',
+                                children: <></>,
+                            },
+                            {
                                 key: '1',
-                                label: 'Thiết kế',
+                                label: 'Thiết kế biểu mẫu',
                                 children: <EditForm cuocKhaoSat={cuocKhaoSat} />,
                             },
                             {
                                 key: '4',
-                                label: 'Phụ trách',
+                                label: 'Phân công khảo sát',// bảng tình hình thực hiện 
+                                children: <ShareForm cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />,
+                            },
+                            {
+                                key: '.14',
+                                label: 'Theo dõi thực hiện',
                                 children: <ShareForm cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />,
                             },
                             {
                                 key: '3',
-                                label: 'Thống kê',
+                                label: 'Kết quả khảo sát', // Tình hình thực hiện
                                 children: <DashboardForm cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />
                             },
                             ...(cuocKhaoSat?.quyenThaoTac ? [

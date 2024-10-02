@@ -389,6 +389,14 @@ code {
 .green {
   color: #10f01b
 }
+.table-cus-antd .ant-table-body{
+  max-height: calc(100vh - 220px) !important;
+}
+.table-cus-antd{
+  min-height: unset !important;
+  max-height: calc(100vh - 180px) !important;
+}
+
 .img-animazom{
   animation-name: zoom-cycle;
   animation-duration: 8s;
@@ -404,3 +412,8 @@ code {
     transform: scale(1.07); /* Phóng to thêm 10% */
   }
 }/*  */
+
+.help{
+  color: #707070;
+  font-size: 15px !important;
+}

@@ -24,6 +24,8 @@ import CauHinhPage from '../admin/cauhinh/CauHinhPage';
 import LogsHeThongPage from '../admin/logs/LogsHeThongPage';
 import QuyenTruyCapPage from '../admin/quyentruycap/QuyenTruyCapPage';
 import ThongKeTheoDonViPage from '../admin/thongke/ThongKeTheoDonViPage';
+import KeHoachPage from '../kehoach/KeHoachPage';
+import KeHoachDetailPage from '../kehoach/KeHoachDetailPage';
 
 
 const HomeMenuPage = ({ user }) => {
@@ -61,6 +63,8 @@ const HomeMenuPage = ({ user }) => {
                             <Route path="/chi-tiet-khao-sat" element={<ProtectedRoute user={user} role="khaosat"> <CuocKhaoSatDetailPage /> </ProtectedRoute>} />
                             <Route path="/bieu-mau" element={<ProtectedRoute user={user} role="bieumau"> <MyListFormPage /> </ProtectedRoute>} />
                             <Route path="/khao-sat" element={<ProtectedRoute user={user} role="khaosat"> <CuocKhaoSatPage /> </ProtectedRoute>} />
+                            <Route path="/ke-hoach" element={<ProtectedRoute user={user} role="kehoach"> <KeHoachPage /> </ProtectedRoute>} />
+                            <Route path="/chi-tiet-ke-hoach" element={<ProtectedRoute user={user} role="kehoach"> <KeHoachDetailPage /> </ProtectedRoute>} />
 
                             <Route path="/donvi" element={<ProtectedRoute user={user} role="donvi"> <DonViPage /> </ProtectedRoute>} />
                             <Route path="/nguoi-dung" element={<ProtectedRoute user={user} role="nguoikhaosat"> <NguoiDungPage /> </ProtectedRoute>} />

@@ -199,7 +199,7 @@ const ThongKeTheoDonViPage = () => {
                         },
 
                         {
-                            title: "Số Chỉ tiêu",
+                            title: "Số Số phiếu",
                             dataIndex: "v15",
                             key: "v15",
                             align: "center",

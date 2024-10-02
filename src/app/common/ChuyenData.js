@@ -349,7 +349,7 @@ function chuyenDataStringToListFile(value) {
 }
 function chuyenKeHoach(value) {
     let listDuAn=[]
-    let ngayHT=FormatDate.getNgayGioHienTai()
+    let ngayKTTT=FormatDate.getNgayGioHienTai()
     congViecKeHoach?.forEach(e => {
         // if(e.ngayBDCTCV==undefined)console.log(e);
         if(e.tenDA){
@@ -411,7 +411,7 @@ function chuyenKeHoach(value) {
         })
         let daRS={
             ...e,
-            ngayKhoiTao:ngayHT,"ngayBDDATT":ngayBDDA, "ngayBDDA":ngayBDDA,"ngayKTDA":ngayKTDA,trangThaiTiepNhan: "Đã tiếp nhận"
+            ngayKhoiTao:ngayKTTT,"ngayBDDATT":ngayBDDA, "ngayBDDA":ngayBDDA,"ngayKTDA":ngayKTDA,trangThaiTiepNhan: "Đã tiếp nhận"
         }
         rs.push(daRS)
     })

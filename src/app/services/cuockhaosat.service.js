@@ -1,5 +1,28 @@
 import axios from "axios";
 
+function getKeHoach(idKeHoach, trangThai) {
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach?`+(idKeHoach?(`idKeHoach=` + idKeHoach ):"")+ `&trangThai=` + trangThai);
+};
+function taoKeHoach(keHoach) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach`, keHoach);
+};
+function capNhatKeHoach(keHoach) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach`, keHoach);
+};
+function xoaKeHoach(id) {
+  return axios.delete(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach?idKeHoach=${id}`);
+};
+function themFileKeHoach(files) {
+  return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/khao-sat/ke-hoach/themfiles", files);
+};
+function xoaFileKeHoach(idFile, idKH) {
+  return axios.get(process.env.REACT_APP_URL_SERVER + "/be-form/khao-sat/ke-hoach/xoafile?idFile=" + idFile + "&idKH=" + idKH);
+};
+
+function ganBieuMauKhaoSat(idBieuMau, idKhaoSat) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach?idBieuMau=${idBieuMau}&idKhaoSat=${idKhaoSat}`);
+};
+
 function getAll(filter) {
   return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat?isShare=${filter?.isShare || 0}&search=${filter?.search || ""}&trangThaiXL=${filter?.trangThai || ""}${filter?.idKhaoSat ? "&idKhaoSat=" + filter?.idKhaoSat : ""}`);
 };
@@ -80,6 +103,13 @@ const cuocKhaoSatService = {
   hoanThanhKhaoSat,
   capNhatKetQuaKS,
   chuaHoanThanhKhaoSat,
-  xoaKetQua
+  xoaKetQua,
+  ganBieuMauKhaoSat,
+  xoaKeHoach,
+  capNhatKeHoach,
+  taoKeHoach,
+  getKeHoach,
+  themFileKeHoach,
+  xoaFileKeHoach
 };
 export default cuocKhaoSatService;

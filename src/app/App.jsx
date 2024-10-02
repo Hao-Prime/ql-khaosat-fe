@@ -6,6 +6,7 @@ import '../index.css';
 import "app/assets/css/rsuite-lib.css";
 import "app/assets/css/style.css";
 import "app/assets/css/custom-antd.css";
+import 'suneditor/dist/css/suneditor.min.css';
 import MyListFormPage from "./views/pages/mylistformpage/MyListFormPage";
 import FormDetailPage from "./views/pages/mylistformpage/FormDetailPage";
 

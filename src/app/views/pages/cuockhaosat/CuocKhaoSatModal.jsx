@@ -122,7 +122,7 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
 
                     </div>
                     <div className='pb-3'>
-                        <p className='bold'> Chỉ tiêu: </p>
+                        <p className='bold'> Số phiếu: </p>
                         <Input type="number" defaultValue={cuocKhaoSat?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ khảo sát cần đạt" />
                     </div>
 

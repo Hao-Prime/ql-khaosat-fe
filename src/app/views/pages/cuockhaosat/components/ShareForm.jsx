@@ -137,7 +137,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
 
         const row1 = await form.validateFields();
         console.log(row1);
-        let row = { ...row1, thoiHan: FormatDate.setTimeZoneUTC7(row1.thoiHan) }
+        let row = { ...row1, ngayKT: FormatDate.setTimeZoneUTC7(row1.ngayKT) }
 
         // const newData = [...listDonVi];
 
@@ -225,7 +225,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
             align: "center",
         },
         {
-            title: 'Chỉ tiêu',
+            title: 'Số phiếu',
             key: 'chiTieu',
             dataIndex: 'chiTieu',
             width: 130,
@@ -237,10 +237,10 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
             title: 'Thời hạn',
             width: 160,
             editable: true,
-            // dataIndex: 'thoiHan',
+            // dataIndex: 'ngayKT',
             align: "center",
             inputType: "date",
-            render: (data, record) => (<p>{data?.thoiHanEdit ? dayjs(data?.thoiHanEdit).subtract(7, 'hour').format("DD/MM/YYYY HH:mm") : data?.thoiHan ? dayjs(data?.thoiHan).format("DD/MM/YYYY HH:mm") : "-"} </p>),
+            render: (data, record) => (<p>{data?.ngayKTEdit ? dayjs(data?.ngayKTEdit).subtract(7, 'hour').format("DD/MM/YYYY HH:mm") : data?.ngayKT ? dayjs(data?.ngayKT).format("DD/MM/YYYY HH:mm") : "-"} </p>),
         },
         {
             title: '',
@@ -359,7 +359,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                     chiTieu: dvnpt?.chiTieu,
                     trangThai: dvnpt?.trangThai,
                     maKhaoSat: dvnpt?.maKhaoSat,
-                    thoiHan: dvnpt?.thoiHan,
+                    ngayKT: dvnpt?.ngayKT,
                     // ...getContChild(element?.children, element?.listKhaoSat?.filter(obj => obj != cuocKhaoSat?._id)?.length),
                     children: formatData(element?.children, listSave)
                 })
@@ -369,7 +369,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                     chiTieu: dvnpt?.chiTieu,
                     trangThai: dvnpt?.trangThai,
                     maKhaoSat: dvnpt?.maKhaoSat,
-                    thoiHan: dvnpt?.thoiHan,
+                    ngayKT: dvnpt?.ngayKT,
                     // ...getContChild(element?.children, element?.listKhaoSat?.filter(obj => obj != cuocKhaoSat?._id)?.length),
                     children: formatData(element?.children, listSave)
                 })
@@ -508,7 +508,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                         <div className='div-flex justify-between wrap'>
                             <div>
                                 <p className='bold f-16'>Danh sách đơn vị được phân công</p>
-                                <p className='f-13'>Chỉ tiêu cần đạt: {dataDonVi?.donVi}</p>
+                                <p className='f-13'>Số phiếu cần đạt: {dataDonVi?.donVi}</p>
                                 <p className='f-13'>Chỉ đã phân đơn vị dưới trực tiếp: {dataDonVi?.donViDaPhan}</p>
                             </div>
 

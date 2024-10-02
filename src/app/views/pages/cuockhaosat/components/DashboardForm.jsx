@@ -539,8 +539,8 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                     trangThai: dvnpt?.trangThai,
                     ngayBD: dvnpt.ngayBD,
                     ngayTiepNhan: dvnpt.ngayTiepNhan,
-                    ngayHT: dvnpt.ngayHT,
-                    thoiHan: dvnpt?.thoiHan,
+                    ngayKTTT: dvnpt.ngayKTTT,
+                    ngayKT: dvnpt?.ngayKT,
                     chiTieuBaoCao: dvnpt?.chiTieuBaoCao || 0,
                     soLuongTong: dvnpt.chiTieuDaDat || 0,
                     // ...getContChild(element?.children, dvnpt.chiTieuDaDat || 0, 0),
@@ -605,7 +605,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         render: (data) => (
                             <p>{data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : <>{dayjs(cuocKhaoSat?.ngayBD).format("DD/MM/YYYY HH:mm")}<br /></>}
                                  {data?.ngayBD && <br />}
-                                {data?.thoiHan ? dayjs(data?.thoiHan).format("DD/MM/YYYY HH:mm") : "-"}
+                                {data?.ngayKT ? dayjs(data?.ngayKT).format("DD/MM/YYYY HH:mm") : "-"}
                             </p>),
                     },
 
@@ -616,7 +616,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
 
                                 {data?.ngayTiepNhan ? dayjs(data?.ngayTiepNhan).format("DD/MM/YYYY HH:mm") : "-"}
                                 {data?.ngayTiepNhan && <br />}
-                                {data?.ngayHT ? dayjs(data?.ngayHT).format("DD/MM/YYYY HH:mm") : "-"}
+                                {data?.ngayKTTT ? dayjs(data?.ngayKTTT).format("DD/MM/YYYY HH:mm") : "-"}
                             </p>),
                     },
                     {
@@ -625,7 +625,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         render: (data) => (
                             <>
 
-                                {PhanLoai.getTimeStatus(data?.ngayBD, data?.thoiHan, data?.ngayTiepNhan, data?.ngayHT)}
+                                {PhanLoai.getTimeStatus(data?.ngayBD, data?.ngayKT, data?.ngayTiepNhan, data?.ngayKTTT)}
                                 <br />
                                 <p className={data?.trangThai == 3 ? "green" : data?.trangThai == 2 ? "blue" : "black"}>
                                     {PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)}
@@ -635,7 +635,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         align: "center",
                     },
                     {
-                        title: 'Chỉ tiêu',
+                        title: 'Số phiếu',
                         dataIndex: 'chiTieu',
                         className: 'nowrap',
                         align: "center",
@@ -667,7 +667,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         render: (data, record) => (
                             <div className='w-100pt'>
                                 {(record?.trangThai < 3 && record?._id != cuocKhaoSat?.donViPhuTrach?.donVi?._id) &&
-                                    <Tooltip placement="bottom" title={"Hoàn thành giúp đơn vị - khi đơn vị trực thuộc đã đạt chỉ tiêu."} >
+                                    <Tooltip placement="bottom" title={"Hoàn thành giúp đơn vị - khi đơn vị trực thuộc đã đạt số phiếu."} >
                                         <Button type="primary" className='mt-1  m-auto' onClick={(e) => { e.stopPropagation(); handleComplete(record?._id) }}>Hoàn thành</Button>
                                     </Tooltip>
                                 }

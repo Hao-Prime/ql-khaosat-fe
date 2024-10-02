@@ -63,7 +63,7 @@ const DashboardPage = () => {
             legend: {
                 show: true,
                 showForSingleSeries: true,
-                customLegendItems: ['Đã đạt', 'Chỉ tiêu'],
+                customLegendItems: ['Đã đạt', 'Số phiếu'],
                 markers: {
                     fillColors: ['#00E396', '#775DD0']
                 }
@@ -187,7 +187,7 @@ const DashboardPage = () => {
                 if (res?.data) {
                     let rsState3 = [
                         {
-                            name: 'Chỉ tiêu',
+                            name: 'Số phiếu',
                             data: [
 
                             ]
@@ -411,7 +411,7 @@ const DashboardPage = () => {
                 legend: {
                     show: true,
                     showForSingleSeries: true,
-                    customLegendItems: ['Chỉ tiêu', 'Đã đạt'],
+                    customLegendItems: ['Số phiếu', 'Đã đạt'],
                     markers: {
                         fillColors: ['#00E396', '#775DD0']
                     }
@@ -518,13 +518,13 @@ const DashboardPage = () => {
                             </p>
                             <Tooltip placement="bottom" title={"Đang thực hiện / Tổng "}>
                                 <p className='tt-sl-d'>{soLuong?.soLuongKhaoSatDTH} /{soLuong?.soLuongKhaoSat}
-                                    <span className='ipowqrqrwq1'>- Còn {soLuong?.soLuongChiTieuDeHoanThanh} chỉ tiêu để hoàn thành</span></p>
+                                    <span className='ipowqrqrwq1'>- Còn {soLuong?.soLuongChiTieuDeHoanThanh} số phiếu để hoàn thành</span></p>
                             </Tooltip>
                             <p className='tt-sl-sub'>Đang thực hiện/tổng</p>
                         </div>
                         <div className='box-sld'>
                             <p className='tt-d'>
-                                <span className='eqwqrqrqw'> Tổng chỉ tiêu giao đã đạt</span>
+                                <span className='eqwqrqrqw'> Tổng số phiếu giao đã đạt</span>
                                 <Tooltip placement="bottom"
                                     title={"Riêng đơn vị " + (filter?.donVi?.tenDonVi || taiKhoan?.donVi?.tenDonVi)}
                                 >
@@ -532,7 +532,7 @@ const DashboardPage = () => {
                                     <span className='rqwttyqrwq'>Riêng đơn vị: {soLuong?.soLuongChiTieuDaDat1}/{soLuong?.soLuongChiTieu1}</span>
                                 </Tooltip>
                             </p>
-                            <Tooltip placement="bottom" title={"Đã đạt / Tổng chỉ tiêu"}>
+                            <Tooltip placement="bottom" title={"Đã đạt / Tổng số phiếu"}>
                                 <p className='tt-sl-d'> {soLuong?.soLuongChiTieuDaDat} /{soLuong?.soLuongChiTieu}</p>
                             </Tooltip>
                             <p className='tt-sl-sub'>Trong các cuộc khảo sát </p>
@@ -551,7 +551,7 @@ const DashboardPage = () => {
                             <ReactApexChart options={state2.options} series={state2.series} type="donut" />
                         </div>
                         <div className='box-apxechaerr1'>
-                            <p className='tt-dx'>Chỉ tiêu từng đơn vị</p>
+                            <p className='tt-dx'>Số phiếu từng đơn vị</p>
                             <ReactApexChart options={state3.options} series={state3.series} type="bar" height={350} />
                         </div>
 

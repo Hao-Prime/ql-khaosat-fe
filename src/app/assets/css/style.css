@@ -2444,7 +2444,7 @@ a {
     color: white;
 }
 .MuiGrid-root>.MuiGrid-item {
-    padding: 0px !important;
+    padding: 0px ;
 }
 .btn-add span{
     color: white;

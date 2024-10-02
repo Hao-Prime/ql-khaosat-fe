@@ -275,7 +275,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
                         <TextArea autoSize={{ minRows: 3 }} onChange={(e) => onChange("moTa", e?.target?.value)} defaultValue={cuocKhaoSatUpdate?.moTa} placeholder="Nhập tên biểu mẫu" />
                     </div>
                     <div className='pb-3'>
-                        <p className='bold'> Tổng chỉ tiêu khảo sát cần đạt: </p>
+                        <p className='bold'> Tổng số phiếu khảo sát cần đạt: </p>
                         <Input type="number" defaultValue={cuocKhaoSatUpdate?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ khảo sát cần đạt" />
                     </div>
                     <div className='pb-3'>

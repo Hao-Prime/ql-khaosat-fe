@@ -25,23 +25,39 @@ const Sidebar = ({ user }) => {
             label: 'Dashboard',
             roles: ["admin", "dashboard"],
         },
+       
         {
-            key: '/quan-tri/bieu-mau',
-            icon: <EventAvailableIcon />,
-            label: 'Danh sách biểu mẫu',
-            roles: ["admin", "bieumau"],
-        },
-        {
-            key: 'sub11',
+            key: 'sub111zx1',
             icon: <EditCalendarIcon />,
-            label: 'Cuộc khảo sát',
-            roles: ["admin", "khaosat"],
+            label: 'Kế hoạch Khảo sát',
+            roles: ["admin", "kehoach", "khaosat"],
             children: [
                 {
-                    key: '/quan-tri/khao-sat?trangThai=0',
-                    label: 'Tất cả',
+                    key: '/quan-tri/chi-tiet-ke-hoach',
+                    label: 'Lập kế hoạch',
                     roles: ["admin", "khaosat"],
                 },
+                {
+                    key: '/quan-tri/ke-hoach?trangThai=1',
+                    label: 'Đang diễn ra',
+                    roles: ["admin", "kehoach", "khaosat"],
+                },
+                {
+                    key: '/quan-tri/ke-hoach?trangThai=2',
+                    label: 'Đã kết thúc',
+                    roles: ["admin", "kehoach", "khaosat"],
+                },
+
+            ],
+
+        },
+        {
+            key: 'sub11a',
+            icon: <EditCalendarIcon />,
+            label: 'Thực hiện Khảo sát',
+            roles: ["admin", "khaosat"],
+            children: [
+                
                 {
                     key: '/quan-tri/khao-sat?trangThai=1',
                     label: 'Chưa tiếp nhận',
@@ -49,24 +65,62 @@ const Sidebar = ({ user }) => {
                 },
                 {
                     key: '/quan-tri/khao-sat?trangThai=2',
-                    label: 'Đang diễn ra',
+                    label: 'Đang thực hiện',
                     roles: ["admin", "khaosat"],
                 },
                 {
                     key: '/quan-tri/khao-sat?trangThai=3',
-                    label: 'Đã kết thúc',
+                    label: 'Đã hoàn thành',
                     roles: ["admin", "khaosat"],
-                }
-
+                },
+                
             ],
 
+        },
+        {
+            key: 'qqeqwqqq',
+            icon: <EventAvailableIcon />,
+            label: 'Quản lý Biểu mẫu',
+            roles: ["admin", "bieumau"],
+            children: [
+                {
+                    key: '/quan-tri/bieu-mau?my=1',
+                    label: 'Biểu mẫu của tôi',
+                    roles: ["admin", "bieumau"],
+                },
+                {
+                    key: '/quan-tri/bieu-mau?isShare=1',
+                    label: 'Biểu mẫu được chia sẻ',
+                    roles: ["admin", "bieumau"],
+                },
+            ]
+        },
+        {
+            key: 'sub11x',
+            label: 'Quản lý danh mục',
+            icon: <AccountBalanceWalletIcon />,
+            roles: ["admin", "doituongkhaosat","nguoikhaosat"],
+            children: [
+                {
+                    key: '/quan-tri/doi-tuong-khao-sat',
+                    label: 'Đối tượng khảo sát',
+                    roles: ["admin", "doituongkhaosat"],
+                },
+                {
+                    key: '/quan-tri/nguoi-dung',
+                    label: 'Người khảo sát',
+                    roles: ["admin", 'nguoikhaosat'],
+                },
+
+            ],
         },
         {
             key: 'sub1',
             label: 'Quản trị hệ thống',
             icon: <AccountBalanceWalletIcon />,
-            roles: ["admin", "donvi", "nguoidung","nguoikhaosat"],
+            roles: ["admin", "donvi", "nguoidung"],
             children: [
+               
                 {
                     key: '/quan-tri/donvi',
                     label: 'Đơn vị',
@@ -77,11 +131,7 @@ const Sidebar = ({ user }) => {
                     label: 'Cán bộ, nhân viên',
                     roles: ["admin", "canbo"],
                 },
-                {
-                    key: '/quan-tri/nguoi-dung',
-                    label: 'Tệp người khảo sát',
-                    roles: ["admin", 'nguoikhaosat'],
-                }
+ 
 
             ],
         },
@@ -93,7 +143,7 @@ const Sidebar = ({ user }) => {
         //     children: [
         //         {
         //             key: '/quan-tri/thong-ke/don-vi',
-        //             label: 'Chỉ tiêu theo đơn vị',
+        //             label: 'Số phiếu theo đơn vị',
         //             roles: ["admin", "thongke.donvi"],
         //         },
         //         // {

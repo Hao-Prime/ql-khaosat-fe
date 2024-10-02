@@ -59,6 +59,12 @@ const QuyenTruyCapPage = () => {
                     { key: "Hoàn thành khảo sát", value: "khaosat.hoanthanh" },
                 ]
             },
+            {
+                key: "Quản lý kế hoạch", value: "kehoach",
+                children: [
+                    { key: "Tiếp nhận xử lý kế hoạch", value: "kehoach.xuly" },
+                ]
+            },
             { key: "Xem thống kê", value: "thongke.donvi" },
             {
                 key: "Quản lý đơn vị", value: "donvi",

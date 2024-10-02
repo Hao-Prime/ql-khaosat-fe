@@ -25,74 +25,32 @@ import BackToTopButton from 'app/components/BackToTopButton';
 import { useSelector } from 'react-redux';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import HomeIcon from '@mui/icons-material/Home';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 const { Search } = Input;
 const { TextArea } = Input;
 
 const MyListFormPage = () => {
     const navigate = useNavigate();
-    const [listForm, setListForm] = useState(
-        [
-
-            // {
-            //     tieuDe: "Đánh giá Độ Hài Hòa Xã Hội",
-            //     moTa: "Khảo sát này nhằm đánh giá mức độ hài hòa và công bằng trong xã hội từ quan điểm của người dân.",
-            //     banner: hoa01
-            // },
-            // {
-            //     tieuDe: "Đánh Giá Hiệu Quả Dịch Vụ Công",
-            //     moTa: "Khảo sát này tập trung vào việc đo lường và đánh giá hiệu quả của các dịch vụ công cung cấp bởi chính quyền địa phương.",
-            //     banner: hoa02
-            // },
-            // {
-            //     tieuDe: "Phản Hồi Cộng Đồng về Quyết Định Chính Sách",
-            //     moTa: "Khảo sát này tập trung vào việc thu thập ý kiến và phản hồi từ cộng đồng về các quyết định chính sách cụ thể của chính quyền địa phương.",
-            //     banner: hoa03
-            // },
-            // {
-            //     tieuDe: "Đánh Giá Mức Độ Trong Trẻo của Hệ Thống Phản Ánh Dân Chủ",
-            //     moTa: "Khảo sát này nhằm đánh giá mức độ mở và trong trẻo của hệ thống phản ánh dân chủ, bao gồm các cơ chế như hội thảo cộng đồng, cuộc họp dân cử, và các cơ quan truyền thông công cộng.",
-            //     banner: hoa04
-            // },
-            // {
-            //     tieuDe: "Đo Lường Sự Tham Gia Công Dân",
-            //     moTa: "Khảo sát này nhằm đo lường mức độ tham gia và hoạt động của công dân trong các hoạt động cộng đồng và chính trị.",
-            //     banner: hoa05
-            // },
-            // {
-            //     tieuDe: "Đánh Giá Mức Độ Công Bằng và Trung Thực trong Bầu Cử",
-            //     moTa: "Khảo sát này tập trung vào đánh giá mức độ công bằng và trung thực trong quá trình bầu cử và quản lý bầu cử.",
-            //     banner: hoa03
-            // },
-            // {
-            //     tieuDe: "Đo Lường Sự Tương Tác và Giao Tiếp Công Dân",
-            //     moTa: "Khảo sát này tập trung vào việc đo lường mức độ tương tác và giao tiếp giữa chính quyền và công dân.",
-            //     banner: hoa01
-            // }
-
-
-
-        ]
-    );
+    const [listForm, setListForm] = useState([]);
     const taiKhoan = useSelector(state => state.taiKhoan)
     const [openAddModal, setOpenAddModal] = useState(false);
     const [bieuMauUp, setBieuMauUp] = useState({ loaiBieuMau: 1 });
     const [loading, setLoading] = useState(false);
-
-
+    const { search } = useLocation();
+    const searchParams = new URLSearchParams(search);
+    const isShare = searchParams.get("isShare");
     const listAnhBia = [hoa01, hoa02, hoa03, hoa04, hoa05]
     var isMounted = true;
-
     useEffect(() => {
         isMounted = true;
         reloadList()
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [isShare]);
     function reloadList() {
         setLoading(true)
-        Services.getFormService().getMyListForm().then(
+        Services.getFormService().getMyListForm({isShare:isShare}).then(
             (res) => {
                 if (res?.data && isMounted) {
                     setListForm(res?.data)
@@ -118,12 +76,10 @@ const MyListFormPage = () => {
     function convertIdToNumber(id) {
         return Math.abs(id?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 5 + 1;
     }
-
     function taoMoiBieuMauSaoChep(idBieuMauSaoChep) {
         setOpenAddModal(true)
         setBieuMauUp({ loaiBieuMau: 1, idBieuMauSaoChep: idBieuMauSaoChep })
     }
-
     return (
 
 
@@ -184,13 +140,13 @@ const MyListFormPage = () => {
                                                         }
                                                     </div> */}
                                                 </div>
-                                                {form?.donVi != taiKhoan?.donVi?._id &&
+                                                {/* {form?.donVi != taiKhoan?.donVi?._id &&
                                                     <Tooltip placement="bottomLeft" title={"Biểu mẫu được chia sẽ"}>
                                                         <div className='type-phutro'>
                                                             <StarPurple500Icon className='yellow f-18' />
                                                         </div>
                                                     </Tooltip>
-                                                }
+                                                } */}
                                                 <Button type="primary" onClick={() => taoMoiBieuMauSaoChep(form?._id)} className='btn-nhanban-css'><ContentCopyIcon className='me-1 f-14'></ContentCopyIcon>Nhân bản</Button>
                                             </div>
                                         </Grid>

@@ -117,14 +117,27 @@ const DonViPage = () => {
             if (dataRSLisstDv?.data?.length == 0) {
                 message.error("Không tìm thấy đơn vị")
             } else {
-                setListDonViMD(SapXep.sapXepTheoObjectAtrVaAtr(dataRSLisstDv?.data, "donViTrucThuoc", "stt", -1, 1))
+                setListDonViMD(sapXepDeQuy(dataRSLisstDv?.data, "stt", 1))
                 setPage(1)
             }
 
         }, 500),
         [],
     );
-
+    function sapXepDeQuy(list, arr, loai) {
+        if (!list) return [];
+        let rs =[]
+        list.forEach(e => {
+            if (e?.children?.length > 0) {
+                // Đệ quy gọi hàm sapXepDeQuy để xử lý danh sách children trước
+                e.children = sapXepDeQuy(e.children, arr, loai);
+            }
+            rs.push(e)
+        });
+    
+        // Sau khi xử lý hết các children, sắp xếp list hiện tại
+        return SapXep.sapXepTheoObjectAtr(rs, arr, loai);
+    }
     return (
         <>
             <div className='pb-2'>
@@ -166,7 +179,13 @@ const DonViPage = () => {
                             title: "Mô tả",
                             dataIndex: "moTa",
                             key: "moTa",
-                            width: 390,
+                            width: 400,
+                        },
+                        {
+                            title: "Thứ tự",
+                            dataIndex: "stt",
+                            key: "stt",
+                            width: 30,
                         },
                         {
                             title: " ",

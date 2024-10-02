@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.5.1",
     "@babel/core": "^7.24.4",
     "@emailjs/browser": "^3.9.1",
     "@emotion/react": "^11.5.0",
@@ -39,6 +40,8 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "redux": "^4.1.2",
+    "suneditor": "^2.47.0",
+    "suneditor-react": "^3.6.1",
     "swiper": "^8.4.4",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
