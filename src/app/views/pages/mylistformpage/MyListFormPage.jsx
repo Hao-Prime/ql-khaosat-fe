@@ -114,7 +114,7 @@ const MyListFormPage = () => {
             </div>
             <div>
                 {loading ? <Loading /> :
-                    <Grid container spacing={5} className='w-100pt'>
+                    <Grid container spacing={5} className='w-100pt pd-item-0'>
 
                         {listForm?.length > 0 ?
                             <>

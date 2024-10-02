@@ -10,11 +10,13 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import FormatString from 'app/common/FormatString';
 import { useSelector } from 'react-redux';
 import CapNhatKeHoachPage from './components/CapNhatKeHoachPage';
+import KeHoachKhaoSatPage from './components/KeHoachKhaoSatPage';
+import ChiTietKeHoachPage from './components/ChiTietKeHoachPage';
 const KeHoachDetailPage = () => {
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
-    const [keHoach, setKeHoach] = React.useState();
-    const [tabValue, setTabValue] = React.useState("1");
+    const [keHoach, setKeHoach] = useState();
+    const [tabValue, setTabValue] = useState("1");
     const idKeHoach = new URLSearchParams(window.location.search).get("id");
     const [loading, setLoading] = useState(false);
     const taiKhoan = useSelector(state => state.taiKhoan)
@@ -22,12 +24,12 @@ const KeHoachDetailPage = () => {
     useEffect(() => {
         isMounted = true;
         reloadDetail()
-
         return () => {
             isMounted = false;
         };
     }, [idKeHoach]);
-    function reloadDetail(notLoading) {
+    function reloadDetail(notLoading, idKeHoachSave) {
+        setTabValue("1")
         if (!idKeHoach) {
             setKeHoach({ quyenThaoTac: true })
             return
@@ -36,8 +38,7 @@ const KeHoachDetailPage = () => {
                 setLoading(true)
             }
         }
-
-        Services.getCuocKhaoSatService().getKeHoach(idKeHoach, null).then(
+        Services.getCuocKhaoSatService().getKeHoach(idKeHoach, 1).then(
             (res) => {
                 if (res?.data?.error) {
                     Modal.error({
@@ -53,11 +54,12 @@ const KeHoachDetailPage = () => {
                         setLoading(true)
                     } else {
                         let quyen = false;
-                        if (res?.data?.nguoiTao == taiKhoan?._id) {
+                        if (res?.data?.nguoiTao?._id == taiKhoan?._id) {
                             quyen = true;
                         } else {
                             res?.data?.donViThucHien?.forEach(element => {
-                                if (element?.taiKhoan == taiKhoan?.taiKhoanId && (taiKhoan?.listVaiTro?.includes("admin") || taiKhoan?.listVaiTro?.includes("kehoach.xuly"))) {
+                                if (taiKhoan?.listVaiTro?.includes("admin") ||
+                                    (element?._id == taiKhoan?.donVi?._id && (taiKhoan?.listVaiTro?.includes("kehoach.xuly")))) {
                                     quyen = true;
                                 }
                             });
@@ -77,9 +79,7 @@ const KeHoachDetailPage = () => {
         )
     }
 
-    const onChange = (e) => {
-        setTabValue(e);
-    }
+
     return (
         <>   {loading ? <Skeleton /> : <>
             <div className='pb-2'>
@@ -96,7 +96,8 @@ const KeHoachDetailPage = () => {
                     <Tabs
                         className='tab-menu'
                         defaultActiveKey="1"
-                        accessKey={tabValue}
+                        activeKey={tabValue}
+                        onChange={(e) => setTabValue(e)}
                         items={[
                             ...(!idKeHoach ? [
                                 {
@@ -113,48 +114,56 @@ const KeHoachDetailPage = () => {
                                 {
                                     key: '1',
                                     label: 'Thông tin kế hoạch',
-                                    children: <></>,
+                                    children: <ChiTietKeHoachPage
+                                        keHoach={keHoach}
+                                        loading={loading}
+                                    ></ChiTietKeHoachPage>,
                                 }
                             ]),
                             {
                                 key: '2',
                                 label: 'Xây dựng các cuộc khảo sát',
-                                children: <></>,
+                                children: <KeHoachKhaoSatPage
+                                    keHoach={keHoach}
+                                    loading={loading}
+                                    tabValue={tabValue}
+                                    setTabValue={setTabValue}
+                                ></KeHoachKhaoSatPage>,
                             },
-                            {
-                                key: '3',
-                                label: 'Phân công khảo sát',// bảng tình hình thực hiện 
-                                children: <></>,
-                            },
-                            {
-                                key: '4',
-                                label: 'Theo dõi thực hiện',
-                                children: <></>,
-                            },
-                            {
-                                key: '44',
-                                label: 'Kết quả khảo sát', // Tình hình thực hiện
-                                children: <></>,
-                            },
+                            // {
+                            //     key: '3',
+                            //     label: 'Phân công khảo sát',// bảng tình hình thực hiện 
+                            //     children: <></>,
+                            // },
+                            // {
+                            //     key: '4',
+                            //     label: 'Theo dõi thực hiện',
+                            //     children: <></>,
+                            // },
+                            // {
+                            //     key: '44',
+                            //     label: 'Kết quả khảo sát', // Tình hình thực hiện
+                            //     children: <></>,
+                            // },
                             ...(keHoach?.quyenThaoTac ? [
-                                ...(idKeHoach ? [{
-                                    key: '5',
-                                    label: 'Lịch sử chỉnh sửa',
-                                    children: <></>,
-                                },
-                                {
-                                    key: '6',
-                                    label: 'Cập nhật kế hoạch',
-                                    children: <CapNhatKeHoachPage keHoach={keHoach} reloadDetail={reloadDetail}></CapNhatKeHoachPage>,
-
-                                }
+                                ...(idKeHoach ? [
+                                    {
+                                        key: '6',
+                                        label: 'Cập nhật kế hoạch',
+                                        children: <CapNhatKeHoachPage
+                                            keHoach={keHoach}
+                                            reloadDetail={reloadDetail}
+                                            loading={loading}
+                                            setTabValue={setTabValue}
+                                        ></CapNhatKeHoachPage>,
+                                    }
 
                                 ] : []),
 
                             ] : [])
                             ,
                         ]}
-                        onChange={onChange}
+
                     />
 
                     <BackToTopButton />

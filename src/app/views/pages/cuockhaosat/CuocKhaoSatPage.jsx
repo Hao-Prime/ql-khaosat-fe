@@ -260,7 +260,7 @@ const CuocKhaoSatPage = () => {
                 <CuocKhaoSatModal open={openCuocKhaoSatModal} setOpen={setOpenCuocKhaoSatModal} cuocKhaoKhatUp={cuocKhaoKhatUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
-                        <Button onClick={() => { setOpenCuocKhaoSatModal(true); setCuocKhaoSatUp() }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        {/* <Button onClick={() => { setOpenCuocKhaoSatModal(true); setCuocKhaoSatUp() }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button> */}
                     </div>
                     <div>
                         <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
@@ -277,20 +277,20 @@ const CuocKhaoSatPage = () => {
                             align: "center",
                             render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
                         },
-                        {
-                            title: "Mã",
-                            align: "center",
-                            render: (data, record) => (
-                                <div>
-                                    <p className='bold '>{FormatString.getMaKhaoSatTheoDonVi(record, taiKhoan?.donVi?._id)}
-                                    </p>
-                                    <TiepNhanComp record={record} />
+                        // {
+                        //     title: "Mã",
+                        //     align: "center",
+                        //     render: (data, record) => (
+                        //         <div>
+                        //             <p className='bold '>{FormatString.getMaKhaoSatTheoDonVi(record, taiKhoan?.donVi?._id)}
+                        //             </p>
+                        //             <TiepNhanComp record={record} />
 
 
-                                </div>
-                            ),
-                            width: 80,
-                        },
+                        //         </div>
+                        //     ),
+                        //     width: 80,
+                        // },
                         {
                             title: "Tiêu đề",
                             render: (data) => (<p className='moTa-p'>{data?.tieuDe}</p>),

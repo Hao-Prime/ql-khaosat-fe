@@ -2,7 +2,7 @@
 import { Breadcrumb, Button, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState } from 'react'
-import CuocKhaoSatModal from './CuocKhaoSatModal';
+import CuocKhaoSatModal from '../../cuockhaosat/CuocKhaoSatModal';
 import Services from 'app/services';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
@@ -26,7 +26,7 @@ const items = [
         label: 'Xóa',
     },
 ];
-const KeHoachKhaoSatPage = (keHoach,setTabValue) => {
+const KeHoachKhaoSatPage = ({keHoach, setTabValue, tabValue}) => {
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
     const [listCuocKhaoSat, setListCuocKhaoSat] = useState([]);
@@ -43,8 +43,16 @@ const KeHoachKhaoSatPage = (keHoach,setTabValue) => {
     const [loading, setLoading] = useState(true);
     const taiKhoan = useSelector(state => state.taiKhoan)
     useEffect(() => {
-        reLoadList()
-    }, []);
+        console.log(tabValue);
+        if (tabValue == "2") {
+            if (!keHoach?._id) {
+                setTabValue('1')
+            } else {
+                reLoadList()
+            }
+        }
+
+    }, [tabValue]);
     useEffect(() => {
         if (listCuocKhaoSatMD) {
             let data = listCuocKhaoSatMD?.filter((v, i) => {
@@ -59,7 +67,7 @@ const KeHoachKhaoSatPage = (keHoach,setTabValue) => {
     async function reLoadList(params) {
         setLoading(true)
 
-        let dataRSLisstDv = await Services.getCuocKhaoSatService().getAll({ isShare: 1, search: searchValue, trangThai: 0 })
+        let dataRSLisstDv = await Services.getCuocKhaoSatService().getAll({ idKeHoach: keHoach?._id })
         if (dataRSLisstDv.data) {
             setListCuocKhaoSatMD(dataRSLisstDv?.data)
             setPage(1)
@@ -74,43 +82,12 @@ const KeHoachKhaoSatPage = (keHoach,setTabValue) => {
         setPage(current)
         setLimit(pageSize)
     };
-    const onClick = async (key, data) => {
-
-        switch (key?.key) {
-            case "1":
-                setOpenCuocKhaoSatModal(true)
-                setCuocKhaoSatUp(data)
-                break;
-            case "2":
-                const confirmed = await modal.confirm({
-                    title: 'Bạn có chắc muốn xóa cuộc khảo sát này',
-                    content: "",
-                });
-                // console.log(confirmed);
-                if (confirmed) {
-                    setLoading(true);
-                    Services.getCuocKhaoSatService().deleteByID(data?._id)?.then(
-                        (res) => {
-                            if (res?.data?.error) {
-                                alert(res?.data?.message)
-                            } else {
-                                reLoadList()
-                            }
-                        });
-                }
-
-                break;
-
-        }
-    };
     const handleSearch = useCallback(
         debounce(async (e) => {
             setSearchValue(e?.target?.value)
         }, 500),
         [],
     );
-
-
     return (
         <>
             <div className="">

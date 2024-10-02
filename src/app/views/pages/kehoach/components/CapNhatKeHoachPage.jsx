@@ -10,7 +10,8 @@ import { UploadOutlined } from '@ant-design/icons';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import states from 'app/states/States';
 import HelpIcon from '@mui/icons-material/Help';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import FormatString from 'app/common/FormatString';
 const { TextArea } = Input;
 const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => {
     const [modal, contextHolder] = Modal.useModal();
@@ -18,24 +19,40 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
     const [keHoachUpdate, setKeHoachUpdate] = useState(keHoach);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
-
-    const [anhBia, setAnhBia] = useState([]);
-    const [noiDung, setNoiDung] = useState(keHoach?.noiDung);
-    const [imageUrl, setImageUrl] = useState();
+    const [noiDung, setNoiDung] = useState();
     const [loading2, setLoading2] = useState(false);
     const [listFile, setListFile] = useState([]);
     const [listDonViTT, setListDonViTT] = useState([]);
+    const editorRef = useRef(null);
     useEffect(() => {
         if (keHoach?._id) {
-            if (keHoach?.anhBia) {
-                setImageUrl(`${process.env.REACT_APP_URL_SERVER}/be-form/public/show-file?stringID=${keHoach?.anhBia?._id}`)
-            }
-            setAnhBia()
             setLoading2(false)
             setKeHoachUpdate(keHoach)
+            if (keHoach?.listFile?.length > 0) {
+                setListFile(keHoach?.listFile?.map((e) => {
+                    return {
+                        ...e,
+                        url: process.env.REACT_APP_URL_SERVER + e?.url,
+                        name: `${e?.tenFile} (${FormatString.convertSize(e?.size)})`
+                    }
+                }))
+            }
+            setNoiDung(keHoach?.noiDung)
+        } else {
+            setKeHoachUpdate()
+            setNoiDung("")
+            setListFile([])
+            console.log(editorRef.current);
+
+            if (editorRef.current) {
+                editorRef?.current?.setContents(""); // Cập nhật nội dung của editor
+            }
         }
-        realoadListSelect()
+
     }, [keHoach]);
+    useEffect(() => {
+        realoadListSelect()
+    }, []);
     async function realoadListSelect() {
         setLoading2(true)
         setSending(false)
@@ -102,12 +119,21 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                         } else {
                             if (listFile) {
                                 let formData = new FormData();
-                                formData.append('file', listFile);
+                                let listLength = 0
+                                listFile?.forEach(element => {
+                                    if (!element?._id) {
+                                        formData.append('files', element?.originFileObj);
+                                        listLength++
+                                    }
+                                });
                                 formData.append("id", res?.data);
-                                await Services.getCuocKhaoSatService().themFileKeHoach(formData, res?.data)
+                                if (listLength > 0) {
+                                    await Services.getCuocKhaoSatService().themFileKeHoach(formData, res?.data)
+                                }
+
                             }
                             message.success("Lưu thành công")
-                            reloadDetail()
+                            reloadDetail(false)
                         }
                         setSending(false);
                     }
@@ -123,18 +149,26 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                         } else {
                             if (listFile) {
                                 let formData = new FormData();
-                                formData.append('file', listFile);
+                                listFile?.forEach(element => {
+                                    if (!element?._id) {
+                                        formData.append('files', element?.originFileObj);
+                                    }
+                                });
                                 formData.append("id", res?.data);
-                                await Services.getFormService().luuAnhBia(formData, res?.data)
+                                await Services.getCuocKhaoSatService().themFileKeHoach(formData, res?.data)
                             }
                             message.success("Lưu thành công")
-                            reloadDetail()
+
+                            // reloadDetail()
                         }
                         setSending(false);
+                        window.location.href = "/quan-tri/chi-tiet-ke-hoach?id=" + res?.data
                     }
                 )
             }
 
+        } else {
+            setSending(false);
         }
 
     };
@@ -146,7 +180,7 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
             });
             setError()
             return false;
-        } else if (!keHoachUpdate?.noiDung) {
+        } else if (!noiDung) {
             Modal.error({
                 title: 'Lỗi',
                 content: "Nội dung không được để trống",
@@ -189,17 +223,21 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
 
                     <div className='pb-3'>
                         <p className='bold'> Tiêu đề kế hoạch: </p>
-                        <Input placeholder="Nhập tiêu đề" onChange={(e) => onChange("tieuDe", e?.target?.value)} defaultValue={keHoachUpdate?.tieuDe} />
+                        <Input placeholder="Nhập tiêu đề" onChange={(e) => onChange("tieuDe", e?.target?.value)} value={keHoachUpdate?.tieuDe} />
 
                     </div>
                     <div className='pb-3'>
                         <p className='bold'> Nội dung tóm tắt: </p>
-                        <TextArea autoSize={{ minRows: 3 }} onChange={(e) => onChange("tomTat", e?.target?.value)} defaultValue={keHoachUpdate?.tomTat} placeholder="Nhập nội dung tóm tắt" />
+                        <TextArea autoSize={{ minRows: 3 }} onChange={(e) => onChange("tomTat", e?.target?.value)} value={keHoachUpdate?.tomTat} placeholder="Nhập nội dung tóm tắt" />
                     </div>
                     <div className='pb-3'>
                         <p className='bold'> Nội dung: </p>
                         <SunEditor
+                            getSunEditorInstance={(editor) => {
+                                editorRef.current = editor; // Gán SunEditor instance vào ref
+                            }}
                             setDefaultStyle="font-family: arial; font-size: 15px;"
+                            defaultValue={keHoachUpdate?.noiDung}
                             setOptions={{
                                 height: 'auto',
                                 minHeight: '170px',
@@ -207,7 +245,10 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                                 buttonList: states.getButtonList(),
                                 // imageUploadUrl: process.env.REACT_APP_URL_SERVER + '/api/public/themfilenoidung',
                             }}
-                            onChange={(e) => { setNoiDung(e) }} />
+                            onBlur={(content) => {
+                                setNoiDung(content?.target?.innerHTML);
+                            }}
+                        />
                     </div>
                     <div className='pb-3'>
                         <p className='bold'> Phạm vi thực hiện trong đơn vị:
@@ -220,9 +261,18 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                             treeDefaultExpandAll
                             allowClear
                             multiple
-                            defaultValue={keHoach?.phamViThucThien}
+                            value={keHoachUpdate?.phamViThucHien?.map(obj => obj?._id)}
                             style={{ width: '100%' }}
-                            onChange={(value) => onChange("phamViThucThien", value)}
+                            filterTreeNode={(input, treeNode) => {
+                                const match = treeNode?.label?.toLowerCase().includes(input.toLowerCase());
+                                if (match && !treeNode?.isLeaf && !treeNode?.children) { } return match;
+                            }}
+                            onChange={(value, label, list) => {
+                                onChange("phamViThucHien", value.map((id, index) => ({
+                                    _id: id,
+                                    tenDonVi: label[index]
+                                })));
+                            }}
                             treeData={listDonViTT}
                             placeholder="Chọn đơn vị"
                         />
@@ -240,9 +290,18 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                                 treeDefaultExpandAll
                                 allowClear
                                 multiple
-                                defaultValue={keHoach?.phamViThucThien}
                                 style={{ width: '100%' }}
-                                onChange={(value) => onChange("phamViThucThien", value)}
+                                value={keHoachUpdate?.donViThucHien?.map(obj => obj?._id)}
+                                filterTreeNode={(input, treeNode) => {
+                                    const match = treeNode?.label?.toLowerCase().includes(input.toLowerCase());
+                                    if (match && !treeNode?.isLeaf && !treeNode?.children) { } return match;
+                                }}
+                                onChange={(value, label, list) => {
+                                    onChange("donViThucHien", value.map((id, index) => ({
+                                        _id: id,
+                                        tenDonVi: label[index]
+                                    })));
+                                }}
                                 treeData={listDonViTT}
                                 placeholder="Chọn đơn vị"
                             />
@@ -258,9 +317,18 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                                 treeDefaultExpandAll
                                 allowClear
                                 multiple
-                                defaultValue={keHoach?.phamViThucThien}
+                                value={keHoachUpdate?.donViPhoiHop?.map(obj => obj?._id)}
                                 style={{ width: '100%' }}
-                                onChange={(value) => onChange("phamViThucThien", value)}
+                                filterTreeNode={(input, treeNode) => {
+                                    const match = treeNode?.label?.toLowerCase().includes(input.toLowerCase());
+                                    if (match && !treeNode?.isLeaf && !treeNode?.children) { } return match;
+                                }}
+                                onChange={(value, label, list) => {
+                                    onChange("donViPhoiHop", value.map((id, index) => ({
+                                        _id: id,
+                                        tenDonVi: label[index]
+                                    })));
+                                }}
                                 treeData={listDonViTT}
                                 placeholder="Chọn đơn vị"
                             />
@@ -273,8 +341,8 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                                 onChange={(e) => onChange("ngayBD", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
                                 format="DD/MM/YYYY"
                                 locale={locale?.DatePicker}
-                                defaultValue={keHoachUpdate?.ngayBD ? dayjs(keHoachUpdate?.ngayBD) : null}
-                                
+                                value={keHoachUpdate?.ngayBD ? dayjs(keHoachUpdate?.ngayBD) : null}
+
                                 style={{ width: "100%", marginRight: "10px" }}
                                 className='me-2'
                             />
@@ -283,7 +351,7 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                             <p className='bold'>Kế thúc: </p>
                             <DatePicker
                                 onChange={(e) => onChange("ngayKT", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
-                                defaultValue={keHoachUpdate?.ngayKT ? dayjs(keHoachUpdate?.ngayKT) : null}
+                                value={keHoachUpdate?.ngayKT ? dayjs(keHoachUpdate?.ngayKT) : null}
                                 locale={locale?.DatePicker}
                                 format="DD/MM/YYYY"
                                 style={{ width: "100%" }}
@@ -308,6 +376,15 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                             <Button icon={<UploadOutlined />}>File đính kèm</Button>
                         </Upload>
                     </div>
+                    {keHoachUpdate?._id && <div className='pb-3'>
+                        <p className='bold'> Trang thái: </p>
+                        <Radio.Group onChange={(e) => onChange("trangThai", e.target.value)}
+                            value={keHoachUpdate?.trangThai}>
+                            <Radio value={1}>Đang thực hiện</Radio>
+                            <Radio value={2}>Đã kết thúc</Radio>
+                        </Radio.Group>
+                    </div>}
+
                     <div className='pb-3 flex justify-center' >
                         <Button key="submit" type="primary" className='mt-2 bg-info flex align-center justify-center' onClick={handleOk} disabled={sending}>
                             <span style={{ display: sending ? 'inherit' : 'none' }}>

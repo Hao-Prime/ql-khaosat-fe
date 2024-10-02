@@ -14,12 +14,14 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import FormatString from 'app/common/FormatString';
 import { useSelector } from 'react-redux';
+import TinhHinhThucHien from './components/TinhHinhThucHien';
+import ViewBieuMauKSForm from './components/ViewBieuMauKSForm';
 const CuocKhaoSatDetailPage = () => {
 
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
-    const [cuocKhaoSat, setCuocKhaoSat] = React.useState();
-    const [tabValue, setTabValue] = React.useState("1");
+    const [cuocKhaoSat, setCuocKhaoSat] = useState();
+    const [tabValue, setTabValue] = useState("0");
     const idCuocKhaoSat = new URLSearchParams(window.location.search).get("id");
     const [loading, setLoading] = useState(false);
     const taiKhoan = useSelector(state => state.taiKhoan)
@@ -139,17 +141,20 @@ const CuocKhaoSatDetailPage = () => {
 
                     <Tabs
                         className='tab-menu'
-                        defaultActiveKey="1"
+                        defaultActiveKey="0"
+                        activeKey={tabValue}
                         items={[
                             {
                                 key: '0',
-                                label: 'Thông tin khảo sát',
+                                label: 'Thông tin kế hoạch',
                                 children: <></>,
                             },
                             {
                                 key: '1',
-                                label: 'Thiết kế biểu mẫu',
-                                children: <EditForm cuocKhaoSat={cuocKhaoSat} />,
+                                label: 'Biểu mẫu áp dụng',
+                                children: <ViewBieuMauKSForm
+                                    tabValue={tabValue}
+                                    cuocKhaoSatUp={cuocKhaoSat} />,
                             },
                             {
                                 key: '4',
@@ -158,12 +163,12 @@ const CuocKhaoSatDetailPage = () => {
                             },
                             {
                                 key: '.14',
-                                label: 'Theo dõi thực hiện',
-                                children: <ShareForm cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />,
+                                label: 'Tình hình thực hiện',
+                                children: <TinhHinhThucHien cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />
                             },
                             {
                                 key: '3',
-                                label: 'Kết quả khảo sát', // Tình hình thực hiện
+                                label: 'Kết quả khảo sát',
                                 children: <DashboardForm cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />
                             },
                             ...(cuocKhaoSat?.quyenThaoTac ? [
@@ -174,7 +179,7 @@ const CuocKhaoSatDetailPage = () => {
                                 },
                                 {
                                     key: '5',
-                                    label: 'Cài đặt',
+                                    label: 'Cập nhật',
                                     children: <SettingForm cuocKhaoSat={cuocKhaoSat} reloadList={reloadList} />,
                                 }
                             ] : [])

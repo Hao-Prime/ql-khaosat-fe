@@ -4,7 +4,7 @@ function getKeHoach(idKeHoach, trangThai) {
   return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach?`+(idKeHoach?(`idKeHoach=` + idKeHoach ):"")+ `&trangThai=` + trangThai);
 };
 function taoKeHoach(keHoach) {
-  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach`, keHoach);
+  return axios.post(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach`, keHoach);
 };
 function capNhatKeHoach(keHoach) {
   return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/ke-hoach`, keHoach);
@@ -24,7 +24,7 @@ function ganBieuMauKhaoSat(idBieuMau, idKhaoSat) {
 };
 
 function getAll(filter) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat?isShare=${filter?.isShare || 0}&search=${filter?.search || ""}&trangThaiXL=${filter?.trangThai || ""}${filter?.idKhaoSat ? "&idKhaoSat=" + filter?.idKhaoSat : ""}`);
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat?isShare=${filter?.isShare || 0}&search=${filter?.search || ""}&trangThaiXL=${filter?.trangThai || ""}${filter?.idKhaoSat ? "&idKhaoSat=" + filter?.idKhaoSat : ""}${filter?.idKeHoach ? "&idKeHoach=" + filter?.idKeHoach : ""}`);
 };
 function getFormDetail(id) {
   return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/detail?idKhaoSat=${id}`);

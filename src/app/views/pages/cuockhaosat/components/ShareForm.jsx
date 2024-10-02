@@ -447,11 +447,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                 listDonViSave={listDonViSave}
                 khongDat={khongDat}
                 cuocKhaoSat={cuocKhaoSat}
-                listDonVi={listDonVi} />
-            <div>
-                <p className='bold f-16'>Link chia sẻ mẫu khảo sát</p>
-            </div>
-            <Input value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id)} />
+                listDonVi={listDonVi } />
             <div className='flex justify-evenly mt-3'>
                 <div>
                     <QRCode
@@ -470,10 +466,15 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                     <p className='text-center'>ZALO APP</p>
                 </div>
             </div>
+            <div>
+                <p className='bold f-16'>Link chia sẻ mẫu khảo sát</p>
+            </div>
+            <Input value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id)} />
+            
             <Divider />
             <Grid container className='w-100pt' spacing={2}>
 
-                <Grid item xs={12} sm={12} md={12} lg={12}>
+                {/* <Grid item xs={12} sm={12} md={12} lg={12}>
                     {cuocKhaoSat?.quyenThaoTac &&
 
                         <div className='p-1'>
@@ -502,7 +503,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                             <ListUser handleDeleteUser={handleDeleteUser} listUser={cuocKhaoSat?.listTaiKhoanChinhSua} cuocKhaoSat={cuocKhaoSat} />
                         </div>
                     }
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={12} md={12} lg={12} >
                     <div className='p-1'>
                         <div className='div-flex justify-between wrap'>
@@ -536,11 +537,11 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                                 scroll={{ x: 'max-content' }}
                                 tableLayout="fixed"
                                 loading={loading}
-                                dataSource={listDonVi}
+                                dataSource={listDonVi || []}
                                 pagination={false}
                             />
                         </Form>
-                        {listDonVi[0]?.children?.length > 0 && (cuocKhaoSat?.donViPhuTrach?.trangThai == 2) &&
+                        {(cuocKhaoSat?.donViPhuTrach?.trangThai == 2) &&
 
                             <div className='flex justify-center w-100pt mt-3' >
                                 <Button className='btn-success' type="primary" size="middle" disabled={sending} onClick={handleSave}>
@@ -551,7 +552,8 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                                     Lưu phụ trách
                                 </Button>
 
-                            </div>}
+                            </div>
+                        }
                     </div>
                 </Grid>
             </Grid>

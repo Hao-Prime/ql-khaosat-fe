@@ -145,22 +145,38 @@ const KeHoachPage = () => {
                         {
                             title: "Tóm tắt",
                             width: 300,
-                            render: (data) => (<p className='moTa-p'>{data?.moTa}</p>),
+                            render: (data) => (<p className='moTa-p'>{data?.tomTat}</p>),
                         },
                         {
-                            title: "Người tạo",
-                            width: 120,
-                            render: (data) => (<p >{data?.nguoiTao?.hoTen}</p>),
+                            title: "Người tạo/Ngày tạo",
+                            width: 160,
+                            render: (data) => (<div>
+                                <p>{data?.donViTao?.tenDonVi}</p>
+                                <p>{data?.nguoiTao?.hoTen}</p>
+                                <p>{dayjs(data?.ngayTao)?.format('DD/MM/YYYY  HH:mm')}</p>
+                            </div>),
                         },
                         {
                             title: "Đơn vị Thực hiện",
-                            width: 120,
-                            render: (data) => (<p >{data?.donVi?.tenDonVi}</p>),
+                            width: 160,
+                            render: (data) => (
+                                <div>
+                                    {data?.donViThucHien?.map((e) =>
+                                        <p key={e?._id}>{e?.tenDonVi}
+                                        </p>)}
+                                </div>
+                            ),
                         },
                         {
                             title: "Đơn vị Phối hợp",
-                            width: 120,
-                            render: (data) => (<p >{data?.donVi?.tenDonVi}</p>),
+                            width: 160,
+                            render: (data) => (
+                                <div>
+                                    {data?.donViThucHien?.map((e) =>
+                                       <p key={e?._id}>{e?.tenDonVi}
+                                        </p>)}
+                                </div>
+                            ),
                         },
                         {
                             title: "Bắt đầu/kết thúc",
@@ -177,7 +193,7 @@ const KeHoachPage = () => {
                             width: 120,
                             render: (data) => (<p >{data?.trangThai}</p>),
                         },
-                        
+
 
                     ]}
                     scroll={{ x: '100%', y: 415 }}

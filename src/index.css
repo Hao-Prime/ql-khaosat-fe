@@ -35,6 +35,17 @@
 .w-70pt{
   width: 70%;
 }
+.div-form-view-detail-full{
+  margin: auto;
+  padding: 20px;
+  margin: 0px auto;
+  border-radius: 5px 5px 5px 5px;
+  box-shadow: 0px 0px 3px 1px #e6e6e6;
+  display: flex;
+  background: white;
+  flex-direction: column;
+  justify-content: space-between;
+}
 /*Ẩn các component formio*/
 .div-form-view-detail{
   margin: auto;
@@ -412,7 +423,9 @@ code {
     transform: scale(1.07); /* Phóng to thêm 10% */
   }
 }/*  */
-
+.pd-item-0 .MuiGrid-item{
+  padding: 0px !important;
+}
 .help{
   color: #707070;
   font-size: 15px !important;
