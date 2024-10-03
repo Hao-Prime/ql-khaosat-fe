@@ -430,3 +430,9 @@ code {
   color: #707070;
   font-size: 15px !important;
 }
+.ant-tooltip{
+  z-index: 13101 !important;
+}
+.ant-modal{
+  top: 50px !important;
+}

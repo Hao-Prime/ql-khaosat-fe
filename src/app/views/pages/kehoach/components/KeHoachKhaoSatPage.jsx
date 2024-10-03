@@ -31,7 +31,7 @@ const KeHoachKhaoSatPage = ({keHoach, setTabValue, tabValue}) => {
     const navigate = useNavigate();
     const [listCuocKhaoSat, setListCuocKhaoSat] = useState([]);
     const [listCuocKhaoSatMD, setListCuocKhaoSatMD] = useState([]);
-    const [cuocKhaoKhatUp, setCuocKhaoSatUp] = useState();
+    const [cuocKhaoSatUp, setCuocKhaoSatUp] = useState();
     const [openCuocKhaoSatModal, setOpenCuocKhaoSatModal] = useState(false);
     const { search } = useLocation();
     const searchParams = new URLSearchParams(search);
@@ -91,10 +91,10 @@ const KeHoachKhaoSatPage = ({keHoach, setTabValue, tabValue}) => {
     return (
         <>
             <div className="">
-                <CuocKhaoSatModal open={openCuocKhaoSatModal} setOpen={setOpenCuocKhaoSatModal} cuocKhaoKhatUp={cuocKhaoKhatUp} reLoadList={reLoadList} />
+                <CuocKhaoSatModal open={openCuocKhaoSatModal} setOpen={setOpenCuocKhaoSatModal} cuocKhaoSatUp={cuocKhaoSatUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
-                        <Button onClick={() => { setOpenCuocKhaoSatModal(true); setCuocKhaoSatUp() }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        <Button onClick={() => { setOpenCuocKhaoSatModal(true); setCuocKhaoSatUp({keHoach:{_id: keHoach?._id}}) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
                     </div>
                     <div>
                         <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
@@ -148,7 +148,7 @@ const KeHoachKhaoSatPage = ({keHoach, setTabValue, tabValue}) => {
                     onRow={(record, rowIndex) => {
                         return {
                             onClick: (event) => {
-                                navigate(`/quan-tri/chi-tiet-khao-sat?id=${record?.maKhaoSat}`)
+                                navigate(`/quan-tri/chi-tiet-khao-sat?id=${record?.maKhaoSat}&burl=/quan-tri/chi-tiet-ke-hoach?id=${keHoach?._id}~!~tab=2`);
                             },
                         };
                     }}

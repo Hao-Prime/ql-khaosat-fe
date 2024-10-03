@@ -162,7 +162,7 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                             // reloadDetail()
                         }
                         setSending(false);
-                        window.location.href = "/quan-tri/chi-tiet-ke-hoach?id=" + res?.data
+                        window.location.href = "/quan-tri/chi-tiet-ke-hoach?id=" + res?.data +"&tab=2"
                     }
                 )
             }

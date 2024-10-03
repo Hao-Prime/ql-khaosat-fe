@@ -16,13 +16,17 @@ import FormatString from 'app/common/FormatString';
 import { useSelector } from 'react-redux';
 import TinhHinhThucHien from './components/TinhHinhThucHien';
 import ViewBieuMauKSForm from './components/ViewBieuMauKSForm';
-const CuocKhaoSatDetailPage = () => {
+import KeHoachDetailPage from '../kehoach/KeHoachDetailPage';
+import ChiTietKeHoachPage from '../kehoach/components/ChiTietKeHoachPage';
+const CuocKhaoSatDetailPage = ({ }) => {
 
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
     const [cuocKhaoSat, setCuocKhaoSat] = useState();
     const [tabValue, setTabValue] = useState("0");
     const idCuocKhaoSat = new URLSearchParams(window.location.search).get("id");
+    const backURL = new URLSearchParams(window.location.search).get("burl");
+    const tab = new URLSearchParams(window.location.search).get("tab");
     const [loading, setLoading] = useState(false);
     const taiKhoan = useSelector(state => state.taiKhoan)
     var isMounted = true;
@@ -34,6 +38,15 @@ const CuocKhaoSatDetailPage = () => {
             isMounted = false;
         };
     }, [idCuocKhaoSat]);
+    useEffect(() => {
+        isMounted = true;
+        if (tab) {
+            setTabValue(tab)
+        }
+        return () => {
+            isMounted = false;
+        };
+    }, [tab]);
     function reloadList() {
 
         setLoading(true)
@@ -119,14 +132,14 @@ const CuocKhaoSatDetailPage = () => {
                 <Breadcrumb
                     items={[
                         { title: <p className='bold f-16 c-575762'>Trang chủ </p> },
-                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(`/quan-tri/khao-sat?trangThai=0`)}><HomeIcon className='mb-1' /> Các cuộc khảo sát</p> }
+                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(backURL ? backURL?.replaceAll("~!~", "&") : `/quan-tri/khao-sat?trangThai=1`)}><HomeIcon className='mb-1' /> Các cuộc khảo sát</p> }
                     ]}
                 /></div>
 
             <div className="page-new" id="topxssx">
                 <div className='div-flex justify-between'>
                     <div className='ps-1 div-flex'>
-                        <ArrowBackIcon className='bold pointer me-1 f-22' onClick={() => navigate(`/quan-tri/khao-sat?trangThai=0`)} />
+                        <ArrowBackIcon className='bold pointer me-1 f-22' onClick={() => navigate(backURL ? backURL?.replaceAll("~!~", "&") : `/quan-tri/khao-sat?trangThai=1`)} />
                         <p className='text-tieude-navx-1'><b>{FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id) + "-" + cuocKhaoSat?.tieuDe}</b></p>
                     </div>
                     <div>
@@ -147,7 +160,10 @@ const CuocKhaoSatDetailPage = () => {
                             {
                                 key: '0',
                                 label: 'Thông tin kế hoạch',
-                                children: <></>,
+                                children: <ChiTietKeHoachPage
+                                    keHoach={cuocKhaoSat?.keHoach}
+                                    loading={loading}
+                                ></ChiTietKeHoachPage>,
                             },
                             {
                                 key: '1',

@@ -18,6 +18,7 @@ const KeHoachDetailPage = () => {
     const [keHoach, setKeHoach] = useState();
     const [tabValue, setTabValue] = useState("1");
     const idKeHoach = new URLSearchParams(window.location.search).get("id");
+    const tab = new URLSearchParams(window.location.search).get("tab");
     const [loading, setLoading] = useState(false);
     const taiKhoan = useSelector(state => state.taiKhoan)
     var isMounted = true;
@@ -28,6 +29,15 @@ const KeHoachDetailPage = () => {
             isMounted = false;
         };
     }, [idKeHoach]);
+    useEffect(() => {
+        isMounted = true;
+        if (tab) {
+            setTabValue(tab)
+        }
+        return () => {
+            isMounted = false;
+        };
+    }, [tab]);
     function reloadDetail(notLoading, idKeHoachSave) {
         setTabValue("1")
         if (!idKeHoach) {

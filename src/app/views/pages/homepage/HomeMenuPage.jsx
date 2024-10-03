@@ -26,6 +26,7 @@ import QuyenTruyCapPage from '../admin/quyentruycap/QuyenTruyCapPage';
 import ThongKeTheoDonViPage from '../admin/thongke/ThongKeTheoDonViPage';
 import KeHoachPage from '../kehoach/KeHoachPage';
 import KeHoachDetailPage from '../kehoach/KeHoachDetailPage';
+import DoiTuongPage from '../admin/doituong/DoiTuongPage';
 
 
 const HomeMenuPage = ({ user }) => {
@@ -65,7 +66,9 @@ const HomeMenuPage = ({ user }) => {
                             <Route path="/khao-sat" element={<ProtectedRoute user={user} role="khaosat"> <CuocKhaoSatPage /> </ProtectedRoute>} />
                             <Route path="/ke-hoach" element={<ProtectedRoute user={user} role="kehoach"> <KeHoachPage /> </ProtectedRoute>} />
                             <Route path="/chi-tiet-ke-hoach" element={<ProtectedRoute user={user} role="kehoach"> <KeHoachDetailPage /> </ProtectedRoute>} />
-
+                            
+                            <Route path="/doi-tuong-khao-sat" element={<ProtectedRoute user={user} role="nguoikhaosat"> <DoiTuongPage /> </ProtectedRoute>} />
+                            
                             <Route path="/donvi" element={<ProtectedRoute user={user} role="donvi"> <DonViPage /> </ProtectedRoute>} />
                             <Route path="/nguoi-dung" element={<ProtectedRoute user={user} role="nguoikhaosat"> <NguoiDungPage /> </ProtectedRoute>} />
                             <Route path="/can-bo" element={<ProtectedRoute user={user} role="canbo"> <CanBoPage /> </ProtectedRoute>} />

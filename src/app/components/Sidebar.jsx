@@ -6,7 +6,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import MenuIcon from '@mui/icons-material/Menu';
-import logoVnpt from "app/assets/images/vnptlogo.png"
+import logoVnpt from "app/assets/images/vnptlogo-white.png"
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';

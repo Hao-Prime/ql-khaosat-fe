@@ -382,7 +382,7 @@ const CuocKhaoSatPage = () => {
                     onRow={(record, rowIndex) => {
                         return {
                             onClick: (event) => {
-                                navigate(`/quan-tri/chi-tiet-khao-sat?id=${record?.maKhaoSat}`)
+                                navigate(`/quan-tri/chi-tiet-khao-sat?id=${record?.maKhaoSat}&burl=/quan-tri/khao-sat?trangThai=${trangThai}`)
                             },
                         };
                     }}

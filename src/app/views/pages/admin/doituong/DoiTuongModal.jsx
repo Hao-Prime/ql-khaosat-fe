@@ -2,13 +2,13 @@
 import { CircularProgress } from '@mui/material';
 import FormatDate from 'app/common/FormatDate';
 import React, { useEffect, useState } from 'react'
-import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Select, message, TreeSelect } from 'antd';
+import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Select, message, TreeSelect, Switch } from 'antd';
 import Services from 'app/services';
 import Loading from 'app/components/Loading';
 const { TextArea } = Input;
-const CauHinhModal = ({ open, setOpen, cauHinhUp, reLoadList }) => {
-    const [cauHinh, setCauHinh] = useState(cauHinhUp);
-    const [listCauHinhTT, setListCauHinhTT] = useState([]);
+const DoiTuongModal = ({ open, setOpen, doiTuongUp, reLoadList }) => {
+    const [doiTuong, setDoiTuong] = useState(doiTuongUp);
+    const [listDoiTuongTT, setListDoiTuongTT] = useState([]);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -20,18 +20,18 @@ const CauHinhModal = ({ open, setOpen, cauHinhUp, reLoadList }) => {
     async function realoadListSelect() {
         setLoading(true)
         setSending(false)
-        setCauHinh(cauHinhUp)
+        setDoiTuong(doiTuongUp)
         await new Promise(resolve => setTimeout(resolve, 50));
-        console.log(cauHinhUp);
+        console.log(doiTuongUp);
         setLoading(false)
     }
     const onChange = (arr, value) => {
-        setCauHinh({ ...cauHinh, [arr]: value })
+        setDoiTuong({ ...doiTuong, [arr]: value })
     }
     const onSubmit = () => {
         setSending(true);
-        if (!cauHinhUp?._id) {
-            Services?.getCauHinhService()?.save(cauHinh)?.then(
+        if (!doiTuongUp?._id) {
+            Services?.getDoiTuongService()?.save(doiTuong)?.then(
                 (res) => {
 
                     if (res?.data?.error) {
@@ -45,7 +45,7 @@ const CauHinhModal = ({ open, setOpen, cauHinhUp, reLoadList }) => {
                 }
             )
         } else {
-            Services?.getCauHinhService()?.update(cauHinh)?.then(
+            Services?.getDoiTuongService()?.update(doiTuong)?.then(
                 (res) => {
 
                     if (res?.data?.error) {
@@ -61,7 +61,7 @@ const CauHinhModal = ({ open, setOpen, cauHinhUp, reLoadList }) => {
         }
     }
     return (
-        <Modal title="CẤU HÌNH THAM SỐ" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText=""
+        <Modal title="ĐỐI TƯỢNG KHẢO SÁT" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText=""
 
             footer={[
                 <span className='me-1 red'>{error}</span>,
@@ -70,7 +70,7 @@ const CauHinhModal = ({ open, setOpen, cauHinhUp, reLoadList }) => {
                     <span style={{ display: sending ? 'inherit' : 'none' }}>
                         <CircularProgress className="span-sender" />
                     </span>
-                    {!cauHinhUp?._id ? "Tạo mới" : "Cập nhật"}
+                    {!doiTuongUp?._id ? "Tạo mới" : "Cập nhật"}
                 </Button>,
                 <Button key="back" onClick={() => setOpen(!open)}>
                     Hủy
@@ -82,13 +82,20 @@ const CauHinhModal = ({ open, setOpen, cauHinhUp, reLoadList }) => {
                 <div className="div-setting-cus">
 
                     <div className='pb-3'>
-                        <p className='bold'> Key *: </p>
-                        <Input defaultValue={cauHinhUp?.key} onChange={(e) => onChange("key", e?.target?.value)} placeholder="Nhập key" />
+                        <p className='bold'> Tên đối tượng *: </p>
+                        <Input defaultValue={doiTuongUp?.tenDoiTuong} onChange={(e) => onChange("tenDoiTuong", e?.target?.value)} placeholder="Nhập tên " />
                     </div>
-
                     <div className='pb-3'>
-                        <p className='bold'> Giá trị: </p>
-                        <TextArea rows={10} defaultValue={cauHinhUp?.value} onChange={(e) => onChange("value", e?.target?.value)} placeholder="Nhập giá trị" />
+                        <p className='bold'> Mô tả: </p>
+                        <TextArea rows={10} defaultValue={doiTuongUp?.moTa} onChange={(e) => onChange("moTa", e?.target?.value)} placeholder="Nhập mô tả" />
+                    </div>
+                    <div className='pb-3'>
+                        <p className='bold'> Thứ tự: </p>
+                        <Input defaultValue={doiTuongUp?.stt} onChange={(e) => onChange("stt", e?.target?.value)} placeholder="Nhập stt " />
+                    </div>
+                    <div className='pb-3 div-flex justify-between'>
+                        <p className='bold mb-1'> Trạng thái </p>
+                        <Switch checkedChildren="Mở" unCheckedChildren="Khóa" defaultChecked={doiTuongUp?.trangThai ? true : false} onChange={(e) => onChange("trangThai", e ? 1 : 0)} />
                     </div>
                 </div >
             }
@@ -97,4 +104,4 @@ const CauHinhModal = ({ open, setOpen, cauHinhUp, reLoadList }) => {
     );
 };
 
-export default CauHinhModal;
+export default DoiTuongModal;

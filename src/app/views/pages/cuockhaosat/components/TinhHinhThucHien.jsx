@@ -155,7 +155,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         align: "center",
                     },
                     {
-                        title: <p>Số khảo sát<br /> đã tạo</p>,
+                        title: <p>Số phiếu<br /> đã tạo</p>,
                         dataIndex: 'soLuongTong',
                         align: "center",
                         className: 'nowrap',

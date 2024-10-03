@@ -80,6 +80,9 @@
     width: 120px;
     margin-left: 10px;
 }
+.ant-menu-submenu-arrow{
+    color: white !important;
+}
 .body-main{
     padding: 20px;
     overflow: hidden scroll;
@@ -146,7 +149,7 @@ a {
 }
 .nav-bar-cus{
     width: 256px;
-    background: white;
+    background: #020f6d;
     
     /* background-image: linear-gradient(to right, #021ab9df 0%, #24b1eddf 100%), url("/src/app/assets/images/bg-sidebar.jpg"); */
    }
@@ -154,8 +157,8 @@ a {
     background-color: rgba(255, 255, 255, 0);
 }
 .ant-menu-inline{
-    /* background-color: rgb(61 61 61 / 23%) !important; */
-    background-color: #cadbfc45 !important;
+    background-color: rgb(130 130 130 / 18%) !important;
+    /* background-color: #cadbfc45 !important; */
     width: 225px;
 }
 .ant-menu-inline .ant-menu-submenu-arrow{
@@ -172,7 +175,7 @@ a {
     background-color: rgb(228, 232, 255) !important;
 }
 .nav-bar-cus *{
-    color: #494a52;
+    color: #ffffff;
 }
 .loading-hiden-all .dsaidopa{
     position: fixed;

@@ -7,6 +7,8 @@ import cuocKhaoSatService from "./cuockhaosat.service"
 import vaiTroService from "./vaitro.service"
 import cauHinhService from "./cauhinh.service"
 import dashboardService from "./dashboard.service"
+import doiTuongService from "./doituong.service"
+function getDoiTuongService() { return doiTuongService }
 function getDashboardService() { return dashboardService }
 function getCauHinhService() { return cauHinhService }
 function getVaiTroService() { return vaiTroService }
@@ -23,7 +25,8 @@ const Services = {
     getFormService,
     getDonViService,
     getCuocKhaoSatService,
-    getNguoiDungService
+    getNguoiDungService,
+    getDoiTuongService
 }
 
 export default Services
