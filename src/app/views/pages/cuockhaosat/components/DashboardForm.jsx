@@ -538,7 +538,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                     chiTieuDaDat: dvnpt?.chiTieuDaDat,
                     trangThai: dvnpt?.trangThai,
                     ngayBD: dvnpt.ngayBD,
-                    ngayTiepNhan: dvnpt.ngayTiepNhan,
+                    ngayBDTT: dvnpt.ngayBDTT,
                     ngayKTTT: dvnpt.ngayKTTT,
                     ngayKT: dvnpt?.ngayKT,
                     chiTieuBaoCao: dvnpt?.chiTieuBaoCao || 0,
@@ -588,6 +588,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
 
             <Table
                 rowKey="_id"
+                bordered
                 columns={[
                     // {
                     //     title: '',
@@ -604,7 +605,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         title: <p>Ngày bắt đầu <br /> Ngày kết thúc</p>,
                         render: (data) => (
                             <p>{data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : <>{dayjs(cuocKhaoSat?.ngayBD).format("DD/MM/YYYY HH:mm")}<br /></>}
-                                 {data?.ngayBD && <br />}
+                                {data?.ngayBD && <br />}
                                 {data?.ngayKT ? dayjs(data?.ngayKT).format("DD/MM/YYYY HH:mm") : "-"}
                             </p>),
                     },
@@ -614,8 +615,8 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         render: (data) => (
                             <p>
 
-                                {data?.ngayTiepNhan ? dayjs(data?.ngayTiepNhan).format("DD/MM/YYYY HH:mm") : "-"}
-                                {data?.ngayTiepNhan && <br />}
+                                {data?.ngayBDTT ? dayjs(data?.ngayBDTT).format("DD/MM/YYYY HH:mm") : "-"}
+                                <br />
                                 {data?.ngayKTTT ? dayjs(data?.ngayKTTT).format("DD/MM/YYYY HH:mm") : "-"}
                             </p>),
                     },
@@ -625,7 +626,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         render: (data) => (
                             <>
 
-                                {PhanLoai.getTimeStatus(data?.ngayBD, data?.ngayKT, data?.ngayTiepNhan, data?.ngayKTTT)}
+                                {PhanLoai.getTimeStatus(data?.ngayBD, data?.ngayKT, data?.ngayBDTT, data?.ngayKTTT)}
                                 <br />
                                 <p className={data?.trangThai == 3 ? "green" : data?.trangThai == 2 ? "blue" : "black"}>
                                     {PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)}

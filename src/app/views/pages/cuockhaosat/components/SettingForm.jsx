@@ -1,4 +1,4 @@
-import { Button, DatePicker, Divider, Input, Modal, Radio, message } from 'antd';
+import { Button, DatePicker, Divider, Input, Modal, Radio, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { Upload } from 'antd';
 import Services from 'app/services';
@@ -11,33 +11,46 @@ import Loading from 'app/components/Loading';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 const { TextArea } = Input;
-const SettingForm = ({ cuocKhaoSat, reloadList }) => {
+const { Option } = Select;
+const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
     const [modal, contextHolder] = Modal.useModal();
     const [value, setValue] = useState(1);
     const [cuocKhaoSatUpdate, setCuocKhaoSatUpdate] = useState(cuocKhaoSat);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
+    const [loadingBieuMau, setLoadingBieuMau] = useState(false)
+    const [listBieuMau, setListBieuMau] = useState([]);
     const taiKhoan = useSelector(state => state.taiKhoan)
     const onChange = (arr, value) => {
         setCuocKhaoSatUpdate({ ...cuocKhaoSatUpdate, [arr]: value })
-        // console.log('radio checked', e.target.value);
-        // setValue(e.target.value);
     };
-    const [anhBia, setAnhBia] = useState([]);
-    const [imageUrl, setImageUrl] = useState();
     const [loading2, setLoading2] = useState(false);
     useEffect(() => {
         if (cuocKhaoSat) {
-            if (cuocKhaoSat?.anhBia) {
-                setImageUrl(`${process.env.REACT_APP_URL_SERVER}/be-form/public/show-file?stringID=${cuocKhaoSat?.anhBia?._id}`)
-            }
 
-            setAnhBia()
             setLoading2(false)
+            realoadListSelect()
             setCuocKhaoSatUpdate(cuocKhaoSat)
         }
     }, [cuocKhaoSat]);
+    async function realoadListSelect() {
 
+        setLoadingBieuMau(true)
+        let listBieuMau = await Services.getFormService().getMyListForm()
+        if (listBieuMau.data) {
+            setListBieuMau(listBieuMau?.data)
+        }
+        setLoadingBieuMau(false)
+
+    }
+    const handleDropdownVisibleChangeBieuMau = async (open) => {
+        if (open) {
+            let res = await Services.getFormService().getMyListForm()
+            if (res.data) {
+                setListBieuMau(res?.data)
+            }
+        }
+    };
     const handleVoHieuHoaCuocKhaoSat = () => {
         setSending(true);
         Services.getCuocKhaoSatService().capNhatThongTinKhaoSat({ ...cuocKhaoSatUpdate, thanhPhan: "", trangThai: cuocKhaoSatUpdate?.trangThai > 0 ? 0 : 2 }).then(
@@ -96,10 +109,10 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
                             title: 'Success',
                             content: "Khảo sát đã được xóa",
                             onOk() {
-                                window.location.href = "/quan-tri/khao-sat?trangThai=0";
+                                window.location.href = backURL ? backURL?.replaceAll("~!~", "&") : `/quan-tri/khao-sat?trangThai=1`;
                             },
                             onCancel() {
-                                window.location.href = "/quan-tri/khao-sat?trangThai=0";
+                                window.location.href = backURL ? backURL?.replaceAll("~!~", "&") : `/quan-tri/khao-sat?trangThai=1`;
                             }
                         });
                     }
@@ -120,12 +133,6 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
                             content: res?.data?.message,
                         });
                     } else {
-                        if (anhBia) {
-                            let formData = new FormData();
-                            formData.append('file', anhBia);
-                            formData.append("id", res?.data);
-                            await Services.getFormService().luuAnhBia(formData, res?.data)
-                        }
                         message.success("Lưu thành công")
                     }
                 }
@@ -163,7 +170,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
     }
     function checkTrangThaiCuocKhaoSat(cuocKhaoSat) {
         if (cuocKhaoSat?.trangThai == 0) {
-            return <span className="status-danger ">Đã vô hiệu</span>
+            return <span className="status-danger ">Đã khóa</span>
         } else if (cuocKhaoSat?.trangThai == 3) {
             return <span className="status-cuccess ">Đã hoàn thành</span>// Đã hoàn thành
         }
@@ -207,25 +214,8 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(img);
     };
-    const handleChange = (info) => {
 
-        if (info.file.status === 'uploading') {
-            setLoading2(true);
-            return;
-        }
-        if (info.file.status === 'done') {
-            setAnhBia(info?.file?.originFileObj);
-            getBase64(info.file.originFileObj, (url) => {
-                setLoading2(false);
-                setImageUrl(url);
-            });
-        }
-    };
-    const customRequest = ({ file, onSuccess, onError }) => {
 
-        onSuccess();
-
-    };
     return (
 
         <div className="div-setting-cus">
@@ -265,6 +255,32 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
                         </Radio.Group>
 
                     </div> */}
+                    <div className='pb-3'>
+                        <p ><span className='bold'>Biểu mẫu:</span>  <i><a className='red f-12' href='/quan-tri/bieu-mau?my=1' target='_blank'> Tạo biểu mẫu mới</a></i></p>
+                        <Select
+                            allowClear
+                            onDropdownVisibleChange={handleDropdownVisibleChangeBieuMau}  // Gọi API khi dropdown mở
+                            loading={loadingBieuMau}  // Hiển thị Spin nếu đang load dữ liệu
+                            defaultValue={cuocKhaoSat?.bieuMau?._id}
+                            style={{ width: '100%' }}
+                            showSearch
+                            onChange={(value) => onChange("bieuMau", value ? { _id: value } : null)}
+                            filterOption={(input, option) =>
+                                option?.children?.toLowerCase().includes(input.toLowerCase()) // Tìm kiếm không phân biệt chữ hoa/chữ thường
+                            }
+                            placeholder="Chọn mẫu biểu mẫu để khảo sát"
+                        >
+                            {loadingBieuMau ? (
+                                <Option disabled key="loading">Loading...</Option>
+                            ) : (
+                                listBieuMau.map((item) => (
+                                    <Option key={item._id} value={item?._id}>
+                                        {item.tenBieuMau}
+                                    </Option>
+                                ))
+                            )}
+                        </Select>
+                    </div>
                     <div className='pb-3'>
                         <p className='bold'><span className='red'>*</span> Tiêu đề: </p>
                         <Input placeholder="Basic usage" onChange={(e) => onChange("tieuDe", e?.target?.value)} defaultValue={cuocKhaoSatUpdate?.tieuDe} />
@@ -320,7 +336,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList }) => {
                         <Button type="primary" danger className='bg-red mt-2 flex align-center' onClick={handleDelete} disabled={sending}>
                             <span style={{ display: sending ? 'inherit' : 'none' }}>
                                 <CircularProgress className="span-sender" />
-                            </span>Xóa biểu mẫu</Button>
+                            </span>Xóa khảo sát</Button>
                     </div>
                 </>}
         </div >

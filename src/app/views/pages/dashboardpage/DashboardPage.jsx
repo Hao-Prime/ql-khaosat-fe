@@ -487,8 +487,8 @@ const DashboardPage = () => {
                                     <span className='eqwqrqrqw'><WarningAmberIcon className='yellow2 f-40' /> Sắp hết hạn</span>
                                 </Tooltip>
                                 <span className='rqwttyqrwq'></span></p>
-                            <p className='tt-sl-d'>{soLuong?.soLuongKSSapHetHan} <span className='ipowqrqrwq'>- Còn thiếu: {soLuong?.soLuongChiTieuSapHetHan} </span></p>
-                            <p className='tt-sl-sub'>Cuộc khảo sát</p>
+                            <p className='tt-sl-d'><span className='ipowqrqrwq f-30'> {soLuong?.soLuongKSSapHetHan}</span> <span className='tt-sl-sub'>khảo sát </span></p>
+                            <p className='tt-sl-sub'>Chưa hoàn thành: {soLuong?.soLuongChiTieuSapHetHan} </p>
                         </div>
                         <div className='box-sld'>
                             <p className='tt-d'>
@@ -499,8 +499,8 @@ const DashboardPage = () => {
                                 <span className='rqwttyqrwq'></span>
 
                             </p>
-                            <p className='tt-sl-d'> {soLuong?.soLuongKSHetHan}  <span className='qtyqyqyqt'>- Còn thiếu: {soLuong?.soLuongChiTieuHetHan} </span></p>
-                            <p className='tt-sl-sub'>Cuộc khảo sát</p>
+                            <p className='tt-sl-d'> <span className='qtyqyqyqt f-30'>{soLuong?.soLuongKSHetHan} </span>  <span className='tt-sl-sub'>khảo sát </span></p>
+                            <p className='tt-sl-sub'>- Chưa hoàn thành: {soLuong?.soLuongChiTieuHetHan} </p>
                         </div>
                     </div>
                     <div className='flex mt-2'>

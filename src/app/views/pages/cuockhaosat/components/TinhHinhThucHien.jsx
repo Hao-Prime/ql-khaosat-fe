@@ -13,7 +13,7 @@ const TinhHinhThucHien = ({ cuocKhaoSat, reloadDetail }) => {
                     <p className=' bold f-16'>Danh sách đơn vị khảo sát:</p>
                     <DetailDonVi cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />
                 </div>
-                
+
             </div>
         </div >
 
@@ -52,7 +52,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                     chiTieuDaDat: dvnpt?.chiTieuDaDat,
                     trangThai: dvnpt?.trangThai,
                     ngayBD: dvnpt.ngayBD,
-                    ngayTiepNhan: dvnpt.ngayTiepNhan,
+                    ngayBDTT: dvnpt.ngayBDTT,
                     ngayKTTT: dvnpt.ngayKTTT,
                     ngayKT: dvnpt?.ngayKT,
                     chiTieuBaoCao: dvnpt?.chiTieuBaoCao || 0,
@@ -102,6 +102,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
 
             <Table
                 rowKey="_id"
+                bordered
                 columns={[
                     // {
                     //     title: '',
@@ -118,7 +119,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         title: <p>Ngày bắt đầu <br /> Ngày kết thúc</p>,
                         render: (data) => (
                             <p>{data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : <>{dayjs(cuocKhaoSat?.ngayBD).format("DD/MM/YYYY HH:mm")}<br /></>}
-                                 {data?.ngayBD && <br />}
+                                {data?.ngayBD && <br />}
                                 {data?.ngayKT ? dayjs(data?.ngayKT).format("DD/MM/YYYY HH:mm") : "-"}
                             </p>),
                     },
@@ -128,8 +129,8 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         render: (data) => (
                             <p>
 
-                                {data?.ngayTiepNhan ? dayjs(data?.ngayTiepNhan).format("DD/MM/YYYY HH:mm") : "-"}
-                                {data?.ngayTiepNhan && <br />}
+                                {data?.ngayBDTT ? dayjs(data?.ngayBDTT).format("DD/MM/YYYY HH:mm") : "-"}
+                                <br />
                                 {data?.ngayKTTT ? dayjs(data?.ngayKTTT).format("DD/MM/YYYY HH:mm") : "-"}
                             </p>),
                     },
@@ -139,7 +140,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         render: (data) => (
                             <>
 
-                                {PhanLoai.getTimeStatus(data?.ngayBD, data?.ngayKT, data?.ngayTiepNhan, data?.ngayKTTT)}
+                                {PhanLoai.getTimeStatus(data?.ngayBD, data?.ngayKT, data?.ngayBDTT, data?.ngayKTTT)}
                                 <br />
                                 <p className={data?.trangThai == 3 ? "green" : data?.trangThai == 2 ? "blue" : "black"}>
                                     {PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)}
@@ -173,20 +174,20 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                             {data?.chiTieuBaoCao || 0}
                         </p>),
                     },
-                    {
-                        title: <p>Cập nhật <br /> hoàn thành</p>,
+                    // {
+                    //     title: <p>Cập nhật <br /> hoàn thành</p>,
 
-                        className: 'nowrap',
-                        align: "center",
-                        render: (data, record) => (
-                            <div className='w-100pt'>
-                                {(record?.trangThai < 3 && record?._id != cuocKhaoSat?.donViPhuTrach?.donVi?._id) &&
-                                    <Tooltip placement="bottom" title={"Hoàn thành giúp đơn vị - khi đơn vị trực thuộc đã đạt số phiếu."} >
-                                        <Button type="primary" className='mt-1  m-auto' onClick={(e) => { e.stopPropagation(); handleComplete(record?._id) }}>Hoàn thành</Button>
-                                    </Tooltip>
-                                }
-                            </div>),
-                    },
+                    //     className: 'nowrap',
+                    //     align: "center",
+                    //     render: (data, record) => (
+                    //         <div className='w-100pt'>
+                    //             {(record?.trangThai < 3 && record?._id != cuocKhaoSat?.donViPhuTrach?.donVi?._id) &&
+                    //                 <Tooltip placement="bottom" title={"Hoàn thành giúp đơn vị - khi đơn vị trực thuộc đã đạt số phiếu."} >
+                    //                     <Button type="primary" className='mt-1  m-auto' onClick={(e) => { e.stopPropagation(); handleComplete(record?._id) }}>Hoàn thành</Button>
+                    //                 </Tooltip>
+                    //             }
+                    //         </div>),
+                    // },
 
                 ]}
                 className='pointer mt-1 table-cus-antd'
@@ -195,7 +196,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                 pagination={false}
                 scroll={{ x: 'max-content' }}
                 tableLayout="fixed"
-                
+
             />
         </>
     )

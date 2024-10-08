@@ -86,7 +86,13 @@ const EditForm = ({ bieuMau }) => {
             if (element?.columns?.length > 0) {
                 rs.push({ ...element, columns: generateKey(element?.columns) })
             } else if (element?.components?.length > 0) {
-                rs.push({ ...element, components: generateKey(element?.components) })
+                if (element.key?.includes("dataGrid")) {
+                    rs.push({ ...element, components: generateKey(element?.components), key: generateRandomString(20) + "-" + element.key })
+
+                } else {
+                    rs.push({ ...element, components: generateKey(element?.components) })
+
+                }
             } else {
                 if (element?.key?.length < 20) {
 

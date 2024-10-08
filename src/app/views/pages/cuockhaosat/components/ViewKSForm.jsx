@@ -69,7 +69,7 @@ const ViewKSForm = () => {
             return rs;
         } else return thanhPhan
     }
-    const convertObject = (obj) => {
+    const convertObject = (obj, keyParent) => {
         let list = []
         console.log(obj);
         for (const key in obj) {
@@ -81,21 +81,21 @@ const ViewKSForm = () => {
                         let listString = obj[key];
                         if (Array.isArray(listString)) {
                             listString?.forEach(element => {
-                                list.push({ key: key + "_" + element, valueCount: 1, type: 2 });
+                                list.push({ key: key + "_" + element, valueCount: 1, type: 2, keyParent: keyParent });
                             });
                         } else if (listString?.value) {// nó là object của api data
-                            list.push({ key: key + "_" + obj[key]?.value, label: listString?.label, valueCount: 1, type: 2 });
+                            list.push({ key: key + "_" + obj[key]?.value, label: listString?.label, valueCount: 1, type: 2, keyParent: keyParent });
                         } else {
-                            list.push({ key: key + "_" + obj[key], valueCount: 1, type: 2 });
+                            list.push({ key: key + "_" + obj[key], valueCount: 1, type: 2, keyParent: keyParent });
                         }
 
                     } else
                         if (typeof obj[key] === 'object') {
-                            list = [...list, ...convertObjectChildValue(obj[key], key)];
+                            list = [...list, ...convertObjectChildValue(obj[key], key, keyParent)];
                         } else if (key?.includes('-radio')) {
-                            list.push({ key: key + "_" + obj[key], valueCount: 1, type: 2 });
+                            list.push({ key: key + "_" + obj[key], valueCount: 1, type: 2, keyParent: keyParent });
                         } else {
-                            list.push({ key, value: obj[key], type: 1 });
+                            list.push({ key, value: obj[key], type: 1, keyParent: keyParent });
                         }
                 }
 
@@ -103,11 +103,18 @@ const ViewKSForm = () => {
         }
         return list;
     }
-    const convertObjectChildValue = (obj, keyParent) => {
+    const convertObjectChildValue = (obj, keyParent, keyParentGird) => {
         let list = []
-        for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                list.push({ key: keyParent + "_" + key, valueCount: obj[key] ? 1 : 0, type: 2 });
+        if (keyParent?.includes("dataGrid")) {
+            obj?.forEach((element,index) => {
+                list.push({ key: keyParent + "_" + index, valueCount:1, type: 3 });
+                list = [...list, ...convertObject(element, keyParent + "_" + key)];
+            });
+        } else {
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    list.push({ key: keyParent + "_" + key, valueCount: obj[key] ? 1 : 0, type: 2, keyParent: keyParentGird });
+                }
             }
         }
         return list;

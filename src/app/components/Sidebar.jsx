@@ -35,17 +35,17 @@ const Sidebar = ({ user }) => {
                 {
                     key: '/quan-tri/chi-tiet-ke-hoach',
                     label: 'Lập kế hoạch',
-                    roles: ["admin", "khaosat"],
+                    roles: ["admin", "kehoach:xuly",],
                 },
                 {
                     key: '/quan-tri/ke-hoach?trangThai=1',
                     label: 'Đang diễn ra',
-                    roles: ["admin", "kehoach", "khaosat"],
+                    roles: ["admin", "kehoach"],
                 },
                 {
                     key: '/quan-tri/ke-hoach?trangThai=2',
                     label: 'Đã kết thúc',
-                    roles: ["admin", "kehoach", "khaosat"],
+                    roles: ["admin", "kehoach"],
                 },
 
             ],
@@ -61,7 +61,7 @@ const Sidebar = ({ user }) => {
                 {
                     key: '/quan-tri/khao-sat?trangThai=1',
                     label: 'Chưa tiếp nhận',
-                    roles: ["admin", "khaosat"],
+                    roles: ["admin", "khaosat:tiepnhan"],
                 },
                 {
                     key: '/quan-tri/khao-sat?trangThai=2',
@@ -84,12 +84,12 @@ const Sidebar = ({ user }) => {
             roles: ["admin", "bieumau"],
             children: [
                 {
-                    key: '/quan-tri/bieu-mau?my=1',
+                    key: '/quan-tri/bieu-mau?isShare=1',
                     label: 'Biểu mẫu của tôi',
                     roles: ["admin", "bieumau"],
                 },
                 {
-                    key: '/quan-tri/bieu-mau?isShare=1',
+                    key: '/quan-tri/bieu-mau?isShare=2',
                     label: 'Biểu mẫu được chia sẻ',
                     roles: ["admin", "bieumau"],
                 },

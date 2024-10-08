@@ -1,7 +1,7 @@
 import { Autocomplete, CircularProgress, Grid, Tab, Tabs, TextField } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react'
 import { debounce, forEach } from "lodash";
-import { Divider, Input, QRCode, Table, Space, Switch, Button, Modal, message, Select, Form, InputNumber, Popconfirm, Typography, DatePicker } from 'antd';
+import { Divider, Input, QRCode, Table, Space, Switch, Button, Modal, message, Select, Form, InputNumber, Popconfirm, Typography, DatePicker, Tooltip } from 'antd';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import Services from 'app/services';
@@ -212,8 +212,19 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
         },
         {
             title: 'Mã khảo sát',
-            key: 'maKhaoSat',
-            dataIndex: 'maKhaoSat',
+            // key: 'maKhaoSat',
+            // dataIndex: 'maKhaoSat',
+            render: (data) => (<Tooltip title={
+                <div className='bg-white bsaeqw' >
+                    <QRCode
+                        errorLevel="H"
+                        className='qr-siz'
+                        value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + data?.maKhaoSat}
+                    // icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
+                    />
+                </div>
+
+            }> <p>{data?.maKhaoSat} </p></Tooltip>),
             width: 140,
             align: "center",
         },
@@ -447,8 +458,8 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                 listDonViSave={listDonViSave}
                 khongDat={khongDat}
                 cuocKhaoSat={cuocKhaoSat}
-                listDonVi={listDonVi } />
-            <div className='flex justify-evenly mt-3'>
+                listDonVi={listDonVi} />
+            {/* <div className='flex justify-evenly mt-3'>
                 <div>
                     <QRCode
                         errorLevel="H"
@@ -465,12 +476,12 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                     />
                     <p className='text-center'>ZALO APP</p>
                 </div>
-            </div>
+            </div> */}
             <div>
                 <p className='bold f-16'>Link chia sẻ mẫu khảo sát</p>
             </div>
             <Input value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id)} />
-            
+
             <Divider />
             <Grid container className='w-100pt' spacing={2}>
 
@@ -533,8 +544,9 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                                         cell: EditableCell,
                                     },
                                 }}
-                                className='pointer mt-1 table-cus-antd'
-                                scroll={{ x: 'max-content' }}
+                                bordered
+                                className='pointer mt-1 '
+                                scroll={{ x: '100%', y: 415 }}
                                 tableLayout="fixed"
                                 loading={loading}
                                 dataSource={listDonVi || []}

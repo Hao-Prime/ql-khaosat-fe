@@ -1,5 +1,5 @@
 
-import { Breadcrumb, Button, Checkbox, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
+import { Breadcrumb, Button, Checkbox, Dropdown, Input, Modal, Pagination, Space, Table, Tooltip, message } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState } from 'react'
 // import VaiTroModal from './VaiTroModal';
@@ -55,31 +55,32 @@ const QuyenTruyCapPage = () => {
             {
                 key: "Quản lý khảo sát", value: "khaosat",
                 children: [
-                    { key: "Tiếp nhận khảo sát", value: "khaosat.tiepnhan" },
-                    { key: "Hoàn thành khảo sát", value: "khaosat.hoanthanh" },
+                    { key: "Tiếp nhận khảo sát", value: "khaosat:tiepnhan" },
+                    { key: "Hoàn thành khảo sát", value: "khaosat:hoanthanh" },
                 ]
             },
             {
                 key: "Quản lý kế hoạch", value: "kehoach",
                 children: [
-                    { key: "Tiếp nhận xử lý kế hoạch", value: "kehoach.xuly" },
+                    { key: "Lập kế hoạch", value: "kehoach:xuly" },
                 ]
             },
-            { key: "Xem thống kê", value: "thongke.donvi" },
+            { key: "Xem thống kê", value: "thongke:donvi" },
             {
                 key: "Quản lý đơn vị", value: "donvi",
                 children: [
-                    { key: "Toàn đơn vị", value: "donvi.toanbo" },
-                    { key: "Chỉ đơn vị dưới cấp", value: "donvi.capduoi" },
+                    { key: "Toàn đơn vị", value: "donvi:toanbo" },
+                    { key: "Chỉ đơn vị dưới cấp", value: "donvi:capduoi" },
                 ]
             },
             {
                 key: "Quản lý cán bộ", value: "canbo",
                 children: [
-                    { key: "Toàn đơn vị", value: "canbo.toanbo" },
-                    { key: "Chỉ đơn vị dưới cấp", value: "canbo.capduoi" },
+                    { key: "Toàn đơn vị", value: "canbo:toanbo" },
+                    { key: "Chỉ đơn vị dưới cấp", value: "canbo:capduoi" },
                 ]
             },
+            { key: "Quản lý đối tượng khảo sát", value: "doituongkhaosat" },
             { key: "Quản lý tệp người khảo sát", value: "nguoikhaosat" },
             { key: "Quản lý logs", value: "logs" },
             { key: "Quản lý cấu hình", value: "cauhinh" },
@@ -90,7 +91,7 @@ const QuyenTruyCapPage = () => {
             title: "",
             width: 300,
             render: (data, record) => (
-                <p className='bold'>- {data?.key}</p>
+                <p className='bold'><Tooltip title={data?.value}>- {data?.key}</Tooltip></p>
             )
         }]
         listVaiTro?.forEach(vaiTro => {

@@ -220,9 +220,9 @@ const CuocKhaoSatPage = () => {
                 <>
                     <p >
                         <>{cuocKhaoSat?.ngayKT &&
-                            PhanLoai.getTimeStatus(cuocKhaoSat?.ngayBD, cuocKhaoSat?.ngayKT, null, cuocKhaoSat?.ngayHT)}</>
+                            PhanLoai.getTimeStatus(cuocKhaoSat?.ngayBD, cuocKhaoSat?.ngayKT, null, cuocKhaoSat?.ngayKTTT)}</>
                         <br />
-                        {cuocKhaoSat?.ngayHT ? dayjs(cuocKhaoSat?.ngayHT)?.format('DD/MM/YYYY HH:mm') : ""}
+                        {cuocKhaoSat?.ngayKTTT ? dayjs(cuocKhaoSat?.ngayKTTT)?.format('DD/MM/YYYY HH:mm') : ""}
                     </p>
                 </>
             );
@@ -237,9 +237,9 @@ const CuocKhaoSatPage = () => {
                 <>
                     <p >
                         <>{rs?.thoiHan &&
-                            PhanLoai.getTimeStatus(rs?.ngayBD, rs?.thoiHan, null, rs?.ngayHT)}</>
+                            PhanLoai.getTimeStatus(rs?.ngayBD, rs?.ngayKT, null, rs?.ngayKTTT)}</>
                         <br />
-                        {rs?.ngayHT ? dayjs(rs?.ngayHT)?.format('DD/MM/YYYY HH:mm') : ""}
+                        {rs?.ngayKTTT ? dayjs(rs?.ngayKTTT)?.format('DD/MM/YYYY HH:mm') : ""}
                     </p>
                 </>
             );
@@ -277,20 +277,20 @@ const CuocKhaoSatPage = () => {
                             align: "center",
                             render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
                         },
-                        // {
-                        //     title: "Mã",
-                        //     align: "center",
-                        //     render: (data, record) => (
-                        //         <div>
-                        //             <p className='bold '>{FormatString.getMaKhaoSatTheoDonVi(record, taiKhoan?.donVi?._id)}
-                        //             </p>
-                        //             <TiepNhanComp record={record} />
+                        {
+                            title: "Mã",
+                            align: "center",
+                            render: (data, record) => (
+                                <div>
+                                    {/* <p className='bold '>{FormatString.getMaKhaoSatTheoDonVi(record, taiKhoan?.donVi?._id)}
+                                    </p> */}
+                                    <TiepNhanComp record={record} />
 
 
-                        //         </div>
-                        //     ),
-                        //     width: 80,
-                        // },
+                                </div>
+                            ),
+                            width: 100,
+                        },
                         {
                             title: "Tiêu đề",
                             render: (data) => (<p className='moTa-p'>{data?.tieuDe}</p>),

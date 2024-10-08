@@ -112,7 +112,7 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
     }
     return (
         <Modal title="THÊM MỚI KHẢO SÁT" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText="" width={900}
-
+        maskClosable={false}
             footer={[
                 <span className='me-1 red'>{error}</span>,
                 <Button key="submit" type="primary" onClick={onSubmit} disabled={sending}>

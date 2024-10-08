@@ -1,7 +1,7 @@
 import axios from "axios";
 
 function getMyListForm(filter) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form?isShare=${filter?.isShare || ""}&search=${filter?.search || ""}`);
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form?isShare=${filter?.isShare || "0"}&search=${filter?.search || ""}`);
 };
 function getFormDetail(id) {
   return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/form/detail?idBieuMau=${id}`);

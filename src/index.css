@@ -436,3 +436,11 @@ code {
 .ant-modal{
   top: 50px !important;
 }
+
+.row{
+  background: #9f9f9f0d;
+  border: 1px solid #dedede;
+  padding: 10px 0px;
+  margin: 1px;
+  border-radius: 5px;
+}

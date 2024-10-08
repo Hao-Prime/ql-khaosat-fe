@@ -298,7 +298,7 @@ const AddFormModal = ({ open, setOpen, reloadList, bieuMauUp }) => {
     };
     return (
         <Modal title="TẠO MỚI BIỂU MẪU" open={open} onOk={handleOk} onCancel={() => setOpen(!open)} okText=""
-
+        maskClosable={false}
             footer={[
                 <span className='me-1 red'>{error}</span>,
                 <Button key="back" onClick={() => setOpen(!open)}>

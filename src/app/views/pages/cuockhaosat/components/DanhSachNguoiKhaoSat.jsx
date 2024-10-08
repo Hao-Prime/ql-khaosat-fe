@@ -39,6 +39,9 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat, donVi, reloadDetail }) => {
         let dataRSLisstDv = await Services.getCuocKhaoSatService().getAllResult(cuocKhaoSat?._id, donVi?._id || taiKhoan?.donVi?._id, page - 1, limit)
         if (dataRSLisstDv?.data?.content) {
             setListKetQua(dataRSLisstDv?.data?.content)
+            dataRSLisstDv?.data?.content.forEach(element => {
+                console.log(JSON.parse(element?.ketQuaFormIO));
+            });
             setTotalPage(dataRSLisstDv?.data?.totalElements)
         }
         setLoading(false)
@@ -208,6 +211,7 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat, donVi, reloadDetail }) => {
             </div>
             <Table
                 rowKey="id"
+                bordered
                 loading={loading}
                 columns={[
                     {

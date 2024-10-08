@@ -75,12 +75,12 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
     };
     const handleDelete = async () => {
         const confirmed = await modal.confirm({
-            title: "Bạn có chắc muốn xóa biểu mẫu này",
+            title: "Bạn có chắc muốn xóa kế hoạch này",
             content: "",
         });
         if (confirmed) {
             setSending(true);
-            Services.getFormService().xoaKeHoach(keHoachUpdate?._id).then(
+            Services.getCuocKhaoSatService().xoaKeHoach(keHoachUpdate?._id).then(
                 (res) => {
                     setSending(false);
                     if (res?.data?.error) {
@@ -91,12 +91,12 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                     } else {
                         Modal.success({
                             title: 'Success',
-                            content: "Biểu mẫu đã được xóa",
+                            content: "Kế hoạch đã được xóa",
                             onOk() {
-                                window.location.href = "/quan-tri/bieu-mau";
+                                window.location.href = "/quan-tri/ke-hoach?trangThai=1";
                             },
                             onCancel() {
-                                window.location.href = "/quan-tri/bieu-mau";
+                                window.location.href = "/quan-tri/ke-hoach?trangThai=1";
                             }
                         });
                     }
@@ -398,13 +398,13 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                             <Divider ><p className='red' ></p></Divider>
                             <div className='flex justify-between pb-3 pt-3'>
                                 <div >
-                                    <p className='bold'>Xóa biểu mẫu này</p>
+                                    <p className='bold'>Xóa kế hoạch này</p>
                                     <p>Một khi bạn xóa một kho lưu trữ, bạn sẽ không thể quay lại. Xin hãy chắc chắn.</p>
                                 </div>
                                 <Button type="primary" danger className='bg-red mt-2 flex align-center' onClick={handleDelete} disabled={sending}>
                                     <span style={{ display: sending ? 'inherit' : 'none' }}>
                                         <CircularProgress className="span-sender" />
-                                    </span>Xóa biểu mẫu</Button>
+                                    </span>Xóa kế hoạch</Button>
                             </div>
 
                         </>}

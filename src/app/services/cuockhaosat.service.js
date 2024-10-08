@@ -52,7 +52,7 @@ function capNhatKetQuaKS(idKhaoSat, listKQ) {
   return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/update-result?idKhaoSat=${idKhaoSat}`, listKQ);
 };
 function xoaKetQua(idKetQuaKhaoSat, idKhaoSat) {
-  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/update-result?idKetQuaKhaoSat=${idKetQuaKhaoSat}&idKhaoSat=${idKhaoSat}`);
+  return axios.delete(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/update-result?idKetQuaKhaoSat=${idKetQuaKhaoSat}&idKhaoSat=${idKhaoSat}`);
 };
 function capNhatKhaoSat(khaoSat) {
   return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form`, khaoSat);

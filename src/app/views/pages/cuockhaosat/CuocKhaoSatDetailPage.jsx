@@ -143,7 +143,7 @@ const CuocKhaoSatDetailPage = ({ }) => {
                         <p className='text-tieude-navx-1'><b>{FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id) + "-" + cuocKhaoSat?.tieuDe}</b></p>
                     </div>
                     <div>
-                        <p className='c-0042ff pointer nowrap' onClick={() => window.open(`/khao-sat?key=${FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id)}`)}>Xem KQ thiết kế <KeyboardDoubleArrowRightIcon /></p>
+                        {/* <p className='c-0042ff pointer nowrap' onClick={() => window.open(`/khao-sat?key=${FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id)}`)}>Xem KQ thiết kế <KeyboardDoubleArrowRightIcon /></p> */}
                     </div>
                 </div>
                 <Divider className='mt-2 mb-1'></Divider>
@@ -196,7 +196,7 @@ const CuocKhaoSatDetailPage = ({ }) => {
                                 {
                                     key: '5',
                                     label: 'Cập nhật',
-                                    children: <SettingForm cuocKhaoSat={cuocKhaoSat} reloadList={reloadList} />,
+                                    children: <SettingForm cuocKhaoSat={cuocKhaoSat} reloadList={reloadList} backURL={backURL}/>,
                                 }
                             ] : [])
                             ,
