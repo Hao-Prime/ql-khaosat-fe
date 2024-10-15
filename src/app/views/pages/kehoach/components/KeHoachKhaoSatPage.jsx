@@ -104,6 +104,7 @@ const KeHoachKhaoSatPage = ({keHoach, setTabValue, tabValue}) => {
                 <Table
                     rowKey="_id"
                     loading={loading}
+                    bordered
                     columns={[
                         {
                             title: "STT",

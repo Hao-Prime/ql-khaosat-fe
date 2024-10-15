@@ -444,3 +444,18 @@ code {
   margin: 1px;
   border-radius: 5px;
 }
+.ant-table-not-height .ant-empty-normal{
+  height: 60px !important;
+}
+.ant-popover{
+  z-index: 6000!important;
+}
+.choices__list .choices__item{
+  -webkit-line-clamp: 2!important;
+  -webkit-box-orient: vertical !important;
+  display: -webkit-box!important;
+  overflow: hidden!important;
+  padding-bottom: 0px !important;
+  white-space: normal !important;
+  padding-right: 10px !important;
+}

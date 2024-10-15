@@ -102,13 +102,37 @@ const Sidebar = ({ user }) => {
             roles: ["admin", "doituongkhaosat","nguoikhaosat"],
             children: [
                 {
+                    key: '/quan-tri/nhom-doi-tuong',
+                    label: 'Nhóm đối tượng',
+                    roles: ["admin", "nhomdoituong"],
+                },
+                // {
+                //     key: '/quan-tri/noi-dung', // nằm trong kế hoạch
+                //     label: 'Nội dung/Câu hỏi',
+                //     roles: ["admin", "noidung"],
+                // },
+                {
                     key: '/quan-tri/doi-tuong-khao-sat',
-                    label: 'Đối tượng khảo sát',
-                    roles: ["admin", "doituongkhaosat"],
+                    label: 'Đối tượng được KS',
+                    roles: ["admin", 'doituongkhaosat'],
                 },
                 {
+                    key: '/quan-tri/doi-tuong-lam-khao-sat',
+                    label: 'Đối tượng thực hiện KS',
+                    roles: ["admin", "doituongthkhaosat"],
+                },
+                // {
+                //     key: 'qqqqqqêe',
+                //     label: 'Thiết kế biểu mẫu',
+                //     roles: ["admin", "noidung"],
+                //     children: [
+                        
+                //     ]
+                // },
+                
+                {
                     key: '/quan-tri/nguoi-dung',
-                    label: 'Người khảo sát',
+                    label: 'Người đã khảo sát',
                     roles: ["admin", 'nguoikhaosat'],
                 },
 
@@ -178,7 +202,7 @@ const Sidebar = ({ user }) => {
                 },
                 {
                     key: '/quan-tri/cau-hinh/role',
-                    label: 'Quyền truy tập',
+                    label: 'Quyền truy cập',
                     roles: ["admin", "role"],
                 }
             ],
@@ -235,7 +259,7 @@ const Sidebar = ({ user }) => {
     };
     const filteredMenuItems = filterMenuItems(items, taiKhoan?.listVaiTro);
     // console.log(filterMenuItems(items, taiKhoan?.listVaiTro));
-    const renderMenuItems = items => {
+    const renderMenuItems = (items, level) => {
         return items.map(item => {
             if (item.children) {
                 return (

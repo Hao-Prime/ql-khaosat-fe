@@ -2,7 +2,7 @@
 import { Breadcrumb, Button, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState } from 'react'
-import DoiTuongModal from './DoiTuongModal';
+import NhomDoiTuongModal from './NhomDoiTuongModal';
 import Services from 'app/services';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
@@ -23,12 +23,12 @@ const items = [
         label: 'Xóa',
     },
 ];
-const DoiTuongPage = () => {
+const NhomDoiTuongPage = () => {
     const [modal, contextHolder] = Modal.useModal();
-    const [listDoiTuong, setListDoiTuong] = useState([]);
-    const [listDoiTuongMD, setListDoiTuongMD] = useState([]);
-    const [doiTuongUp, setDoiTuongUp] = useState();
-    const [openDoiTuongModal, setOpenDoiTuongModal] = useState(false);
+    const [listNhomDoiTuong, setListNhomDoiTuong] = useState([]);
+    const [listNhomDoiTuongMD, setListNhomDoiTuongMD] = useState([]);
+    const [nhomDoiTuongUp, setNhomDoiTuongUp] = useState();
+    const [openNhomDoiTuongModal, setOpenNhomDoiTuongModal] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [windowScreen, setWindowScreen] = useState(window.screen.width > 1000);
     const [limit, setLimit] = useState(30);
@@ -39,22 +39,22 @@ const DoiTuongPage = () => {
         reLoadList()
     }, []);
     useEffect(() => {
-        if (listDoiTuongMD?.length > 0) {
-            let data = listDoiTuongMD.filter((v, i) => {
+        if (listNhomDoiTuongMD?.length > 0) {
+            let data = listNhomDoiTuongMD.filter((v, i) => {
                 const start = limit * (page - 1);
                 const end = start + limit;
                 return i >= start && i < end;
             });
-            setListDoiTuong(data);
+            setListNhomDoiTuong(data);
         }
-    }, [limit, page, listDoiTuongMD]);
+    }, [limit, page, listNhomDoiTuongMD]);
     async function reLoadList(params) {
         setLoading(true)
 
-        let dataRSLisstDv = (await Services.getDoiTuongService().getAll("", "", ""))?.data
-        setListDoiTuongMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "stt", 1))
+        let dataRSLisstDv = (await Services.getNhomDoiTuongService().getAll("", ""))?.data
+        setListNhomDoiTuongMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "stt", 1))
         if(dataRSLisstDv?.length==0){
-            setListDoiTuong([])
+            setListNhomDoiTuong([])
         }
         setLoading(false)
     }
@@ -68,8 +68,8 @@ const DoiTuongPage = () => {
         switch (key?.key) {
             case "1":
 
-                setDoiTuongUp(data)
-                setOpenDoiTuongModal(true)
+                setNhomDoiTuongUp(data)
+                setOpenNhomDoiTuongModal(true)
                 break;
             case "2":
                 const confirmed = await modal.confirm({
@@ -79,7 +79,7 @@ const DoiTuongPage = () => {
                 console.log(confirmed);
                 if (confirmed) {
                     setLoading(true);
-                    Services.getDoiTuongService().deleteByID(data?._id)?.then(
+                    Services.getNhomDoiTuongService().deleteByID(data?._id)?.then(
                         (res) => {
                             if (res?.data?.error) {
                                 alert(res?.data?.message)
@@ -99,8 +99,8 @@ const DoiTuongPage = () => {
             setLoading(true)
             let dataRSLisstDv = []
             if (key) {
-                listDoiTuongMD.forEach((phuTrach) => {
-                    if (phuTrach?.tenDoiTuong?.toUpperCase().includes(key.toUpperCase()) ||
+                listNhomDoiTuongMD.forEach((phuTrach) => {
+                    if (phuTrach?.ten?.toUpperCase().includes(key.toUpperCase()) ||
                         phuTrach?.moTa?.toUpperCase().includes(key.toUpperCase())) {
                         dataRSLisstDv.push(phuTrach)
                     }
@@ -108,7 +108,7 @@ const DoiTuongPage = () => {
                 if (dataRSLisstDv?.length == 0) {
                     message.error("Không tìm thấy")
                 } else {
-                    setListDoiTuongMD(dataRSLisstDv)
+                    setListNhomDoiTuongMD(dataRSLisstDv)
                 }
                 setLoading(false)
             } else {
@@ -127,7 +127,7 @@ const DoiTuongPage = () => {
                             title: <p className='bold f-16 c-575762'>Trang chủ </p>,
                         },
                         {
-                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> Cấu hình giá trị</p>,
+                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' />Nhóm đối tượng</p>,
                             href: "/"
                         }
 
@@ -135,10 +135,10 @@ const DoiTuongPage = () => {
                 /></div>
 
             <div className="page-new">
-                <DoiTuongModal open={openDoiTuongModal} setOpen={setOpenDoiTuongModal} doiTuongUp={doiTuongUp} reLoadList={reLoadList} />
+                <NhomDoiTuongModal open={openNhomDoiTuongModal} setOpen={setOpenNhomDoiTuongModal} nhomDoiTuongUp={nhomDoiTuongUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
-                        <Button onClick={() => { setOpenDoiTuongModal(true); setDoiTuongUp({trangThai:1}) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        <Button onClick={() => { setOpenNhomDoiTuongModal(true); setNhomDoiTuongUp({trangThai:1}) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
                     </div>
                     <div>
                         <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
@@ -155,18 +155,19 @@ const DoiTuongPage = () => {
                             align: "center",
                             render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
                         },
+                        
                         {
-                            title: "Tên đối tượng",
-                            dataIndex: "tenDoiTuong",
-                            key: "tenDoiTuong",
-                            width: 180,
+                            title: "Tên",
+                            dataIndex: "ten",
+                            key: "ten",
+                            width: 220,
 
                         },
                         {
                             title: "Mô tả",
                             dataIndex: "moTa",
                             key: "moTa",
-                            width: 500,
+                            width: 520,
                         },
                         {
                             title: "Thứ tự",
@@ -196,7 +197,7 @@ const DoiTuongPage = () => {
                     scroll={{ x: '100%', y: 415 }}
                     locale={{ emptyText: 'Không có dữ liệu' }}
                     style={{ minHeight: 415 }}
-                    dataSource={listDoiTuong}
+                    dataSource={listNhomDoiTuong}
                     pagination={false}
                     size='small'
                     className='pointer mt-1 table-cus-antd'
@@ -209,7 +210,7 @@ const DoiTuongPage = () => {
                         showSizeChanger
                         onShowSizeChange={onShowSizeChange}
 
-                        total={listDoiTuong?.length || 0}
+                        total={listNhomDoiTuong?.length || 0}
                         defaultPageSize={30}
                     />
                 </div>
@@ -218,4 +219,4 @@ const DoiTuongPage = () => {
     );
 };
 
-export default DoiTuongPage;
+export default NhomDoiTuongPage;

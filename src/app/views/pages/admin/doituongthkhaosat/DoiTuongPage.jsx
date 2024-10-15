@@ -2,7 +2,7 @@
 import { Breadcrumb, Button, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState } from 'react'
-import CauHinhModal from './CauHinhModal';
+import DoiTuongModal from './DoiTuongModal';
 import Services from 'app/services';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
@@ -23,12 +23,12 @@ const items = [
         label: 'Xóa',
     },
 ];
-const CauHinhPage = () => {
+const DoiTuongPage = () => {
     const [modal, contextHolder] = Modal.useModal();
-    const [listCauHinh, setListCauHinh] = useState([]);
-    const [listCauHinhMD, setListCauHinhMD] = useState([]);
-    const [cauHinhUp, setCauHinhUp] = useState();
-    const [openCauHinhModal, setOpenCauHinhModal] = useState(false);
+    const [listDoiTuong, setListDoiTuong] = useState([]);
+    const [listDoiTuongMD, setListDoiTuongMD] = useState([]);
+    const [doiTuongUp, setDoiTuongUp] = useState();
+    const [openDoiTuongModal, setOpenDoiTuongModal] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [windowScreen, setWindowScreen] = useState(window.screen.width > 1000);
     const [limit, setLimit] = useState(30);
@@ -39,22 +39,22 @@ const CauHinhPage = () => {
         reLoadList()
     }, []);
     useEffect(() => {
-        if (listCauHinhMD?.length > 0) {
-            let data = listCauHinhMD.filter((v, i) => {
+        if (listDoiTuongMD?.length > 0) {
+            let data = listDoiTuongMD.filter((v, i) => {
                 const start = limit * (page - 1);
                 const end = start + limit;
                 return i >= start && i < end;
             });
-            setListCauHinh(data);
+            setListDoiTuong(data);
         }
-    }, [limit, page, listCauHinhMD]);
+    }, [limit, page, listDoiTuongMD]);
     async function reLoadList(params) {
         setLoading(true)
 
-        let dataRSLisstDv = (await Services.getCauHinhService().getAll("", "", ""))?.data
-        setListCauHinhMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "_id", -1))
+        let dataRSLisstDv = (await Services.getDoiTuongService().getAll("", "", ""))?.data
+        setListDoiTuongMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "stt", 1))
         if(dataRSLisstDv?.length==0){
-            setListCauHinh([])
+            setListDoiTuong([])
         }
         setLoading(false)
     }
@@ -68,18 +68,18 @@ const CauHinhPage = () => {
         switch (key?.key) {
             case "1":
 
-                setCauHinhUp(data)
-                setOpenCauHinhModal(true)
+                setDoiTuongUp(data)
+                setOpenDoiTuongModal(true)
                 break;
             case "2":
                 const confirmed = await modal.confirm({
-                    title: 'Bạn có chắc muốn xóa cấu hình này',
+                    title: 'Bạn có chắc muốn xóa đối tượng này',
                     content: "",
                 });
                 console.log(confirmed);
                 if (confirmed) {
                     setLoading(true);
-                    Services.getCauHinhService().deleteByID(data?._id)?.then(
+                    Services.getDoiTuongService().deleteByID(data?._id)?.then(
                         (res) => {
                             if (res?.data?.error) {
                                 alert(res?.data?.message)
@@ -95,16 +95,25 @@ const CauHinhPage = () => {
     };
     const handleSearch = useCallback(
         debounce(async (e) => {
-            setLoading(false)
-            let dataRSLisstDv = await Services.getCauHinhService().getAll("", "", e?.target?.value)
-
-            if (dataRSLisstDv?.data?.length == 0) {
-                message.error("Không tìm thấy đơn vị")
+            let key = e?.target?.value
+            setLoading(true)
+            let dataRSLisstDv = []
+            if (key) {
+                listDoiTuongMD.forEach((phuTrach) => {
+                    if (phuTrach?.tenDoiTuong?.toUpperCase().includes(key.toUpperCase()) ||
+                        phuTrach?.moTa?.toUpperCase().includes(key.toUpperCase())) {
+                        dataRSLisstDv.push(phuTrach)
+                    }
+                })
+                if (dataRSLisstDv?.length == 0) {
+                    message.error("Không tìm thấy")
+                } else {
+                    setListDoiTuongMD(dataRSLisstDv)
+                }
+                setLoading(false)
             } else {
-                setListCauHinhMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv?.data, "_id", -1))
-                setPage(1)
+                reLoadList()
             }
-
         }, 500),
         [],
     );
@@ -118,7 +127,7 @@ const CauHinhPage = () => {
                             title: <p className='bold f-16 c-575762'>Trang chủ </p>,
                         },
                         {
-                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> Cấu hình giá trị</p>,
+                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> Đối tượng thực hiện khảo sát</p>,
                             href: "/"
                         }
 
@@ -126,10 +135,10 @@ const CauHinhPage = () => {
                 /></div>
 
             <div className="page-new">
-                <CauHinhModal open={openCauHinhModal} setOpen={setOpenCauHinhModal} cauHinhUp={cauHinhUp} reLoadList={reLoadList} />
+                <DoiTuongModal open={openDoiTuongModal} setOpen={setOpenDoiTuongModal} doiTuongUp={doiTuongUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
-                        <Button onClick={() => { setOpenCauHinhModal(true); setCauHinhUp() }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        <Button onClick={() => { setOpenDoiTuongModal(true); setDoiTuongUp({trangThai:1}) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
                     </div>
                     <div>
                         <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
@@ -147,29 +156,28 @@ const CauHinhPage = () => {
                             render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
                         },
                         {
-                            title: "Mã key",
-                            dataIndex: "key",
-                            key: "key",
+                            title: "Tên đối tượng",
+                            dataIndex: "tenDoiTuong",
+                            key: "tenDoiTuong",
                             width: 180,
 
                         },
                         {
-                            title: "Giá trị",
-                            render: (value) => {
-                                try {
-                                  // Kiểm tra nếu 'value' là đối tượng, chuyển thành JSON định dạng đẹp
-                                  const formattedJson = JSON.stringify(value, null, 2);
-                                  return (
-                                    <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'monospace' }}>
-                                      {formattedJson}
-                                    </pre>
-                                  );
-                                } catch {
-                                  // Nếu không phải đối tượng, trả về giá trị thô
-                                  return <pre>{value}</pre>;
-                                }
-                              },
+                            title: "Mô tả",
+                            dataIndex: "moTa",
+                            key: "moTa",
                             width: 500,
+                        },
+                        {
+                            title: "Thứ tự",
+                            dataIndex: "stt",
+                            key: "stt",
+                            width: 80,
+                        },
+                        {
+                            title: "Trang thái",
+                            render: (data) => (data?.trangThai != 1 ? <span className='box-red'>Khóa</span> : <span className='box-green'>Mở</span>),
+                            width: 90,
                         },
                         {
                             title: " ",
@@ -188,7 +196,7 @@ const CauHinhPage = () => {
                     scroll={{ x: '100%', y: 415 }}
                     locale={{ emptyText: 'Không có dữ liệu' }}
                     style={{ minHeight: 415 }}
-                    dataSource={listCauHinh}
+                    dataSource={listDoiTuong}
                     pagination={false}
                     size='small'
                     className='pointer mt-1 table-cus-antd'
@@ -201,7 +209,7 @@ const CauHinhPage = () => {
                         showSizeChanger
                         onShowSizeChange={onShowSizeChange}
 
-                        total={listCauHinh?.length || 0}
+                        total={listDoiTuong?.length || 0}
                         defaultPageSize={30}
                     />
                 </div>
@@ -210,4 +218,4 @@ const CauHinhPage = () => {
     );
 };
 
-export default CauHinhPage;
+export default DoiTuongPage;

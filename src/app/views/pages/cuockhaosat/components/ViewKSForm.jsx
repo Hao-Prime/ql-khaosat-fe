@@ -81,21 +81,21 @@ const ViewKSForm = () => {
                         let listString = obj[key];
                         if (Array.isArray(listString)) {
                             listString?.forEach(element => {
-                                list.push({ key: key + "_" + element, valueCount: 1, type: 2, keyParent: keyParent });
+                                list.push({ key: element + "_" + key, valueCount: 1, type: 2, keyParent: keyParent ,code:1});
                             });
                         } else if (listString?.value) {// nó là object của api data
-                            list.push({ key: key + "_" + obj[key]?.value, label: listString?.label, valueCount: 1, type: 2, keyParent: keyParent });
+                            list.push({ key: obj[key]?.value + "_" + key, label: listString?.label, valueCount: 1, type: 2, keyParent: keyParent ,code:2});
                         } else {
-                            list.push({ key: key + "_" + obj[key], valueCount: 1, type: 2, keyParent: keyParent });
+                            list.push({ key: obj[key] + "_" + key, valueCount: 1, type: 2, keyParent: keyParent ,code:3});
                         }
 
                     } else
                         if (typeof obj[key] === 'object') {
                             list = [...list, ...convertObjectChildValue(obj[key], key, keyParent)];
                         } else if (key?.includes('-radio')) {
-                            list.push({ key: key + "_" + obj[key], valueCount: 1, type: 2, keyParent: keyParent });
+                            list.push({ key: obj[key] + "_" + key, valueCount: 1, type: 2, keyParent: keyParent ,code:4});
                         } else {
-                            list.push({ key, value: obj[key], type: 1, keyParent: keyParent });
+                            list.push({ key, value: obj[key], type: 1, keyParent: keyParent ,code:5});
                         }
                 }
 
@@ -106,14 +106,21 @@ const ViewKSForm = () => {
     const convertObjectChildValue = (obj, keyParent, keyParentGird) => {
         let list = []
         if (keyParent?.includes("dataGrid")) {
-            obj?.forEach((element,index) => {
-                list.push({ key: keyParent + "_" + index, valueCount:1, type: 3 });
-                list = [...list, ...convertObject(element, keyParent + "_" + key)];
+            obj?.forEach((element, index) => {
+                list.push({ key: index + "_" + keyParent, valueCount: 1, type: 3, keyParent: keyParentGird ,code:6});
+                list = [...list, ...convertObject(element, keyParent + "_" + index)];
             });
+        } else if (keyParent?.includes("survey")) {
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    list.push({ key: obj[key] + "_" + keyParent?.replaceAll("survey", "radio"), valueCount: 1, type: 2, keyParent: keyParent, doiTuongId: key ,code:7});
+                }
+            }
+
         } else {
             for (const key in obj) {
                 if (obj.hasOwnProperty(key)) {
-                    list.push({ key: keyParent + "_" + key, valueCount: obj[key] ? 1 : 0, type: 2, keyParent: keyParentGird });
+                    list.push({ key: key + "_" + keyParent, valueCount: obj[key] ? 1 : 0, type: 2, keyParent: keyParentGird });
                 }
             }
         }
@@ -223,8 +230,10 @@ const ViewKSForm = () => {
                                 <Button className='mt-2' onClick={() => window.location.href = "/"}> Quay lại</Button>
                             </div>
                             :
-                            <>
-
+                            <div>
+                                <div className='div-finish mb-3'>
+                                    <p className='f-20 '><span className=''>Bạn đang thực hiện khảo sát của đơn vị </span> <b className='bold red'>{cuocKhaoSat?.donVi?.tenDonVi}</b></p>
+                                </div>
                                 {
                                     listPageForm?.length > 1 ?
                                         <>
@@ -577,7 +586,7 @@ const ViewKSForm = () => {
 
                                 {/* <p className='text-center red'>{error}</p> */}
 
-                            </>}
+                            </div>}
                     </div>
                     {sending && <div className='loading-hiden-all'>
                         <Loading />

@@ -160,7 +160,10 @@ const CanBoModal = ({ open, setOpen, canBoUp, reLoadList }) => {
                             placeholder="Chọn vai trò cán bộ"
                         />
                     </div>
-
+                    <div className='pb-3'>
+                        <p className='bold'>Mật khẩu mới (Bỏ trống để giữ nguyên): </p>
+                        <Input onChange={(e) => onChange("pas", e?.target?.value)} placeholder="Nhập mật khẩu mới nếu cần đổi" />
+                    </div>
                 </div >
             }
         </Modal>

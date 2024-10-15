@@ -117,7 +117,8 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                                 content: res?.data?.message,
                             });
                         } else {
-                            if (listFile) {
+                            if (listFile?.length>0) {
+                                let lenght=0
                                 let formData = new FormData();
                                 let listLength = 0
                                 listFile?.forEach(element => {
@@ -147,15 +148,20 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                                 content: res?.data?.message,
                             });
                         } else {
-                            if (listFile) {
+                            if (listFile?.length>0) {
                                 let formData = new FormData();
+                                let lenght=0
                                 listFile?.forEach(element => {
                                     if (!element?._id) {
                                         formData.append('files', element?.originFileObj);
+                                        lenght=1
                                     }
                                 });
-                                formData.append("id", res?.data);
-                                await Services.getCuocKhaoSatService().themFileKeHoach(formData, res?.data)
+                                if(lenght>0){
+                                    formData.append("id", res?.data);
+                                    await Services.getCuocKhaoSatService().themFileKeHoach(formData, res?.data)
+                                }
+                   
                             }
                             message.success("Lưu thành công")
 
@@ -348,7 +354,7 @@ const CapNhatKeHoachPage = ({ keHoach, reloadDetail, loading, setTabValue }) => 
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6} lg={6} className=' pb-2 ps-2'>
-                            <p className='bold'>Kế thúc: </p>
+                            <p className='bold'>Kết thúc: </p>
                             <DatePicker
                                 onChange={(e) => onChange("ngayKT", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
                                 value={keHoachUpdate?.ngayKT ? dayjs(keHoachUpdate?.ngayKT) : null}

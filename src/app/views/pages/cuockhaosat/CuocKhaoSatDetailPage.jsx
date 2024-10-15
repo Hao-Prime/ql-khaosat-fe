@@ -167,7 +167,7 @@ const CuocKhaoSatDetailPage = ({ }) => {
                             },
                             {
                                 key: '1',
-                                label: 'Biểu mẫu áp dụng',
+                                label: 'Biểu mẫu khảo sát',
                                 children: <ViewBieuMauKSForm
                                     tabValue={tabValue}
                                     cuocKhaoSatUp={cuocKhaoSat} />,

@@ -26,7 +26,10 @@ import QuyenTruyCapPage from '../admin/quyentruycap/QuyenTruyCapPage';
 import ThongKeTheoDonViPage from '../admin/thongke/ThongKeTheoDonViPage';
 import KeHoachPage from '../kehoach/KeHoachPage';
 import KeHoachDetailPage from '../kehoach/KeHoachDetailPage';
-import DoiTuongPage from '../admin/doituong/DoiTuongPage';
+import DoiTuongPage from '../admin/doituongthkhaosat/DoiTuongPage';
+import DoiTuongKhaoSatPage from '../admin/doituongkhaosat/DoiTuongKhaoSatPage';
+import NhomDoiTuongPage from '../admin/nhomdoituong/NhomDoiTuongPage';
+import NoiDungKhaoSatPage from '../admin/noidungkhaosat/NoiDungKhaoSatPage';
 
 
 const HomeMenuPage = ({ user }) => {
@@ -67,8 +70,11 @@ const HomeMenuPage = ({ user }) => {
                             <Route path="/ke-hoach" element={<ProtectedRoute user={user} role="kehoach"> <KeHoachPage /> </ProtectedRoute>} />
                             <Route path="/chi-tiet-ke-hoach" element={<ProtectedRoute user={user} role="kehoach"> <KeHoachDetailPage /> </ProtectedRoute>} />
                             
-                            <Route path="/doi-tuong-khao-sat" element={<ProtectedRoute user={user} role="nguoikhaosat"> <DoiTuongPage /> </ProtectedRoute>} />
-                            
+                            <Route path="/nhom-doi-tuong" element={<ProtectedRoute user={user} role="nhomdoituong"> <NhomDoiTuongPage /> </ProtectedRoute>} />
+                            <Route path="/noi-dung" element={<ProtectedRoute user={user} role="noidung"> <NoiDungKhaoSatPage /> </ProtectedRoute>} />
+                            <Route path="/doi-tuong-khao-sat" element={<ProtectedRoute user={user} role="doituongkhaosat"> <DoiTuongKhaoSatPage /> </ProtectedRoute>} />
+                            <Route path="/doi-tuong-lam-khao-sat" element={<ProtectedRoute user={user} role="doituongthkhaosat"> <DoiTuongPage /> </ProtectedRoute>} />
+                       
                             <Route path="/donvi" element={<ProtectedRoute user={user} role="donvi"> <DonViPage /> </ProtectedRoute>} />
                             <Route path="/nguoi-dung" element={<ProtectedRoute user={user} role="nguoikhaosat"> <NguoiDungPage /> </ProtectedRoute>} />
                             <Route path="/can-bo" element={<ProtectedRoute user={user} role="canbo"> <CanBoPage /> </ProtectedRoute>} />

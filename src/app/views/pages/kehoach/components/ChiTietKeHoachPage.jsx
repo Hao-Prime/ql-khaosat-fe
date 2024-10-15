@@ -99,7 +99,7 @@ const ChiTietKeHoachPage = ({ keHoach, reloadDetail, loading, }) => {
 
                         </Grid>
                         <Grid item xs={12} sm={12} md={6} lg={6} className=' pb-2 ps-2'>
-                            <p><span className='bold'>Kế thúc: </span>{keHoach?.ngayKT ? dayjs(keHoach?.ngayKT)?.format('DD/MM/YYYY') : ""} </p>
+                            <p><span className='bold'>Kết thúc: </span>{keHoach?.ngayKT ? dayjs(keHoach?.ngayKT)?.format('DD/MM/YYYY') : ""} </p>
 
                         </Grid>
                     </Grid>

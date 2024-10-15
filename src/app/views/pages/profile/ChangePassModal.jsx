@@ -64,15 +64,15 @@ const ChangePassModal = ({ open, setOpen }) => {
             <div className="div-setting-cus">
 
                 <div className='pb-3'>
-                    <p className='bold'> Mật khẩu cũ*: </p>
+                    <p className='bold'> Mật khẩu cũ<span className='red'>*</span>: </p>
                     <Input type='password' onChange={(e) => onChange("matKhauCu", e?.target?.value)} placeholder="Nhập mật khẩu cũ" />
                 </div>
                 <div className='pb-3'>
-                    <p className='bold'> Mật khẩu mới *: </p>
+                    <p className='bold'> Mật khẩu mới <span className='red'>*</span>: </p>
                     <Input type='password' onChange={(e) => onChange("matKhauMoi", e?.target?.value)} placeholder="Nhập mật khẩu mới" />
                 </div>
                 <div className='pb-3'>
-                    <p className='bold'> Nhập lại Mật khẩu mới *: </p>
+                    <p className='bold'> Nhập lại Mật khẩu mới <span className='red'>*</span>: </p>
                     <Input type='password' onChange={(e) => onChange("matKhauMoi2", e?.target?.value)} placeholder="Nhập lại mật khẩu mới" />
                 </div>
 

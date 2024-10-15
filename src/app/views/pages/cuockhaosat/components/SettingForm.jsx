@@ -295,7 +295,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
                         <Input type="number" defaultValue={cuocKhaoSatUpdate?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ khảo sát cần đạt" />
                     </div>
                     <div className='pb-3'>
-                        <p className='bold'> Giới hạn thời gian trả lời biểu mẫu: </p>
+                        <p className='bold'> Thời gian biểu mẫu: </p>
                         <div className='flex justify-between'>
                             <DatePicker
                                 onChange={(e) => onChange("ngayBD", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}

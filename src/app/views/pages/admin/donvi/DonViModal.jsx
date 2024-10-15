@@ -80,7 +80,7 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
         }
     }
     return (
-        <Modal title="ĐƠN VỊ" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText=""
+        <Modal title="ĐƠN VỊ" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText="" maskClosable={false}
 
             footer={[
                 <span className='me-1 red'>{error}</span>,
@@ -112,7 +112,7 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
                         />
                     </div>
                     <div className='pb-3'>
-                        <p className='bold'> Tên đơn vị *: </p>
+                        <p className='bold'> Tên đơn vị <span className='red'>*</span>: </p>
                         <Input defaultValue={donVi?.tenDonVi} onChange={(e) => onChange("tenDonVi", e?.target?.value)} placeholder="Nhập tên đơn vị" />
                     </div>
 

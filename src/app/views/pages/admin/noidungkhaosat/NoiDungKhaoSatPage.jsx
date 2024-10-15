@@ -2,7 +2,7 @@
 import { Breadcrumb, Button, Dropdown, Input, Modal, Pagination, Space, Table, message } from 'antd';
 import FormatDate from 'app/common/FormatDate';
 import React, { useCallback, useEffect, useState } from 'react'
-import CauHinhModal from './CauHinhModal';
+import NoiDungKhaoSatModal from './NoiDungKhaoSatModal';
 import Services from 'app/services';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
@@ -23,38 +23,37 @@ const items = [
         label: 'Xóa',
     },
 ];
-const CauHinhPage = () => {
+const NoiDungKhaoSatPage = () => {
     const [modal, contextHolder] = Modal.useModal();
-    const [listCauHinh, setListCauHinh] = useState([]);
-    const [listCauHinhMD, setListCauHinhMD] = useState([]);
-    const [cauHinhUp, setCauHinhUp] = useState();
-    const [openCauHinhModal, setOpenCauHinhModal] = useState(false);
+    const [listNoiDungKhaoSat, setListNoiDungKhaoSat] = useState([]);
+    const [listNoiDungKhaoSatMD, setListNoiDungKhaoSatMD] = useState([]);
+    const [noiDungKhaoSatUp, setNoiDungKhaoSatUp] = useState();
+    const [openNoiDungKhaoSatModal, setOpenNoiDungKhaoSatModal] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [windowScreen, setWindowScreen] = useState(window.screen.width > 1000);
     const [limit, setLimit] = useState(30);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         reLoadList()
     }, []);
     useEffect(() => {
-        if (listCauHinhMD?.length > 0) {
-            let data = listCauHinhMD.filter((v, i) => {
+        if (listNoiDungKhaoSatMD?.length > 0) {
+            let data = listNoiDungKhaoSatMD.filter((v, i) => {
                 const start = limit * (page - 1);
                 const end = start + limit;
                 return i >= start && i < end;
             });
-            setListCauHinh(data);
+            setListNoiDungKhaoSat(data);
         }
-    }, [limit, page, listCauHinhMD]);
+    }, [limit, page, listNoiDungKhaoSatMD]);
     async function reLoadList(params) {
         setLoading(true)
 
-        let dataRSLisstDv = (await Services.getCauHinhService().getAll("", "", ""))?.data
-        setListCauHinhMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "_id", -1))
+        let dataRSLisstDv = (await Services.getNoiDungKhaoSatService().getAll("", ""))?.data
+        setListNoiDungKhaoSatMD(SapXep.sapXepTheoObject2Atr(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "stt", 1),"nhomDoiTuong", "stt", 1))
         if(dataRSLisstDv?.length==0){
-            setListCauHinh([])
+            setListNoiDungKhaoSat([])
         }
         setLoading(false)
     }
@@ -68,18 +67,18 @@ const CauHinhPage = () => {
         switch (key?.key) {
             case "1":
 
-                setCauHinhUp(data)
-                setOpenCauHinhModal(true)
+                setNoiDungKhaoSatUp(data)
+                setOpenNoiDungKhaoSatModal(true)
                 break;
             case "2":
                 const confirmed = await modal.confirm({
-                    title: 'Bạn có chắc muốn xóa cấu hình này',
+                    title: 'Bạn có chắc muốn xóa đối tượng này',
                     content: "",
                 });
                 console.log(confirmed);
                 if (confirmed) {
                     setLoading(true);
-                    Services.getCauHinhService().deleteByID(data?._id)?.then(
+                    Services.getNoiDungKhaoSatService().deleteByID(data?._id)?.then(
                         (res) => {
                             if (res?.data?.error) {
                                 alert(res?.data?.message)
@@ -95,16 +94,26 @@ const CauHinhPage = () => {
     };
     const handleSearch = useCallback(
         debounce(async (e) => {
-            setLoading(false)
-            let dataRSLisstDv = await Services.getCauHinhService().getAll("", "", e?.target?.value)
-
-            if (dataRSLisstDv?.data?.length == 0) {
-                message.error("Không tìm thấy đơn vị")
+            let key = e?.target?.value
+            setLoading(true)
+            let dataRSLisstDv = []
+            if (key) {
+                listNoiDungKhaoSatMD.forEach((phuTrach) => {
+                    if (phuTrach?.ten?.toUpperCase().includes(key.toUpperCase()) ||
+                        phuTrach?.nhomDoiTuong?.ten?.toUpperCase().includes(key.toUpperCase()) ||
+                        phuTrach?.moTa?.toUpperCase().includes(key.toUpperCase())) {
+                        dataRSLisstDv.push(phuTrach)
+                    }
+                })
+                if (dataRSLisstDv?.length == 0) {
+                    message.error("Không tìm thấy")
+                } else {
+                    setListNoiDungKhaoSatMD(dataRSLisstDv)
+                }
+                setLoading(false)
             } else {
-                setListCauHinhMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv?.data, "_id", -1))
-                setPage(1)
+                reLoadList()
             }
-
         }, 500),
         [],
     );
@@ -112,24 +121,25 @@ const CauHinhPage = () => {
     return (
         <>
             <div className='pb-2'>
-                <Breadcrumb
+                {/* <Breadcrumb
                     items={[
                         {
                             title: <p className='bold f-16 c-575762'>Trang chủ </p>,
                         },
                         {
-                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> Cấu hình giá trị</p>,
+                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' />Đối tượng khảo sát</p>,
                             href: "/"
                         }
 
                     ]}
-                /></div>
+                /> */}
+                </div>
 
             <div className="page-new">
-                <CauHinhModal open={openCauHinhModal} setOpen={setOpenCauHinhModal} cauHinhUp={cauHinhUp} reLoadList={reLoadList} />
+                <NoiDungKhaoSatModal open={openNoiDungKhaoSatModal} setOpen={setOpenNoiDungKhaoSatModal} noiDungKhaoSatUp={noiDungKhaoSatUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
-                        <Button onClick={() => { setOpenCauHinhModal(true); setCauHinhUp() }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        <Button onClick={() => { setOpenNoiDungKhaoSatModal(true); setNoiDungKhaoSatUp({trangThai:1}) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
                     </div>
                     <div>
                         <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
@@ -146,30 +156,52 @@ const CauHinhPage = () => {
                             align: "center",
                             render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
                         },
-                        {
-                            title: "Mã key",
-                            dataIndex: "key",
-                            key: "key",
-                            width: 180,
+                        // {
+                        //     title: "Tên nhóm",
+                        //     render: (data, record, index) => (<p>{data?.nhomDoiTuong?.ten}</p>),
+                        //     width: 90,
 
+                        // },
+                        {
+                            title: "Nội dung",
+                            dataIndex: "ten",
+                            key: "ten",
+                            width: 600,
+                            className: 'header-align-center'
+                        },
+                        // {
+                        //     title: "Giá trị",
+                        //     dataIndex: "gaiTri",
+                        //     key: "giaTrij",
+                        //     render: (value) => {
+                        //         try {
+                        //           // Kiểm tra nếu 'value' là đối tượng, chuyển thành JSON định dạng đẹp
+                        //           const formattedJson = JSON.stringify(value, null, 2);
+                        //           return (
+                        //             <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'monospace' }}>
+                        //               {formattedJson}
+                        //             </pre>
+                        //           );
+                        //         } catch {
+                        //           // Nếu không phải đối tượng, trả về giá trị thô
+                        //           return <pre>{value}</pre>;
+                        //         }
+                        //       },
+                        //     width: 500,
+                        // },
+                        
+                        {
+                            title: "Thứ tự",
+                            dataIndex: "stt",
+                            align: "center",
+                            key: "stt",
+                            width: 50,
                         },
                         {
-                            title: "Giá trị",
-                            render: (value) => {
-                                try {
-                                  // Kiểm tra nếu 'value' là đối tượng, chuyển thành JSON định dạng đẹp
-                                  const formattedJson = JSON.stringify(value, null, 2);
-                                  return (
-                                    <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'monospace' }}>
-                                      {formattedJson}
-                                    </pre>
-                                  );
-                                } catch {
-                                  // Nếu không phải đối tượng, trả về giá trị thô
-                                  return <pre>{value}</pre>;
-                                }
-                              },
-                            width: 500,
+                            title: "TT",
+                            align: "center",
+                            render: (data) => (data?.trangThai != 1 ? <span className='box-red'>Khóa</span> : <span className='box-green'>Mở</span>),
+                            width: 50,
                         },
                         {
                             title: " ",
@@ -188,7 +220,7 @@ const CauHinhPage = () => {
                     scroll={{ x: '100%', y: 415 }}
                     locale={{ emptyText: 'Không có dữ liệu' }}
                     style={{ minHeight: 415 }}
-                    dataSource={listCauHinh}
+                    dataSource={listNoiDungKhaoSat}
                     pagination={false}
                     size='small'
                     className='pointer mt-1 table-cus-antd'
@@ -201,7 +233,7 @@ const CauHinhPage = () => {
                         showSizeChanger
                         onShowSizeChange={onShowSizeChange}
 
-                        total={listCauHinh?.length || 0}
+                        total={listNoiDungKhaoSat?.length || 0}
                         defaultPageSize={30}
                     />
                 </div>
@@ -210,4 +242,4 @@ const CauHinhPage = () => {
     );
 };
 
-export default CauHinhPage;
+export default NoiDungKhaoSatPage;

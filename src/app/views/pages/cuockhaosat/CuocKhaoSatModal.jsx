@@ -111,7 +111,7 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
         return true;
     }
     return (
-        <Modal title="THÊM MỚI KHẢO SÁT" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText="" width={900}
+        <Modal title="THÊM MỚI MẪU KHẢO SÁT" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText="" width={900}
         maskClosable={false}
             footer={[
                 <span className='me-1 red'>{error}</span>,
@@ -130,7 +130,12 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
                 :
                 <div className="div-setting-cus">
                     <div className='pb-3'>
-                        <p ><span className='bold'>Biểu mẫu:</span>  <i><a className='red f-12' href='/quan-tri/bieu-mau?my=1' target='_blank'> Tạo biểu mẫu mới</a></i></p>
+                    <div className='pb-3'>
+                        <p className='bold'><span className='red'>*</span> Tiêu đề: </p>
+                        <Input defaultValue={cuocKhaoSat?.tieuDe} onChange={(e) => onChange("tieuDe", e?.target?.value)} placeholder="Nhập tên tiêu đề" />
+                    </div>
+
+                        <p ><span className='bold'>Chọn biểu mẫu có sẵn:</span>  <i><a className='red f-12' href='/quan-tri/bieu-mau?my=1' target='_blank'> Tạo biểu mẫu mới</a></i></p>
                         <Select
                             allowClear
                             onDropdownVisibleChange={handleDropdownVisibleChangeBieuMau}  // Gọi API khi dropdown mở
@@ -155,17 +160,13 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
                             )}
                         </Select>
                     </div>
-                    <div className='pb-3'>
-                        <p className='bold'><span className='red'>*</span> Tiêu đề: </p>
-                        <Input defaultValue={cuocKhaoSat?.tieuDe} onChange={(e) => onChange("tieuDe", e?.target?.value)} placeholder="Nhập tên đơn vị" />
-                    </div>
-
+                  
                     <div className='pb-3'>
                         <p className='bold'> Mô tả: </p>
                         <TextArea defaultValue={cuocKhaoSat?.moTa} onChange={(e) => onChange("moTa", e?.target?.value)} placeholder="Nhập mô tả" />
                     </div>
                     <div className='pb-3'>
-                        <p className='bold mb-1'> Đối tượng khảo sát
+                        <p className='bold mb-1'> Đối tượng thực hiện khảo sát
                             <Tooltip title="Người khi khảo sát sẽ được gán loại đối tượng này">
                                 <HelpIcon className='help' />
                             </Tooltip>
@@ -195,7 +196,7 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
                         </Select>
                     </div>
                     <div className='pb-3'>
-                        <p className='bold'> Giới hạn thời gian trả lời khỏa sát: </p>
+                        <p className='bold'> Thời gian /bắt đầu/kết thúc khảo sát: </p>
                         <div className='flex justify-between'>
                             <DatePicker
                                 onChange={(e) => onChange("ngayBD", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
@@ -219,8 +220,8 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
 
                     </div>
                     <div className='pb-3'>
-                        <p className='bold'>Tổng Số phiếu cần đạt: </p>
-                        <Input type="number" defaultValue={cuocKhaoSat?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ khảo sát cần đạt" />
+                        <p className='bold'>Số phiếu thực hiện: </p>
+                        <Input type="number" defaultValue={cuocKhaoSat?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ phiếu cần thực hiện" />
                     </div>
 
                 </div >

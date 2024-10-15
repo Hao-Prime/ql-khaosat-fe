@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import CapNhatKeHoachPage from './components/CapNhatKeHoachPage';
 import KeHoachKhaoSatPage from './components/KeHoachKhaoSatPage';
 import ChiTietKeHoachPage from './components/ChiTietKeHoachPage';
+import NoiDungKhaoSatPage from '../admin/noidungkhaosat/NoiDungKhaoSatPage';
 const KeHoachDetailPage = () => {
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
@@ -131,8 +132,28 @@ const KeHoachDetailPage = () => {
                                 }
                             ]),
                             {
+                                key: '2.2',
+                                label: 'Nội dung khảo sát',
+                                children: <NoiDungKhaoSatPage
+                                    keHoach={keHoach}
+                                    loading={loading}
+                                    tabValue={tabValue}
+                                    setTabValue={setTabValue}
+                                ></NoiDungKhaoSatPage>,
+                            },
+                            {
                                 key: '2',
-                                label: 'Xây dựng các cuộc khảo sát',
+                                label: 'Mẫu khảo sát',
+                                children: <KeHoachKhaoSatPage
+                                    keHoach={keHoach}
+                                    loading={loading}
+                                    tabValue={tabValue}
+                                    setTabValue={setTabValue}
+                                ></KeHoachKhaoSatPage>,
+                            },
+                            {
+                                key: '4',
+                                label: 'Thống kê tổng hợp',
                                 children: <KeHoachKhaoSatPage
                                     keHoach={keHoach}
                                     loading={loading}

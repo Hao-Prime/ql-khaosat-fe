@@ -159,7 +159,7 @@ const NguoiDungPage = () => {
                             title: <p className='bold f-16 c-575762'>Trang chủ </p>,
                         },
                         {
-                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> Người dùng đã khảo sát</p>,
+                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' /> Người đã thực hiện khảo sát</p>,
                             href: "/"
                         }
 

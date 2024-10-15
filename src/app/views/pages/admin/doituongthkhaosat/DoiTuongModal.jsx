@@ -61,7 +61,7 @@ const DoiTuongModal = ({ open, setOpen, doiTuongUp, reLoadList }) => {
         }
     }
     return (
-        <Modal title="ĐỐI TƯỢNG KHẢO SÁT" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText=""
+        <Modal title="ĐỐI TƯỢNG THỰC HIỆN KHẢO SÁT" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText=""
 
             footer={[
                 <span className='me-1 red'>{error}</span>,
@@ -82,7 +82,7 @@ const DoiTuongModal = ({ open, setOpen, doiTuongUp, reLoadList }) => {
                 <div className="div-setting-cus">
 
                     <div className='pb-3'>
-                        <p className='bold'> Tên đối tượng *: </p>
+                        <p className='bold'> Tên đối tượng <span className='red'>*</span>: </p>
                         <Input defaultValue={doiTuongUp?.tenDoiTuong} onChange={(e) => onChange("tenDoiTuong", e?.target?.value)} placeholder="Nhập tên " />
                     </div>
                     <div className='pb-3'>

@@ -80,7 +80,7 @@ const QuyenTruyCapModal = ({ open, setOpen, vaiTroUp, setVaiTroUp, reLoadList })
         )
     }
     return (
-        <Modal title="VAI TRÒ" open={open} onOk={onSubmit} onCancel={() => { setOpen(!open); setVaiTroUp() }} okText=""
+        <Modal title="VAI TRÒ" open={open} onOk={onSubmit} onCancel={() => { setOpen(!open); setVaiTroUp() }} okText="" maskClosable={false}
 
             footer={[
                 <span className='me-1 red'>{error}</span>,

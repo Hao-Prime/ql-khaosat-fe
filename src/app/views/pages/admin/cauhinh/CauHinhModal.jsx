@@ -82,13 +82,36 @@ const CauHinhModal = ({ open, setOpen, cauHinhUp, reLoadList }) => {
                 <div className="div-setting-cus">
 
                     <div className='pb-3'>
-                        <p className='bold'> Key *: </p>
+                        <p className='bold'> Key <span className='red'>*</span>: </p>
                         <Input defaultValue={cauHinhUp?.key} onChange={(e) => onChange("key", e?.target?.value)} placeholder="Nhập key" />
                     </div>
 
                     <div className='pb-3'>
                         <p className='bold'> Giá trị: </p>
-                        <TextArea rows={10} defaultValue={cauHinhUp?.value} onChange={(e) => onChange("value", e?.target?.value)} placeholder="Nhập giá trị" />
+                        <TextArea
+                            rows={4}
+                            defaultValue={cauHinh?.value
+                                ? JSON.stringify(cauHinh.value, null, 2)
+                                    .replace(/\\"/g, '"')
+                                    .replace(/\\\\/g, '\\')
+                                : ""
+                            }
+                            onChange={(e) => {
+                                let inputValue = e.target.value;
+
+                                inputValue = inputValue.replace(/:(\s*)"(.*?)"(,|\s*}|$)/g, (match, p1, p2, p3) => {
+                                    return `:${p1}"${p2.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"${p3}`;
+                                });
+                                try {
+                                    const parsedValue = JSON.parse(inputValue);
+                                    onChange("value", parsedValue);
+                                    setError("");
+                                } catch (err) {
+                                    setError("Dữ liệu không đúng định dạng JSON");
+                                }
+                            }}
+                            placeholder={`Nhập value dạng JSON có dạng:\n{\n  "tieuDe": "Tiêu đề",\n  "noiDung": "Nội dung"\n}`}
+                        />
                     </div>
                 </div >
             }
