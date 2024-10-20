@@ -93,7 +93,7 @@ const FormDetailPage = () => {
                             {
                                 key: '1',
                                 label: 'Thiết kế',
-                                children: <EditForm bieuMau={bieuMau} />,
+                                children: <EditForm bieuMau={bieuMau} ServiceSave={Services.getFormService().capNhatBieuMau}/>,
                             },
                             {
                                 key: '2',

@@ -170,6 +170,12 @@ const DonViPage = () => {
                     loading={loading}
                     columns={[
                         {
+                            title: "Mã đơn vị",
+                            dataIndex: "ma",
+                            key: "ma",
+                            width: 100,
+                        },
+                        {
                             title: "Tên đơn vị",
                             dataIndex: "tenDonVi",
                             key: "tenDonVi",
@@ -184,6 +190,7 @@ const DonViPage = () => {
                         {
                             title: "Thứ tự",
                             dataIndex: "stt",
+                            align: "center",
                             key: "stt",
                             width: 30,
                         },

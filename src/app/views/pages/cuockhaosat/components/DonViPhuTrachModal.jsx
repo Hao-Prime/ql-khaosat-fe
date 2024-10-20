@@ -7,12 +7,13 @@ import Services from 'app/services';
 import Loading from 'app/components/Loading';
 import dayjs from 'dayjs';
 const { TextArea } = Input;
-const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setlistDonVi, listDonViSave, listDonVi, khongDat, cuocKhaoSat }) => {
+const DonViPhuTrachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setlistDonVi, listDonViSave, listDonVi, khongDat, cuocKhaoSat }) => {
     const [donVIPT, setDonVIPT] = useState(donViPTUp);
     const [listDonVIPTTT, setListDonVIPTTT] = useState([]);
     const [error, setError] = useState("");
     const [sending, setSending] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [chonNgay, setChonNgay] = useState(false);
     useEffect(() => {
         if (open) {
             realoadListSelect()
@@ -21,16 +22,20 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
     async function realoadListSelect() {
         setLoading(true)
         setSending(false)
-        setDonVIPT(donViPTUp)
+        setDonVIPT(donViPTUp?.ngayKT ? donViPTUp : { ...donViPTUp, ngayKT: cuocKhaoSat?.ngayKT })
         await new Promise(resolve => setTimeout(resolve, 50));
-        console.log(donViPTUp);
         setLoading(false)
     }
     const onChange = (arr, value) => {
-        setDonVIPT({ ...donVIPT, [arr]: value })
+        setDonVIPT({ ...donVIPT, [arr]: value})
     }
     const onSubmit = () => {
-        save(donVIPT?._id)
+        if(donVIPT?.chiTieu==null ||donVIPT?.chiTieu==undefined ||donVIPT?.chiTieu<0 ){
+            setError("Cần chọn chỉ tiêu thực hiện")
+        }else {
+            save(donVIPT?._id)
+        }
+       
     }
     function saveChild(list, key, newData) {
         function updateItem(item, key, newData) {
@@ -48,7 +53,7 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
         return list.map((item) => updateItem(item, key, newData));
     }
     const save = async (key) => {
-        let row = {...donVIPT,ngayKTEdit: donVIPT.ngayKT}
+        let row = { ...donVIPT, ngayKTEdit:chonNgay?donVIPT?.ngayKT: FormatDate.setTimeZoneUTC7(donVIPT?.ngayKT)  }
         let listNewData = saveChild(listDonVi, key, row)
         setlistDonVi(listNewData);
         console.log(listNewData);
@@ -107,11 +112,14 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
                     </div>
 
                     <div className='pb-3'>
-                        <p className='bold'> Thời hạn: </p>
+                        <p > <span className='bold'>Thời hạn:</span> <i>(Mặc định theo ngày của kế hoạch)</i></p>
                         <DatePicker
-                            onChange={(e) => onChange("ngayKT", FormatDate.setTimeZoneUTC7(dayjs(e).toDate())
-                            )}
-                            defaultValue={donViPTUp?.ngayKT ? dayjs(donViPTUp?.ngayKT) : null}
+                            onChange={(e) =>{
+                                setChonNgay(true)
+                                onChange("ngayKT", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))
+                            }
+                            }
+                            defaultValue={donVIPT?.ngayKT ? dayjs(donVIPT?.ngayKT) : null}
                             format="DD/MM/YYYY HH:mm"
                             showTime style={{ width: "100%" }}
                         />
@@ -123,4 +131,4 @@ const DonViPhuTreachModal = ({ open, setOpen, donViPTUp, setlistDonViSave, setli
     );
 };
 
-export default DonViPhuTreachModal;
+export default DonViPhuTrachModal;

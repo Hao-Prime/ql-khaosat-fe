@@ -19,6 +19,7 @@
     vertical-align: top;
 }
 .ant-select-dropdown{
+    overflow: hidden!important;
     z-index: 3000 !important;
     max-height: 280px;
 }

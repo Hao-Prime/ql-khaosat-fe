@@ -252,7 +252,7 @@ const CuocKhaoSatPage = () => {
                 <Breadcrumb
                     items={[
                         { title: <p className='bold f-16 c-575762' onClick={() => navigate("/")}>Trang chủ </p> },
-                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(`/quan-tri/khao-sat?trangThai=0`)}><HomeIcon className='mb-1' /> Các cuộc khảo sát</p> }
+                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(`/quan-tri/khao-sat?trangThai=0`)}><HomeIcon className='mb-1' />Mẫu khảo sát</p> }
                     ]}
                 /></div>
 
@@ -270,6 +270,7 @@ const CuocKhaoSatPage = () => {
                 <Table
                     rowKey="_id"
                     loading={loading}
+                    bordered
                     columns={[
                         {
                             title: "STT",
@@ -382,7 +383,7 @@ const CuocKhaoSatPage = () => {
                     onRow={(record, rowIndex) => {
                         return {
                             onClick: (event) => {
-                                navigate(`/quan-tri/chi-tiet-khao-sat?id=${record?.maKhaoSat}&burl=/quan-tri/khao-sat?trangThai=${trangThai}`)
+                                navigate(`/quan-tri/chi-tiet-khao-sat?id=${record?.maKhaoSat}&showkh=0&burl=/quan-tri/khao-sat?trangThai=${trangThai}`)
                             },
                         };
                     }}

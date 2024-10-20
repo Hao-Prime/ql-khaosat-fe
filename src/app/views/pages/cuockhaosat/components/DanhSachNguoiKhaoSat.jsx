@@ -205,9 +205,9 @@ const DanhSachNguoiKhaoSat = ({ cuocKhaoSat, donVi, reloadDetail }) => {
             {contextHolder}
             <div className='flex justify-between'>
                 <p className='text-center bold f-16'>Danh sách khảo sát <span className='red'>{donVi?.tenDonVi}</span>:{/*  */}</p>
-                <Button key="submit" title='Xuât chi tiết tất cả câu trả lời' type="primary" onClick={() => downloadExcel()}>
+                {/* <Button key="submit" title='Xuât chi tiết tất cả câu trả lời' type="primary" onClick={() => downloadExcel()}>
                     <span className='white'><DownloadIcon className='f-14 me-1' />Xuất toàn bộ</span>
-                </Button>
+                </Button> */}
             </div>
             <Table
                 rowKey="id"

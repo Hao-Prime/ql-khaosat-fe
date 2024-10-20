@@ -12,6 +12,11 @@ import HomePage from 'app/views/pages/homepage/HomePage';
 import ReactDOM from 'react-dom/client';
 import ViewKSForm from 'app/views/pages/cuockhaosat/components/ViewKSForm';
 import { ContentContext, ContentProvider } from 'app/context/ContentContext';
+import './index.css';
+import "app/assets/css/rsuite-lib.css";
+import "app/assets/css/style.css";
+import "app/assets/css/custom-antd.css";
+import 'suneditor/dist/css/suneditor.min.css';
 const store = createStore(
   rootReducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

@@ -7,7 +7,7 @@ import Services from 'app/services';
 import Loading from 'app/components/Loading';
 const { TextArea } = Input;
 const { Option } = Select;
-const NoiDungKhaoSatModal = ({ open, setOpen, noiDungKhaoSatUp, reLoadList }) => {
+const NoiDungKhaoSatModal = ({ keHoach, open, setOpen, noiDungKhaoSatUp, reLoadList }) => {
     const [noiDungKhaoSat, setNoiDungKhaoSat] = useState(noiDungKhaoSatUp);
     const [listNoiDungKhaoSatTT, setListNoiDungKhaoSatTT] = useState([]);
     const [error, setError] = useState("");
@@ -51,16 +51,17 @@ const NoiDungKhaoSatModal = ({ open, setOpen, noiDungKhaoSatUp, reLoadList }) =>
     }
     const onSubmit = () => {
         setSending(true);
-        if (!noiDungKhaoSat?.nhomDoiTuong) {
-            setError("Nhóm đối tượng không được để trống")
-            setSending(false);
-        } else if (!noiDungKhaoSat?.ten) {
+        // if (!noiDungKhaoSat?.nhomDoiTuong) {
+        //     setError("Nhóm đối tượng không được để trống")
+        //     setSending(false);
+        // } else 
+        if (!noiDungKhaoSat?.ten) {
             setError("Tên đối tượng không được để trống")
             setSending(false);
         } else {
             setError(true)
             if (!noiDungKhaoSatUp?._id) {
-                Services?.getNoiDungKhaoSatService()?.save({ ...noiDungKhaoSat, giaTri: listKQ })?.then(
+                Services?.getNoiDungKhaoSatService()?.save({keHoach: keHoach?._id,...noiDungKhaoSat, giaTri: listKQ })?.then(
                     (res) => {
 
                         if (res?.data?.error) {
@@ -74,7 +75,7 @@ const NoiDungKhaoSatModal = ({ open, setOpen, noiDungKhaoSatUp, reLoadList }) =>
                     }
                 )
             } else {
-                Services?.getNoiDungKhaoSatService()?.update({ ...noiDungKhaoSat, giaTri: listKQ })?.then(
+                Services?.getNoiDungKhaoSatService()?.update({keHoach: keHoach?._id,...noiDungKhaoSat, giaTri: listKQ })?.then(
                     (res) => {
 
                         if (res?.data?.error) {
@@ -119,7 +120,7 @@ const NoiDungKhaoSatModal = ({ open, setOpen, noiDungKhaoSatUp, reLoadList }) =>
             {loading ? <Loading />
                 :
                 <div className="div-setting-cus">
-                    <div className='pb-3'>
+                    {/* <div className='pb-3'>
                         <p className='bold'> Nhóm đối tượng<span className='red'>*</span>: <i><a className='red f-12 pointer' href='/quan-tri/nhom-doi-tuong' target='_blank'> Tạo nhóm mới</a></i></p>
                         <Select
                             allowClear
@@ -144,7 +145,7 @@ const NoiDungKhaoSatModal = ({ open, setOpen, noiDungKhaoSatUp, reLoadList }) =>
                                 ))
                             )}
                         </Select>
-                    </div>
+                    </div> */}
                     <div className='pb-3'>
                         <p className='bold'> Nội dung/Câu hỏi khảo sát <span className='red'>*</span>: </p>
                         <TextArea

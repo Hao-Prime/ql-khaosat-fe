@@ -7,7 +7,7 @@ import Services from 'app/services';
 import Loading from 'app/components/Loading';
 const { TextArea } = Input;
 const { Option } = Select;
-const DoiTuongKhaoSatModal = ({ open, setOpen, doiTuongKhaoSatUp, reLoadList }) => {
+const DoiTuongKhaoSatModal = ({keHoach, open, setOpen, doiTuongKhaoSatUp, reLoadList }) => {
     const [doiTuongKhaoSat, setDoiTuongKhaoSat] = useState(doiTuongKhaoSatUp);
     const [listDoiTuongKhaoSatTT, setListDoiTuongKhaoSatTT] = useState([]);
     const [error, setError] = useState("");
@@ -45,7 +45,7 @@ const DoiTuongKhaoSatModal = ({ open, setOpen, doiTuongKhaoSatUp, reLoadList }) 
         } else {
             setError(true)
             if (!doiTuongKhaoSatUp?._id) {
-                Services?.getDoiTuongKhaoSatService()?.save(doiTuongKhaoSat)?.then(
+                Services?.getDoiTuongKhaoSatService()?.save({keHoach: keHoach?._id,...doiTuongKhaoSat})?.then(
                     (res) => {
 
                         if (res?.data?.error) {
@@ -59,7 +59,7 @@ const DoiTuongKhaoSatModal = ({ open, setOpen, doiTuongKhaoSatUp, reLoadList }) 
                     }
                 )
             } else {
-                Services?.getDoiTuongKhaoSatService()?.update(doiTuongKhaoSat)?.then(
+                Services?.getDoiTuongKhaoSatService()?.update({keHoach: keHoach?._id,...doiTuongKhaoSat})?.then(
                     (res) => {
 
                         if (res?.data?.error) {

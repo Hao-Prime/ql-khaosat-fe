@@ -6,7 +6,7 @@ import { Button, Divider, Modal, DatePicker, Input, Radio, Empty, Select, messag
 import Services from 'app/services';
 import Loading from 'app/components/Loading';
 const { TextArea } = Input;
-const NhomDoiTuongModal = ({ open, setOpen, nhomDoiTuongUp, reLoadList }) => {
+const NhomDoiTuongModal = ({keHoach, open, setOpen, nhomDoiTuongUp, reLoadList }) => {
     const [nhomDoiTuong, setNhomDoiTuong] = useState(nhomDoiTuongUp);
     const [listNhomDoiTuongTT, setListNhomDoiTuongTT] = useState([]);
     const [error, setError] = useState("");
@@ -36,7 +36,7 @@ const NhomDoiTuongModal = ({ open, setOpen, nhomDoiTuongUp, reLoadList }) => {
         } else {
             setError(true)
             if (!nhomDoiTuongUp?._id) {
-                Services?.getNhomDoiTuongService()?.save(nhomDoiTuong)?.then(
+                Services?.getNhomDoiTuongService()?.save({keHoach: keHoach?._id,...nhomDoiTuong})?.then(
                     (res) => {
 
                         if (res?.data?.error) {
@@ -50,7 +50,7 @@ const NhomDoiTuongModal = ({ open, setOpen, nhomDoiTuongUp, reLoadList }) => {
                     }
                 )
             } else {
-                Services?.getNhomDoiTuongService()?.update(nhomDoiTuong)?.then(
+                Services?.getNhomDoiTuongService()?.update({keHoach: keHoach?._id,...nhomDoiTuong})?.then(
                     (res) => {
 
                         if (res?.data?.error) {

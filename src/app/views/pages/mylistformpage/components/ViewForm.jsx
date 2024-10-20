@@ -224,7 +224,7 @@ const ViewForm = () => {
                                         <>
                                             {
                                                 listPageForm?.map((form, index) =>
-                                                    <div className='' key={index} style={{ display: page == index ? "inline-block" : "none" }}>
+                                                    <div className='' key={index} style={{ display: page == index ? "block" : "none" }}>
                                                         <Form
                                                             // ref={formRef}
                                                             src={{

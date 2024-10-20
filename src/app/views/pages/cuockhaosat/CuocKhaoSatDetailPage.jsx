@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import BackToTopButton from 'app/components/BackToTopButton';
 import Services from 'app/services';
-import EditForm from './components/EditForm';
+import EditKSForm from './components/EditKSForm';
 import HistoryForm from './components/HistoryForm';
 import DashboardForm from './components/DashboardForm';
 import ShareForm from './components/ShareForm';
@@ -18,14 +18,15 @@ import TinhHinhThucHien from './components/TinhHinhThucHien';
 import ViewBieuMauKSForm from './components/ViewBieuMauKSForm';
 import KeHoachDetailPage from '../kehoach/KeHoachDetailPage';
 import ChiTietKeHoachPage from '../kehoach/components/ChiTietKeHoachPage';
-const CuocKhaoSatDetailPage = ({ }) => {
+const CuocKhaoSatDetailPage = ({keHoach }) => {
 
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
     const [cuocKhaoSat, setCuocKhaoSat] = useState();
-    const [tabValue, setTabValue] = useState("0");
+    const [tabValue, setTabValue] = useState(new URLSearchParams(window.location.search).get("showkh"));
     const idCuocKhaoSat = new URLSearchParams(window.location.search).get("id");
     const backURL = new URLSearchParams(window.location.search).get("burl");
+    const showKH = new URLSearchParams(window.location.search).get("showkh");
     const tab = new URLSearchParams(window.location.search).get("tab");
     const [loading, setLoading] = useState(false);
     const taiKhoan = useSelector(state => state.taiKhoan)
@@ -76,6 +77,8 @@ const CuocKhaoSatDetailPage = ({ }) => {
                                 }
                             });
                         }
+                        console.log(res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : []);
+                        
                         setCuocKhaoSat({
                             ...res?.data,
                             thanhPhan: res?.data?.thanhPhan ? JSON?.parse(res?.data?.thanhPhan) : [],
@@ -132,7 +135,7 @@ const CuocKhaoSatDetailPage = ({ }) => {
                 <Breadcrumb
                     items={[
                         { title: <p className='bold f-16 c-575762'>Trang chủ </p> },
-                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(backURL ? backURL?.replaceAll("~!~", "&") : `/quan-tri/khao-sat?trangThai=1`)}><HomeIcon className='mb-1' /> Các cuộc khảo sát</p> }
+                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(backURL ? backURL?.replaceAll("~!~", "&") : `/quan-tri/khao-sat?trangThai=1`)}><HomeIcon className='mb-1' />Mẫu khảo sát</p> }
                     ]}
                 /></div>
 
@@ -157,25 +160,33 @@ const CuocKhaoSatDetailPage = ({ }) => {
                         defaultActiveKey="0"
                         activeKey={tabValue}
                         items={[
-                            {
-                                key: '0',
-                                label: 'Thông tin kế hoạch',
-                                children: <ChiTietKeHoachPage
-                                    keHoach={cuocKhaoSat?.keHoach}
-                                    loading={loading}
-                                ></ChiTietKeHoachPage>,
-                            },
+                            ...(showKH=='0' ? [
+                                {
+                                    key: '0',
+                                    label: 'Thông tin kế hoạch',
+                                    children: <ChiTietKeHoachPage
+                                        keHoach={cuocKhaoSat?.keHoach}
+                                        loading={loading}
+                                    ></ChiTietKeHoachPage>,
+                                },
+                            ] : []
+                            ),
                             {
                                 key: '1',
                                 label: 'Biểu mẫu khảo sát',
-                                children: <ViewBieuMauKSForm
+                                children: <EditKSForm
                                     tabValue={tabValue}
-                                    cuocKhaoSatUp={cuocKhaoSat} />,
+                                    loading2={loading}
+                                    keHoach={cuocKhaoSat?.keHoach}
+                                    cuocKhaoSat={cuocKhaoSat} />,
                             },
                             {
                                 key: '4',
                                 label: 'Phân công khảo sát',// bảng tình hình thực hiện 
-                                children: <ShareForm cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />,
+                                children: <ShareForm 
+                                cuocKhaoSat={cuocKhaoSat} 
+                                reloadDetail={reloadDetail} 
+                                />,
                             },
                             {
                                 key: '.14',
@@ -196,7 +207,7 @@ const CuocKhaoSatDetailPage = ({ }) => {
                                 {
                                     key: '5',
                                     label: 'Cập nhật',
-                                    children: <SettingForm cuocKhaoSat={cuocKhaoSat} reloadList={reloadList} backURL={backURL}/>,
+                                    children: <SettingForm cuocKhaoSat={cuocKhaoSat} reloadList={reloadList} backURL={backURL} />,
                                 }
                             ] : [])
                             ,

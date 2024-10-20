@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import HomePage from "app/views/pages/homepage/HomePage";
 import Services from "app/services";
-import '../index.css';
-import "app/assets/css/rsuite-lib.css";
-import "app/assets/css/style.css";
-import "app/assets/css/custom-antd.css";
-import 'suneditor/dist/css/suneditor.min.css';
+
 import MyListFormPage from "./views/pages/mylistformpage/MyListFormPage";
 import FormDetailPage from "./views/pages/mylistformpage/FormDetailPage";
 

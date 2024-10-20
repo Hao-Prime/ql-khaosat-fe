@@ -44,7 +44,7 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
     }
     const onSubmit = () => {
         setSending(true);
-        if(checkCuocKhaoSat){
+        if (checkCuocKhaoSat) {
             Services?.getCuocKhaoSatService()?.taoMoiKhaoSat(cuocKhaoSat)?.then(
                 (res) => {
                     if (res?.data?.error) {
@@ -57,10 +57,10 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
                     setSending(false)
                 }
             )
-        }else {
+        } else {
             setSending(false);
         }
-        
+
 
     }
     const handleDropdownVisibleChangeDoiTuong = async (open) => {
@@ -112,7 +112,7 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
     }
     return (
         <Modal title="THÊM MỚI MẪU KHẢO SÁT" open={open} onOk={onSubmit} onCancel={() => setOpen(!open)} okText="" width={900}
-        maskClosable={false}
+            maskClosable={false}
             footer={[
                 <span className='me-1 red'>{error}</span>,
                 <Button key="submit" type="primary" onClick={onSubmit} disabled={sending}>
@@ -129,13 +129,14 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
             {loading ? <Loading />
                 :
                 <div className="div-setting-cus">
-                    <div className='pb-3'>
-                    <div className='pb-3'>
-                        <p className='bold'><span className='red'>*</span> Tiêu đề: </p>
-                        <Input defaultValue={cuocKhaoSat?.tieuDe} onChange={(e) => onChange("tieuDe", e?.target?.value)} placeholder="Nhập tên tiêu đề" />
-                    </div>
+                     <div className='pb-3'>
+                            <p className='bold'><span className='red'>*</span> Tiêu đề: </p>
+                            <Input defaultValue={cuocKhaoSat?.tieuDe} onChange={(e) => onChange("tieuDe", e?.target?.value)} placeholder="Nhập tên tiêu đề" />
+                        </div>
+                    <div className='pb-2'>
+                       
 
-                        <p ><span className='bold'>Chọn biểu mẫu có sẵn:</span>  <i><a className='red f-12' href='/quan-tri/bieu-mau?my=1' target='_blank'> Tạo biểu mẫu mới</a></i></p>
+                        <p ><span className='bold'>Chọn biểu mẫu có sẵn:</span>  </p>
                         <Select
                             allowClear
                             onDropdownVisibleChange={handleDropdownVisibleChangeBieuMau}  // Gọi API khi dropdown mở
@@ -159,8 +160,10 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
                                 ))
                             )}
                         </Select>
+                        <p className='text-right mb-0'><i><a className='red f-12' href='/quan-tri/bieu-mau?my=1' target='_blank'> Tạo biểu mẫu mới</a></i></p>
+                       
                     </div>
-                  
+
                     <div className='pb-3'>
                         <p className='bold'> Mô tả: </p>
                         <TextArea defaultValue={cuocKhaoSat?.moTa} onChange={(e) => onChange("moTa", e?.target?.value)} placeholder="Nhập mô tả" />
@@ -176,9 +179,9 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
                             onDropdownVisibleChange={handleDropdownVisibleChangeDoiTuong}  // Gọi API khi dropdown mở
                             loading={loadingDoiTuong}  // Hiển thị Spin nếu đang load dữ liệu
                             style={{ width: 200 }}
-                            mode="tags"
-                            onChange={(e) => onChange("listDoiTuongID", e)}
-                            defaultValue={cuocKhaoSatUp?.listDoiTuongID}
+                            // mode="tags"
+                            onChange={(value) => onChange("doiTuongTHKhaoSat", value ? { _id: value } : null)}
+                            defaultValue={cuocKhaoSat?.doiTuongTHKhaoSat?._id || null}
                             className='w-100pt'
                             filterOption={(input, option) =>
                                 option?.children?.toLowerCase().includes(input.toLowerCase()) // Tìm kiếm không phân biệt chữ hoa/chữ thường
@@ -195,30 +198,33 @@ const CuocKhaoSatModal = ({ open, setOpen, cuocKhaoSatUp, reLoadList }) => {
                             )}
                         </Select>
                     </div>
-                    <div className='pb-3'>
-                        <p className='bold'> Thời gian /bắt đầu/kết thúc khảo sát: </p>
+                    {/* <div className='pb-3'>
                         <div className='flex justify-between'>
-                            <DatePicker
-                                onChange={(e) => onChange("ngayBD", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
-                                format="DD/MM/YYYY HH:mm"
-                                locale={locale?.DatePicker}
-                                defaultValue={cuocKhaoSatUp?.ngayBD ? dayjs(cuocKhaoSatUp?.ngayBD) : null}
-                                showTime
-                                style={{ width: "100%", marginRight: "10px" }}
-                            />
+                            <div>
+                                <p className='bold'> Thời gian bắt đầu: </p>
+                                <DatePicker
+                                    onChange={(e) => onChange("ngayBD", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
+                                    format="DD/MM/YYYY HH:mm"
+                                    locale={locale?.DatePicker}
+                                    defaultValue={cuocKhaoSatUp?.ngayBD ? dayjs(cuocKhaoSatUp?.ngayBD) : null}
+                                    showTime
+                                    style={{ width: "100%", marginRight: "10px" }}
+                                />
+                            </div>
 
-                            <DatePicker
-                                onChange={(e) => onChange("ngayKT", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
-                                defaultValue={cuocKhaoSatUp?.ngayKT ? dayjs(cuocKhaoSatUp?.ngayKT) : null}
-                                format="DD/MM/YYYY HH:mm"
-                                locale={locale?.DatePicker}
-                                showTime style={{ width: "100%" }}
-                            />
+                            <div>
+                                <p className='bold'> Thời gian kết thúc: </p>
+                                <DatePicker
+                                    onChange={(e) => onChange("ngayKT", FormatDate.setTimeZoneUTC7(dayjs(e).toDate()))}
+                                    defaultValue={cuocKhaoSatUp?.ngayKT ? dayjs(cuocKhaoSatUp?.ngayKT) : null}
+                                    format="DD/MM/YYYY HH:mm"
+                                    locale={locale?.DatePicker}
+                                    showTime style={{ width: "100%" }}
+                                />
+                            </div>
 
                         </div>
-
-
-                    </div>
+                    </div> */}
                     <div className='pb-3'>
                         <p className='bold'>Số phiếu thực hiện: </p>
                         <Input type="number" defaultValue={cuocKhaoSat?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ phiếu cần thực hiện" />

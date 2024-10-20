@@ -54,6 +54,9 @@ function capNhatKetQuaKS(idKhaoSat, listKQ) {
 function xoaKetQua(idKetQuaKhaoSat, idKhaoSat) {
   return axios.delete(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form/update-result?idKetQuaKhaoSat=${idKetQuaKhaoSat}&idKhaoSat=${idKhaoSat}`);
 };
+function capNhatBieuMauKhaoSat(khaoSat) {//gán biểu mẫu
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form-bm`, khaoSat);
+};
 function capNhatKhaoSat(khaoSat) {
   return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-form`, khaoSat);
 };
@@ -93,6 +96,7 @@ const cuocKhaoSatService = {
   capNhatThongTinKhaoSat,
   capNhatQuyenKhaoSat,
   capNhatKhaoSat, phanDonViPhuTrach,
+  capNhatBieuMauKhaoSat,
   taoMoiKhaoSat,
   xoaKhaoSat,
   guiKetQua,

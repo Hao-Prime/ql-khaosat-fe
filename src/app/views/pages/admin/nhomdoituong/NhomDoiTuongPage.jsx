@@ -23,7 +23,7 @@ const items = [
         label: 'Xóa',
     },
 ];
-const NhomDoiTuongPage = () => {
+const NhomDoiTuongPage = ({keHoach,showBreadcrumb}) => {
     const [modal, contextHolder] = Modal.useModal();
     const [listNhomDoiTuong, setListNhomDoiTuong] = useState([]);
     const [listNhomDoiTuongMD, setListNhomDoiTuongMD] = useState([]);
@@ -51,9 +51,9 @@ const NhomDoiTuongPage = () => {
     async function reLoadList(params) {
         setLoading(true)
 
-        let dataRSLisstDv = (await Services.getNhomDoiTuongService().getAll("", ""))?.data
+        let dataRSLisstDv = (await Services.getNhomDoiTuongService().getAll("",keHoach?._id))?.data
         setListNhomDoiTuongMD(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "stt", 1))
-        if(dataRSLisstDv?.length==0){
+        if (dataRSLisstDv?.length == 0) {
             setListNhomDoiTuong([])
         }
         setLoading(false)
@@ -120,25 +120,29 @@ const NhomDoiTuongPage = () => {
 
     return (
         <>
-            <div className='pb-2'>
-                <Breadcrumb
-                    items={[
-                        {
-                            title: <p className='bold f-16 c-575762'>Trang chủ </p>,
-                        },
-                        {
-                            title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' />Nhóm đối tượng</p>,
-                            href: "/"
-                        }
+            {showBreadcrumb == false ? <></> :
+                <div className='pb-2'>
 
-                    ]}
-                /></div>
+                    <Breadcrumb
+                        items={[
+                            {
+                                title: <p className='bold f-16 c-575762'>Trang chủ </p>,
+                            },
+                            {
+                                title: <p className='bold f-16 c-blue2'><HomeIcon className='mb-1' />Nhóm đối tượng</p>,
+                                href: "/"
+                            }
+
+                        ]}
+                    /></div>
+            }
+
 
             <div className="page-new">
-                <NhomDoiTuongModal open={openNhomDoiTuongModal} setOpen={setOpenNhomDoiTuongModal} nhomDoiTuongUp={nhomDoiTuongUp} reLoadList={reLoadList} />
+                <NhomDoiTuongModal keHoach={keHoach} open={openNhomDoiTuongModal} setOpen={setOpenNhomDoiTuongModal} nhomDoiTuongUp={nhomDoiTuongUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
-                        <Button onClick={() => { setOpenNhomDoiTuongModal(true); setNhomDoiTuongUp({trangThai:1}) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
+                        <Button onClick={() => { setOpenNhomDoiTuongModal(true); setNhomDoiTuongUp({ trangThai: 1 }) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
                     </div>
                     <div>
                         <Search placeholder="Tìm kiếm" style={{ width: 200, marginRight: "5px" }} onChange={handleSearch} />
@@ -155,23 +159,24 @@ const NhomDoiTuongPage = () => {
                             align: "center",
                             render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
                         },
-                        
+
                         {
                             title: "Tên",
                             dataIndex: "ten",
                             key: "ten",
-                            width: 220,
+                            width: 150,
 
                         },
                         {
                             title: "Mô tả",
                             dataIndex: "moTa",
                             key: "moTa",
-                            width: 520,
+                            width: 200,
                         },
                         {
                             title: "Thứ tự",
                             dataIndex: "stt",
+                            align: "center",
                             key: "stt",
                             width: 80,
                         },

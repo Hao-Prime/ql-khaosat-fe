@@ -1,7 +1,7 @@
 import axios from "axios";
 
-function getAll(id, idNhomKhaoSat) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/doi-tuong-khao-sat?id=${id}&idNhomKhaoSat=${idNhomKhaoSat}`);
+function getAll(id, idNhomKhaoSat,idKeHoach) {
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/doi-tuong-khao-sat?id=${id}&idNhomKhaoSat=${idNhomKhaoSat||""}&idKeHoach=${idKeHoach||""}`);
 }
 function save(doiTuongKhaoSat) {
   return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/doi-tuong-khao-sat", doiTuongKhaoSat);

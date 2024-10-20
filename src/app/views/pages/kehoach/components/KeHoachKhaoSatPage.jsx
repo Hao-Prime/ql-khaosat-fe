@@ -149,7 +149,7 @@ const KeHoachKhaoSatPage = ({keHoach, setTabValue, tabValue}) => {
                     onRow={(record, rowIndex) => {
                         return {
                             onClick: (event) => {
-                                navigate(`/quan-tri/chi-tiet-khao-sat?id=${record?.maKhaoSat}&burl=/quan-tri/chi-tiet-ke-hoach?id=${keHoach?._id}~!~tab=2`);
+                                navigate(`/quan-tri/chi-tiet-khao-sat?id=${record?.maKhaoSat}&showkh=1&burl=/quan-tri/chi-tiet-ke-hoach?id=${keHoach?._id}~!~tab=2`);
                             },
                         };
                     }}
@@ -157,7 +157,9 @@ const KeHoachKhaoSatPage = ({keHoach, setTabValue, tabValue}) => {
                 />
 
                 <div className='div-flex justify-between'>
-                    <div ><p className='red'><i><b >Lưu ý:</b> Mỗi đơn vị phụ trách sẽ có mã khác nhau</i></p></div>
+                    <div >
+                        {/* <p className='red'><i><b >Lưu ý:</b> Mỗi đơn vị phụ trách sẽ có mã khác nhau</i></p> */}
+                        </div>
                     <Pagination
                         showSizeChanger
                         onShowSizeChange={onShowSizeChange}

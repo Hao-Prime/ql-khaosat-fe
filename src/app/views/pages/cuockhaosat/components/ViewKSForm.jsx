@@ -31,7 +31,22 @@ const ViewKSForm = () => {
             isMounted = false;
         };
     }, [key]);
-
+    function convertDataGird(data){
+        const result = {};
+        data?.forEach(item => {
+            if (item.keyParent && item.keyParent.includes('dataGrid')) {
+                if (!result[item.keyParent]) {
+                    result[item.keyParent] = {
+                        key: item.keyParent,
+                        ketQua2: []
+                    };
+                }
+                result[item.keyParent].ketQua2.push(item);
+            }
+        });
+        const resultArray = Object.values(result);
+        return resultArray || [];
+    }
     function reloadList() {
         setLoading(true)
         Services.getCuocKhaoSatService().getFormDetailSubmit(key).then(
@@ -138,6 +153,9 @@ const ViewKSForm = () => {
                 rs = rs?.map(obj => {
                     return { ...obj, label: obj?.label ? obj?.label : getLabelFromKey(obj?.key) };
                 })
+                rs= [...rs,...convertDataGird(rs)]
+                console.log(rs);
+                
                 Services.getCuocKhaoSatService().guiKetQua(
                     {
                         cuocKhaoSat: { _id: cuocKhaoSat?._id },

@@ -10,34 +10,47 @@ import PhanLoai from 'app/common/PhanLoai';
 import FormatString from 'app/common/FormatString';
 import dayjs from 'dayjs';
 import FormatDate from 'app/common/FormatDate';
-import DonViPhuTreachModal from './DonViPhuTreachModal';
+import DonViPhuTrachModal from './DonViPhuTrachModal';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import PhanCongTheoDoiTuong from './PhanCongTheoDoiTuong';
 const ShareForm = ({ cuocKhaoSat, reloadDetail }) => {
-    const [value, setValue] = React.useState(0);
-
+    const [value, setValue] = useState(0);
+    const [selectedRowIndex, setSelectedRowIndex] = useState(0);
+    const [donVi, setDonVi] = useState(cuocKhaoSat?.donViTao);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
+    useEffect(() => {
+        console.log(cuocKhaoSat);
+    }, []);
     return (
         <div className="">
             {/* <Tabs value={value} onChange={handleChange} centered>
                 <Tab label="Link khảo sát" />
                 <Tab label="Chia sẻ đơn vị" />
             </Tabs> */}
+
+            <Divider variant="dashed" style={{ borderColor: '#7cb305' }} dashed className='m-0 p-0'>Phân công theo đơn vị cấp dưới</Divider>
             <div className='mt-3'>
-
-                <LinkKhaoSat cuocKhaoSat={cuocKhaoSat} reloadDetail={reloadDetail} />
-
-
+                <LinkKhaoSat
+                    cuocKhaoSat={cuocKhaoSat}
+                    reloadDetail={reloadDetail}
+                    setSelectedRowIndex={setSelectedRowIndex}
+                    setDonVi={setDonVi}
+                    selectedRowIndex={selectedRowIndex}
+                />
             </div>
-
+            <Divider variant="dashed" style={{ borderColor: '#7cb305' }} dashed className='m-1 p-2'>Phân công theo đối tượng được khảo sát </Divider>
+            <PhanCongTheoDoiTuong
+                donVi={donVi}
+            ></PhanCongTheoDoiTuong>
         </div >
 
     );
 };
 
 export default ShareForm;
-const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
+const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail, setSelectedRowIndex, setDonVi, selectedRowIndex }) => {
     const [idTaiKhoan, setIdTaiKhoan] = useState(false)
     const taiKhoan = useSelector(state => state.taiKhoan)
     const [listTaiKhoan, setListTaiKhoan] = useState([]);
@@ -204,27 +217,43 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
             key: 'tenDonVi',
             width: 240,
         },
-        {
-            title: 'Người phụ trách',
-            width: '30%',
-            render: (data) => (<p>{data?.listNguoiPhuTrach?.map(obj => obj.hoTen)?.join(', ')} </p>),
-            width: 240,
-        },
+        // {
+        //     title: 'Người phụ trách',
+        //     width: '30%',
+        //     render: (data) => (<p>{data?.listNguoiPhuTrach?.map(obj => obj.hoTen)?.join(', ')} </p>),
+        //     width: 240,
+        // },
         {
             title: 'Mã khảo sát',
             // key: 'maKhaoSat',
             // dataIndex: 'maKhaoSat',
-            render: (data) => (<Tooltip title={
-                <div className='bg-white bsaeqw' >
-                    <QRCode
-                        errorLevel="H"
-                        className='qr-siz'
-                        value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + data?.maKhaoSat}
-                    // icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
-                    />
-                </div>
+            render: (data) => (
+                <> {data?.maKhaoSat &&
+                    <>
 
-            }> <p>{data?.maKhaoSat} </p></Tooltip>),
+
+                        <p>
+                            <span onClick={() => { window.open(process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + data?.maKhaoSat) }}>
+                                {data?.maKhaoSat}
+                            </span>
+                        </p>
+                        <Tooltip title={
+                            <div className='bg-white bsaeqw' >
+                                <QRCode
+                                    errorLevel="H"
+                                    className='qr-siz'
+                                    value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + data?.maKhaoSat}
+                                // icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
+                                />
+                            </div>
+
+                        }>
+                            <p><span className='brqwiopirqpw'><QrCodeScannerIcon className='icon-qr f-15' /> QR Code</span></p> </Tooltip>
+                    </>
+
+                }
+                </>
+            ),
             width: 140,
             align: "center",
         },
@@ -290,11 +319,13 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                 ) : (
                     <>
                         {
-                            record?._id != taiKhoan?.donVi?._id && (cuocKhaoSat?.donViPhuTrach?.trangThai == 2) &&
+                            // record?._id != taiKhoan?.donVi?._id && 
+                            (cuocKhaoSat?.donViPhuTrach?.trangThai == 2) &&
                             // <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
                             //     Chỉnh
                             // </Typography.Link>
-                            <Typography.Link disabled={editingKey !== ''} onClick={() => { setOpenMModalDVPT(true); setDonViPTUp(record) }}>
+                            <Typography.Link disabled={editingKey !== ''} onClick={() => { setOpenMModalDVPT(true);
+                             setDonViPTUp(record) }}>
                                 Chỉnh
                             </Typography.Link>
                         }
@@ -450,7 +481,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
 
     return (
         <div className=''>
-            <DonViPhuTreachModal open={openMModalDVPT}
+            <DonViPhuTrachModal open={openMModalDVPT}
                 donViPTUp={donViPTUp}
                 setOpen={setOpenMModalDVPT}
                 setlistDonViSave={setlistDonViSave}
@@ -477,12 +508,12 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                     <p className='text-center'>ZALO APP</p>
                 </div>
             </div> */}
-            <div>
+            {/* <div>
                 <p className='bold f-16'>Link chia sẻ mẫu khảo sát</p>
             </div>
-            <Input value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id)} />
+            <Input value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + FormatString.getMaKhaoSatTheoDonVi(cuocKhaoSat, taiKhoan?.donVi?._id)} /> */}
 
-            <Divider />
+            {/* <Divider /> */}
             <Grid container className='w-100pt' spacing={2}>
 
                 {/* <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -520,8 +551,8 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                         <div className='div-flex justify-between wrap'>
                             <div>
                                 <p className='bold f-16'>Danh sách đơn vị được phân công</p>
-                                <p className='f-13'>Số phiếu cần đạt: {dataDonVi?.donVi}</p>
-                                <p className='f-13'>Chỉ đã phân đơn vị dưới trực tiếp: {dataDonVi?.donViDaPhan}</p>
+                                <p className='f-13'>Số phiếu cần thực hiện: {dataDonVi?.donVi}</p>
+                                <p className='f-13'>Số phiếu đã phân công đơn vị dưới thực hiện: {dataDonVi?.donViDaPhan}</p>
                             </div>
 
                             <div>
@@ -551,11 +582,22 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail }) => {
                                 loading={loading}
                                 dataSource={listDonVi || []}
                                 pagination={false}
+                                onRow={(record, rowIndex) => {
+                                    return {
+                                        onClick: () => {
+                                            setSelectedRowIndex(rowIndex); // Lưu trữ chỉ số dòng khi click
+                                            setDonVi(record); // Lưu trữ thông tin dòng khi click
+                                        },
+                                    };
+                                }}
+                                rowClassName={(record, index) =>
+                                    index === selectedRowIndex ? 'selected-row' : ''
+                                }
                             />
                         </Form>
                         {(cuocKhaoSat?.donViPhuTrach?.trangThai == 2) &&
 
-                            <div className='flex justify-center w-100pt mt-3' >
+                            <div className='flex justify-center w-100pt mt-3 mb-3' >
                                 <Button className='btn-success' type="primary" size="middle" disabled={sending} onClick={handleSave}>
                                     <span style={{ display: sending ? 'inline-block' : 'none' }}>
                                         <CircularProgress className="span-sender" />

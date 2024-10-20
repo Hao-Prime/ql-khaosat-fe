@@ -10,6 +10,7 @@ import Loading from 'app/components/Loading';
 
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
+import SapXep from 'app/common/SapXep';
 const { TextArea } = Input;
 const { Option } = Select;
 const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
@@ -20,6 +21,8 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
     const [sending, setSending] = useState(false);
     const [loadingBieuMau, setLoadingBieuMau] = useState(false)
     const [listBieuMau, setListBieuMau] = useState([]);
+    const [loadingDoiTuong, setLoadingDoiTuong] = useState(false);
+    const [listDoiTuong, setListDoiTuong] = useState([]);
     const taiKhoan = useSelector(state => state.taiKhoan)
     const onChange = (arr, value) => {
         setCuocKhaoSatUpdate({ ...cuocKhaoSatUpdate, [arr]: value })
@@ -35,11 +38,17 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
     }, [cuocKhaoSat]);
     async function realoadListSelect() {
 
-        setLoadingBieuMau(true)
-        let listBieuMau = await Services.getFormService().getMyListForm()
-        if (listBieuMau.data) {
-            setListBieuMau(listBieuMau?.data)
+        // setLoadingBieuMau(true)
+        // let listBieuMau = await Services.getFormService().getMyListForm()
+        // if (listBieuMau.data) {
+        //     setListBieuMau(listBieuMau?.data)
+        // }
+        setLoadingDoiTuong(true)
+        let res = await Services.getDoiTuongService().getAll("")
+        if (res.data) {
+            setListDoiTuong(SapXep.sapXepTheoObjectAtr(res?.data, "stt", 1))
         }
+        setLoadingDoiTuong(false)
         setLoadingBieuMau(false)
 
     }
@@ -138,8 +147,6 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
                 }
             )
         } else {
-
-
             setSending(false);
         }
 
@@ -184,7 +191,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
                 return <span className="status-cuccess ">Đã kết thúc</span>// Đã kết thúc
             }
         }
-        return <span className="status-cyan ">Đang diễn ra</span>;//Đâng diễn ra
+        return <span className="status-cyan ">Đang mở</span>;//Đâng diễn ra
     }
     const uploadButton = (
         <div>
@@ -214,7 +221,14 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(img);
     };
-
+    const handleDropdownVisibleChangeDoiTuong = async (open) => {
+        if (open) {
+            let res = await Services.getDoiTuongService().getAll("")
+            if (res.data) {
+                setListDoiTuong(SapXep.sapXepTheoObjectAtr(res?.data, "stt", 1))
+            }
+        }
+    };
 
     return (
 
@@ -222,30 +236,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
             {contextHolder}
             {!cuocKhaoSatUpdate ? <Loading></Loading> :
                 <>
-                    <div className='flex justify-between pb-3'>
 
-
-                        <p className='bold'> Trạng thái: {checkTrangThaiCuocKhaoSat(cuocKhaoSat)} </p>
-                        <div className='div-flex'>
-
-
-                            <Button type="primary" danger className='bg-red flex align-center justify-center' onClick={handleVoHieuHoaCuocKhaoSat} disabled={sending}>
-                                <span style={{ display: sending ? 'inherit' : 'none' }}>
-                                    <CircularProgress className="span-sender" />
-                                </span>
-                                {cuocKhaoSat?.trangThai > 0 ? "Khóa khảo sát" : "Mở khóa"}
-
-                            </Button>
-                            {cuocKhaoSat?.trangThai > 2 &&
-                                <Button type="primary" info className='bg-red flex align-center justify-center ms-1' onClick={handleChuaHoanThanhKhaoSat} disabled={sending}>
-                                    <span style={{ display: sending ? 'inherit' : 'none' }}>
-                                        <CircularProgress className="span-sender" />
-                                    </span>
-                                    Mở lại tiếp tục khảo sát
-                                </Button>
-                            }
-                        </div>
-                    </div>
                     {/* <div className='pb-3'>
                         <p className='bold'> Loại biểu mẫu: </p>
                         <Radio.Group onChange={onChange} defaultValue={cuocKhaoSatUpdate?.loaiCuocKhaoSat}>
@@ -255,7 +246,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
                         </Radio.Group>
 
                     </div> */}
-                    <div className='pb-3'>
+                    {/* <div className='pb-3'>
                         <p ><span className='bold'>Biểu mẫu:</span>  <i><a className='red f-12' href='/quan-tri/bieu-mau?my=1' target='_blank'> Tạo biểu mẫu mới</a></i></p>
                         <Select
                             allowClear
@@ -280,7 +271,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
                                 ))
                             )}
                         </Select>
-                    </div>
+                    </div> */}
                     <div className='pb-3'>
                         <p className='bold'><span className='red'>*</span> Tiêu đề: </p>
                         <Input placeholder="Basic usage" onChange={(e) => onChange("tieuDe", e?.target?.value)} defaultValue={cuocKhaoSatUpdate?.tieuDe} />
@@ -291,10 +282,36 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
                         <TextArea autoSize={{ minRows: 3 }} onChange={(e) => onChange("moTa", e?.target?.value)} defaultValue={cuocKhaoSatUpdate?.moTa} placeholder="Nhập tên biểu mẫu" />
                     </div>
                     <div className='pb-3'>
-                        <p className='bold'> Tổng số phiếu khảo sát cần đạt: </p>
-                        <Input type="number" defaultValue={cuocKhaoSatUpdate?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ khảo sát cần đạt" />
+                        <p className='bold'> Đối tượng thực hiện khảo sát: </p>
+                        <Select
+                            placeholder="Chọn đối tượng khảo sát"
+                            onDropdownVisibleChange={handleDropdownVisibleChangeDoiTuong}  // Gọi API khi dropdown mở
+                            loading={loadingDoiTuong}  // Hiển thị Spin nếu đang load dữ liệu
+                            style={{ width: 200 }}
+                            // mode="tags"
+                            onChange={(value) => onChange("doiTuongTHKhaoSat", value ? { _id: value } : null)}
+                            defaultValue={cuocKhaoSatUpdate?.doiTuongTHKhaoSat?._id || null}
+                            className='w-100pt'
+                            filterOption={(input, option) =>
+                                option?.children?.toLowerCase().includes(input.toLowerCase()) // Tìm kiếm không phân biệt chữ hoa/chữ thường
+                            }
+                        >
+                            {loadingDoiTuong ? (
+                                <Option disabled key="loading">Loading...</Option>
+                            ) : (
+                                listDoiTuong.map((item) => (
+                                    <Option key={item._id} value={item?._id}>
+                                        {item.tenDoiTuong}
+                                    </Option>
+                                ))
+                            )}
+                        </Select>
                     </div>
                     <div className='pb-3'>
+                        <p className='bold'> Số phiếu cần thực hiện: </p>
+                        <Input type="number" defaultValue={cuocKhaoSatUpdate?.chiTieu} onChange={(e) => onChange("chiTieu", e?.target?.value)} placeholder="Tổng toàn bộ khảo sát cần đạt" />
+                    </div>
+                    {/* <div className='pb-3'>
                         <p className='bold'> Thời gian biểu mẫu: </p>
                         <div className='flex justify-between'>
                             <DatePicker
@@ -316,7 +333,7 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
                         </div>
 
 
-                    </div>
+                    </div> */}
 
                     <div className='pb-3 flex justify-center' >
                         <Button key="submit" type="primary" className='mt-2 bg-info flex align-center justify-center' onClick={handleOk} disabled={sending}>
@@ -333,10 +350,35 @@ const SettingForm = ({ cuocKhaoSat, reloadList, backURL }) => {
                             <p className='bold'>Xóa khảo sát này</p>
                             <p>Một khi bạn xóa một kho lưu trữ, bạn sẽ không thể quay lại. Xin hãy chắc chắn.</p>
                         </div>
+
                         <Button type="primary" danger className='bg-red mt-2 flex align-center' onClick={handleDelete} disabled={sending}>
                             <span style={{ display: sending ? 'inherit' : 'none' }}>
                                 <CircularProgress className="span-sender" />
                             </span>Xóa khảo sát</Button>
+                    </div>
+                    <div className='flex justify-between pb-3'>
+
+
+                        <p className='bold'> Trạng thái: {checkTrangThaiCuocKhaoSat(cuocKhaoSat)} </p>
+                        <div className='div-flex'>
+
+
+                            <Button type="primary" danger className='bg-red flex align-center justify-center' onClick={handleVoHieuHoaCuocKhaoSat} disabled={sending}>
+                                <span style={{ display: sending ? 'inherit' : 'none' }}>
+                                    <CircularProgress className="span-sender" />
+                                </span>
+                                {cuocKhaoSat?.trangThai > 0 ? "Khóa khảo sát" : "Mở khóa"}
+
+                            </Button>
+                            {cuocKhaoSat?.trangThai > 2 &&
+                                <Button type="primary" info className='bg-red flex align-center justify-center ms-1' onClick={handleChuaHoanThanhKhaoSat} disabled={sending}>
+                                    <span style={{ display: sending ? 'inherit' : 'none' }}>
+                                        <CircularProgress className="span-sender" />
+                                    </span>
+                                    Mở lại tiếp tục khảo sát
+                                </Button>
+                            }
+                        </div>
                     </div>
                 </>}
         </div >

@@ -8,6 +8,7 @@ import Loading from 'app/components/Loading';
 import { useSelector } from 'react-redux';
 import locale from 'antd/lib/locale/vi_VN';
 import dayjs from 'dayjs';
+import SapXep from 'app/common/SapXep';
 const { TextArea } = Input;
 const CanBoModal = ({ open, setOpen, canBoUp, reLoadList }) => {
     const [canBo, setCanBo] = useState(canBoUp);
@@ -30,8 +31,8 @@ const CanBoModal = ({ open, setOpen, canBoUp, reLoadList }) => {
         let dataRSLisstDv = await Services.getNguoiDungService().getSelectVaiTro()
         let resListAllDonVi = (await Services.getDonViService().getSelectToanBoDonViDuoi())?.data
         if (dataRSLisstDv.data) {
-            setListVaiTro(dataRSLisstDv?.data?.map(obj => {
-                return { value: obj._id, label: obj.tenVaiTro };
+            setListVaiTro(SapXep.sapXepTheoObjectAtr(dataRSLisstDv?.data,"stt",1)?.map(obj => {
+                return { value: obj._id, label: obj.moTa };
             }))
             setListDonVi(formatDataDonVi(resListAllDonVi))
         }
@@ -40,6 +41,7 @@ const CanBoModal = ({ open, setOpen, canBoUp, reLoadList }) => {
     }
     const handleOk = () => { }
     const onChange = (arr, value) => {
+        setError("")
         setCanBo({ ...canBo, [arr]: value })
     }
     function formatDataDonVi(list) {
@@ -49,8 +51,42 @@ const CanBoModal = ({ open, setOpen, canBoUp, reLoadList }) => {
         });
         return rs;
     }
+    const kiemTraTTnguoiDung = (user)=>{
+        if(!user?.donVi){
+            setError("Đơn vị không được để trống")
+            return false
+        }else if(!user?.hoTen){
+            setError("Họ tên không được để trống")
+            return false
+        }else if(!validatePhoneNumber(user?.soDienThoai)){
+            setError("Số điện thoại không đúng")
+            return
+        }else if(!user?.vaiTroTaiKhoanList?.length>0){
+            setError("Chưa chọn vai trò")
+            return
+        }
+        return true
+    }
+    function validatePhoneNumber(str) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regex kiểm tra email
+        const phoneRegex = /^0\d{9}$/; // regex kiểm tra số điện thoại bắt đầu bằng số 0 và có 10 số
+        if (phoneRegex.test(str)) {
+            // Nếu chuỗi đúng định dạng số điện thoại, trả về true
+            if (str == null) {
+                return false
+            }
+            return true;
+        } else {
+            // Nếu không phải số CMND hợp lệ, trả về false
+            return false;
+        }
+    }
     const onSubmit = () => {
         setSending(true);
+        if(!kiemTraTTnguoiDung(canBo)){
+            setSending(false);
+            return;
+        }
         Services?.getNguoiDungService()?.saveCanBo(
             {
                 ...canBo,
@@ -58,9 +94,11 @@ const CanBoModal = ({ open, setOpen, canBoUp, reLoadList }) => {
             })?.then(
                 (res) => {
                     if (res?.data?.error) {
-                        setError(res?.data?.mesage)
+                        setError(res?.data?.message)
+                        setSending(false)
                     } else {
                         setOpen(false);
+                        setSending(false)
                         message.success("Lưu thành công")
                         reLoadList()
                     }

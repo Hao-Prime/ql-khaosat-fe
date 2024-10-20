@@ -23,7 +23,7 @@ const items = [
         label: 'Xóa',
     },
 ];
-const DoiTuongKhaoSatPage = () => {
+const DoiTuongKhaoSatPage = ({keHoach,showBreadcrumb}) => {
     const [modal, contextHolder] = Modal.useModal();
     const [listDoiTuongKhaoSat, setListDoiTuongKhaoSat] = useState([]);
     const [listDoiTuongKhaoSatMD, setListDoiTuongKhaoSatMD] = useState([]);
@@ -50,7 +50,7 @@ const DoiTuongKhaoSatPage = () => {
     async function reLoadList(params) {
         setLoading(true)
 
-        let dataRSLisstDv = (await Services.getDoiTuongKhaoSatService().getAll("", ""))?.data
+        let dataRSLisstDv = (await Services.getDoiTuongKhaoSatService().getAll("", "",keHoach?._id))?.data
         setListDoiTuongKhaoSatMD(SapXep.sapXepTheoObject2Atr(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "stt", 1),"nhomDoiTuong", "stt", 1))
         if(dataRSLisstDv?.length==0){
             setListDoiTuongKhaoSat([])
@@ -121,7 +121,8 @@ const DoiTuongKhaoSatPage = () => {
     return (
         <>
             <div className='pb-2'>
-                {/* <Breadcrumb
+            {showBreadcrumb == false ? <></> :
+            <Breadcrumb
                     items={[
                         {
                             title: <p className='bold f-16 c-575762'>Trang chủ </p>,
@@ -132,11 +133,12 @@ const DoiTuongKhaoSatPage = () => {
                         }
 
                     ]}
-                /> */}
+                />
+                }
                 </div>
 
             <div className="page-new">
-                <DoiTuongKhaoSatModal open={openDoiTuongKhaoSatModal} setOpen={setOpenDoiTuongKhaoSatModal} doiTuongKhaoSatUp={doiTuongKhaoSatUp} reLoadList={reLoadList} />
+                <DoiTuongKhaoSatModal keHoach={keHoach} open={openDoiTuongKhaoSatModal} setOpen={setOpenDoiTuongKhaoSatModal} doiTuongKhaoSatUp={doiTuongKhaoSatUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
                         <Button onClick={() => { setOpenDoiTuongKhaoSatModal(true); setDoiTuongKhaoSatUp({trangThai:1}) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
@@ -156,30 +158,31 @@ const DoiTuongKhaoSatPage = () => {
                             align: "center",
                             render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
                         },
-                        // {
-                        //     title: "Tên nhóm",
-                        //     render: (data, record, index) => (<p>{data?.nhomDoiTuong?.ten}</p>),
-                        //     width: 180,
+                        {
+                            title: "Tên nhóm đối tượng",
+                            render: (data, record, index) => (<p>{data?.nhomDoiTuong?.ten}</p>),
+                            width: 100,
 
-                        // },
+                        },
                         {
                             title: "Tên đối tượng",
                             dataIndex: "ten",
                             key: "ten",
-                            width: 180,
+                            width: 150,
 
                         },
                         {
                             title: "Mô tả",
                             dataIndex: "moTa",
                             key: "moTa",
-                            width: 500,
+                            width: 200,
                         },
                         {
                             title: "Thứ tự",
                             dataIndex: "stt",
+                            align: "center",
                             key: "stt",
-                            width: 80,
+                            width: 70,
                         },
                         {
                             title: "Trang thái",

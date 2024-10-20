@@ -13,6 +13,8 @@ import CapNhatKeHoachPage from './components/CapNhatKeHoachPage';
 import KeHoachKhaoSatPage from './components/KeHoachKhaoSatPage';
 import ChiTietKeHoachPage from './components/ChiTietKeHoachPage';
 import NoiDungKhaoSatPage from '../admin/noidungkhaosat/NoiDungKhaoSatPage';
+import NoiDungDungChungPage from './components/NoiDungDungChungPage';
+import DangPhatTrienPage from '../admin/developer/DangPhatTrienPage';
 const KeHoachDetailPage = () => {
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
@@ -97,7 +99,7 @@ const KeHoachDetailPage = () => {
                 <Breadcrumb
                     items={[
                         { title: <p className='bold f-16 c-575762'>Trang chủ </p> },
-                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(`/quan-tri/khao-sat?trangThai=0`)}><HomeIcon className='mb-1' /> Các cuộc khảo sát</p> }
+                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(`/quan-tri/ke-hoach?trangThai=1`)}><HomeIcon className='mb-1' /> Kế hoạch khảo sát</p> }
                     ]}
                 /></div>
 
@@ -113,7 +115,7 @@ const KeHoachDetailPage = () => {
                             ...(!idKeHoach ? [
                                 {
                                     key: '1',
-                                    label: 'Thông tin kế hoạch',
+                                    label: 'Điền thông tin kế hoạch',
                                     children: <CapNhatKeHoachPage
                                         keHoach={keHoach}
                                         reloadDetail={reloadDetail}
@@ -129,38 +131,36 @@ const KeHoachDetailPage = () => {
                                         keHoach={keHoach}
                                         loading={loading}
                                     ></ChiTietKeHoachPage>,
-                                }
+                                },
+                                {
+                                    key: '2.2',
+                                    label: 'Nội dung khảo sát',
+                                    children: <NoiDungDungChungPage
+                                        keHoach={keHoach}
+                                        loading={loading}
+                                        tabValue={tabValue}
+                                        setTabValue={setTabValue}
+                                    ></NoiDungDungChungPage>,
+                                },
+                                {
+                                    key: '2',
+                                    label: 'Mẫu khảo sát',
+                                    children: <KeHoachKhaoSatPage
+                                        keHoach={keHoach}
+                                        loading={loading}
+                                        tabValue={tabValue}
+                                        setTabValue={setTabValue}
+                                    ></KeHoachKhaoSatPage>,
+                                },
+                                {
+                                    key: '4',
+                                    label: 'Thống kê tổng hợp',
+                                    children: <DangPhatTrienPage
+                                    ></DangPhatTrienPage>,
+                                },
                             ]),
-                            {
-                                key: '2.2',
-                                label: 'Nội dung khảo sát',
-                                children: <NoiDungKhaoSatPage
-                                    keHoach={keHoach}
-                                    loading={loading}
-                                    tabValue={tabValue}
-                                    setTabValue={setTabValue}
-                                ></NoiDungKhaoSatPage>,
-                            },
-                            {
-                                key: '2',
-                                label: 'Mẫu khảo sát',
-                                children: <KeHoachKhaoSatPage
-                                    keHoach={keHoach}
-                                    loading={loading}
-                                    tabValue={tabValue}
-                                    setTabValue={setTabValue}
-                                ></KeHoachKhaoSatPage>,
-                            },
-                            {
-                                key: '4',
-                                label: 'Thống kê tổng hợp',
-                                children: <KeHoachKhaoSatPage
-                                    keHoach={keHoach}
-                                    loading={loading}
-                                    tabValue={tabValue}
-                                    setTabValue={setTabValue}
-                                ></KeHoachKhaoSatPage>,
-                            },
+
+
                             // {
                             //     key: '3',
                             //     label: 'Phân công khảo sát',// bảng tình hình thực hiện 

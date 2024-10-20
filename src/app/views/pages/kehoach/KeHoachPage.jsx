@@ -113,7 +113,7 @@ const KeHoachPage = () => {
                 <Breadcrumb
                     items={[
                         { title: <p className='bold f-16 c-575762' onClick={() => navigate("/")}>Trang chủ </p> },
-                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(`/quan-tri/khao-sat?trangThai=0`)}><HomeIcon className='mb-1' /> Các cuộc khảo sát</p> }
+                        { title: <p className='bold f-16 c-blue2' onClick={() => navigate(`/quan-tri/ke-hoach?trangThai=1`)}><HomeIcon className='mb-1' />Kế hoạch khỏa sát</p> }
                     ]}
                 /></div>
 
@@ -128,6 +128,7 @@ const KeHoachPage = () => {
                 </div>
                 {contextHolder}
                 <Table
+                    bordered
                     rowKey="_id"
                     loading={loading}
                     columns={[
@@ -135,21 +136,21 @@ const KeHoachPage = () => {
                             title: "STT",
                             width: 40,
                             align: "center",
-                            render: (data, record, index) => (<p>{(limit * (page - 1) + (index + 1))}</p>),
+                            render: (data, record, index) => (<p className='text-center'>{(limit * (page - 1) + (index + 1))}</p>),
                         },
                         {
                             title: "Tiêu đề",
                             render: (data) => (<p className='moTa-p'>{data?.tieuDe}</p>),
-                            width: 220,
+                            width: 180,
                         },
                         {
                             title: "Tóm tắt",
-                            width: 300,
+                            width: 220,
                             render: (data) => (<p className='moTa-p'>{data?.tomTat}</p>),
                         },
                         {
                             title: "Người tạo/Ngày tạo",
-                            width: 160,
+                            width: 140,
                             render: (data) => (<div>
                                 <p>{data?.donViTao?.tenDonVi}</p>
                                 <p>{data?.nguoiTao?.hoTen}</p>
@@ -158,7 +159,7 @@ const KeHoachPage = () => {
                         },
                         {
                             title: "Đơn vị Thực hiện",
-                            width: 160,
+                            width: 140,
                             render: (data) => (
                                 <div>
                                     {data?.donViThucHien?.map((e) =>
@@ -169,7 +170,7 @@ const KeHoachPage = () => {
                         },
                         {
                             title: "Đơn vị Phối hợp",
-                            width: 160,
+                            width: 140,
                             render: (data) => (
                                 <div>
                                     {data?.donViThucHien?.map((e) =>
@@ -188,11 +189,11 @@ const KeHoachPage = () => {
                                 </p>
                             ),
                         },
-                        {
-                            title: "Trạng thái",
-                            width: 120,
-                            render: (data) => (<p >{data?.trangThai}</p>),
-                        },
+                        // {
+                        //     title: "Trạng thái",
+                        //     width: 120,
+                        //     render: (data) => (<p >{data?.trangThai}</p>),
+                        // },
 
 
                     ]}
@@ -214,7 +215,9 @@ const KeHoachPage = () => {
                 />
 
                 <div className='div-flex justify-between'>
-                    <div ><p className='red'><i><b >Lưu ý:</b> Mỗi đơn vị phụ trách sẽ có mã khác nhau</i></p></div>
+                    <div >
+                        {/* <p className='red'><i><b >Lưu ý:</b> Mỗi đơn vị phụ trách sẽ có mã khác nhau</i></p> */}
+                        </div>
                     <Pagination
                         showSizeChanger
                         onShowSizeChange={onShowSizeChange}

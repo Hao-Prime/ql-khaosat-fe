@@ -101,21 +101,21 @@ const Sidebar = ({ user }) => {
             icon: <AccountBalanceWalletIcon />,
             roles: ["admin", "doituongkhaosat","nguoikhaosat"],
             children: [
-                {
-                    key: '/quan-tri/nhom-doi-tuong',
-                    label: 'Nhóm đối tượng',
-                    roles: ["admin", "nhomdoituong"],
-                },
+                // {
+                //     key: '/quan-tri/nhom-doi-tuong',
+                //     label: 'Nhóm đối tượng',
+                //     roles: ["admin", "nhomdoituong"],
+                // },
                 // {
                 //     key: '/quan-tri/noi-dung', // nằm trong kế hoạch
                 //     label: 'Nội dung/Câu hỏi',
                 //     roles: ["admin", "noidung"],
                 // },
-                {
-                    key: '/quan-tri/doi-tuong-khao-sat',
-                    label: 'Đối tượng được KS',
-                    roles: ["admin", 'doituongkhaosat'],
-                },
+                // {
+                //     key: '/quan-tri/doi-tuong-khao-sat',
+                //     label: 'Đối tượng được KS',
+                //     roles: ["admin", 'doituongkhaosat'],
+                // },
                 {
                     key: '/quan-tri/doi-tuong-lam-khao-sat',
                     label: 'Đối tượng thực hiện KS',

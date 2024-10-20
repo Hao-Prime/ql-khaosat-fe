@@ -133,13 +133,11 @@ const CanBoPage = () => {
     const handleSearch = useCallback(
         debounce(async (e) => {
             setLoading(false)
-            console.log(e);
-
             if (page != 1) {
                 setSearchValue(e?.target?.value)
                 setPage(1)
             } else {
-                let dataRSLisstDv = await Services.getCanBoService().getNguoiKhaoSat(e?.target?.value, "", 0, limit)
+                let dataRSLisstDv = await Services.getNguoiDungService().getCanBo(e?.target?.value?.trim(), "", 0, limit)
                 if (dataRSLisstDv?.data?.length == 0) {
                     message.error("Không tìm thấy đơn vị")
                 } else {
@@ -147,8 +145,6 @@ const CanBoPage = () => {
                     setTotalPage(dataRSLisstDv?.data?.totalElements)
                 }
             }
-
-
         }, 500),
         [],
     );
@@ -227,7 +223,7 @@ const CanBoPage = () => {
 
                         {
                             title: "Role",
-                            render: (data) => (<p>{data?.taiKhoan?.vaiTroTaiKhoanList?.map(obj => obj?.vaiTro?.tenVaiTro)?.join(', ')} </p>),
+                            render: (data) => (<p>{data?.taiKhoan?.vaiTroTaiKhoanList?.map(obj => obj?.vaiTro?.moTa)?.join(', ')} </p>),
                             width: 180,
                         },
                         {

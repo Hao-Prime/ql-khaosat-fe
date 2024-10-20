@@ -249,7 +249,7 @@ const NavbarMunuForm = ({ content, type, children, setHiddenSidebar, hiddenSideb
                             </> :
                             <>
                                 <div className='qxxeyqwopioprq pointer'>
-                                {hiddenSidebar ?
+                                    {hiddenSidebar ?
                                         <FormatIndentIncreaseIcon className='me-2 c-blue2' onClick={() => setHiddenSidebar(!hiddenSidebar)} />
                                         : <FormatIndentDecreaseIcon className='me-2 c-blue2' onClick={() => setHiddenSidebar(!hiddenSidebar)} />
 
@@ -309,13 +309,13 @@ const NavbarMunuForm = ({ content, type, children, setHiddenSidebar, hiddenSideb
                             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                                 <div className='div-nav-flex-2'>
                                     <div>
-                                    {hiddenSidebar ?
-                                        <FormatIndentIncreaseIcon className='me-2 c-blue2' onClick={() => setHiddenSidebar(!hiddenSidebar)} />
-                                        : <FormatIndentDecreaseIcon className='me-2 c-blue2' onClick={() => setHiddenSidebar(!hiddenSidebar)} />
+                                        {hiddenSidebar ?
+                                            <FormatIndentIncreaseIcon className='me-2 c-blue2' onClick={() => setHiddenSidebar(!hiddenSidebar)} />
+                                            : <FormatIndentDecreaseIcon className='me-2 c-blue2' onClick={() => setHiddenSidebar(!hiddenSidebar)} />
 
-                                    }
-                                    <FullscreenIcon className='me-2 c-blue2' onClick={() => toggleFullscreen()} />
-                                    {/* <StarBorderIcon className='me-2 c-blue2' onClick={() => togglePage()} /> */}
+                                        }
+                                        <FullscreenIcon className='me-2 c-blue2' onClick={() => toggleFullscreen()} />
+                                        {/* <StarBorderIcon className='me-2 c-blue2' onClick={() => togglePage()} /> */}
                                     </div>
 
                                     <div>
@@ -328,7 +328,7 @@ const NavbarMunuForm = ({ content, type, children, setHiddenSidebar, hiddenSideb
                             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                                 <div className='div-nav-flex-2'>
 
-                                {hiddenSidebar ?
+                                    {hiddenSidebar ?
                                         <FormatIndentIncreaseIcon className='me-2 c-blue2' onClick={() => setHiddenSidebar(!hiddenSidebar)} />
                                         : <FormatIndentDecreaseIcon className='me-2 c-blue2' onClick={() => setHiddenSidebar(!hiddenSidebar)} />
 
@@ -358,7 +358,12 @@ const NavbarMunuForm = ({ content, type, children, setHiddenSidebar, hiddenSideb
                                 }
 
 
-                                <span className='black me-2 ms-3'>{taiKhoan?.hoTen}</span>
+                                <span className='black me-2 ms-3 text-right' style={{lineHeight:1}}>
+                                    {taiKhoan?.hoTen}<br />
+                                    <span><i className='gray f-13'>  {taiKhoan?.donVi?.tenDonVi}</i>
+                                    </span>
+
+                                </span>
 
                                 <Tooltip title="Mở cài đặt">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

@@ -118,10 +118,11 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                     {
                         title: <p>Ngày bắt đầu <br /> Ngày kết thúc</p>,
                         render: (data) => (
-                            <p>{data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : <>{dayjs(cuocKhaoSat?.ngayBD).format("DD/MM/YYYY HH:mm")}<br /></>}
-                                {data?.ngayBD && <br />}
-                                {data?.ngayKT ? dayjs(data?.ngayKT).format("DD/MM/YYYY HH:mm") : "-"}
-                            </p>),
+                            <p>
+                            {data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : "-"}
+                            <br />
+                            {data?.ngayKT ? dayjs(data?.ngayKT).format("DD/MM/YYYY HH:mm") : "-"}
+                        </p>),
                     },
 
                     {
@@ -156,13 +157,13 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         align: "center",
                     },
                     {
-                        title: <p>Số phiếu<br /> đã tạo</p>,
+                        title: <p>Số phiếu<br /> đã thực hiện</p>,
                         dataIndex: 'soLuongTong',
                         align: "center",
                         className: 'nowrap',
                         render: (data, record) => (<p>{
                             record?.chiTieu > 0 ?
-                                `${record?.chiTieuDaDat}(${Math.floor(record?.chiTieuDaDat * 100 / record?.chiTieu)}%)`
+                                `${record?.chiTieuDaDat} (${((record?.chiTieuDaDat * 100) / record?.chiTieu).toFixed(2)}%)`
                                 : "0(0%)"} </p>),
                     },
                     {

@@ -12,7 +12,7 @@ import { CircularProgress } from '@mui/material';
 import Loading from 'app/components/Loading';
 import SapXep from 'app/common/SapXep';
 
-const EditForm = ({ bieuMau }) => {
+const EditForm = ({ bieuMau,ServiceSave, keHoach }) => {
     const key = new URLSearchParams(window.location.search).get("key");
     const [formData, setFormData] = useState({
         display: "form",
@@ -67,7 +67,8 @@ const EditForm = ({ bieuMau }) => {
             setSending(true);
             console.log(generateKey(form.component?.components))
 
-            Services.getFormService().capNhatBieuMau({ ...bieuMau, thanhPhan: JSON.stringify(generateKey(form.component?.components)) }).then(
+            
+            ServiceSave({ ...bieuMau, thanhPhan: JSON.stringify(generateKey(form.component?.components)) }).then(
                 (res) => {
                     setSending(false);
                     if (res?.data?.error) {
@@ -167,11 +168,11 @@ const EditForm = ({ bieuMau }) => {
     };
 
     const addKeyFieldToAllComponents = async () => {
-        let listCauHoiRS = await Services.getNoiDungKhaoSatService().getAll("");
+        let listCauHoiRS = await Services.getNoiDungKhaoSatService().getAll("",keHoach?._id);
         setListCauHoi(listCauHoiRS?.data);
-        let listNhomDoiTuongRS = await Services.getNhomDoiTuongService().getAll("");
+        let listNhomDoiTuongRS = await Services.getNhomDoiTuongService().getAll("",keHoach?._id);
         setListNhomDoiTuong(listNhomDoiTuongRS?.data);
-        let listDoiTuongKSRS = (await Services.getDoiTuongKhaoSatService().getAll(""))?.data;
+        let listDoiTuongKSRS = (await Services.getDoiTuongKhaoSatService().getAll("","",keHoach?._id))?.data;
         setListDoiTuongKS(listDoiTuongKSRS);
 
         const componentNames = Object.keys(Components.components);
@@ -191,7 +192,7 @@ const EditForm = ({ bieuMau }) => {
                             key: 'mauQuestion',
                             label: 'Chọn danh mục nhóm đối tượng',
                             placeholder: 'Chọn danh mục nhóm đối tượng khảo sát',
-                            tooltip: 'Vào danh mục -> Thiết kế biểu mẫu -> Quản lý nhóm đối tượng khảo sát',
+                            tooltip: 'Vào kế hoạch -> Nội dung khảo sát -> Quản lý nhóm đối tượng được khảo sát',
                             data: {
                                 values: listNhomDoiTuongRS?.data?.map(obj => ({
                                     label: obj?.ten,
@@ -247,9 +248,9 @@ const EditForm = ({ bieuMau }) => {
                         editForm.components.unshift({
                             type: 'select',
                             key: 'mauCauHoi',
-                            label: 'Chọn từ câu hỏi/nội dung mẫu',
-                            placeholder: 'Chọn các câu hỏi/nội dung mẫu đã tạo',
-                            tooltip: 'Vào danh mục -> Thiết kế biểu mẫu -> Quản lý nội dung/câu hỏi',
+                            label: 'Chọn từ nội dung dùng chung',
+                            placeholder: 'Chọn các câu hỏi/nội dung mẫu đã tạo ở danh mục',
+                            tooltip: 'Vào kế hoạch -> Nội dung khảo sát -> Nội dung dùng chung',
                             data: {
                                 values: listCauHoiRS?.data?.map(obj => ({
                                     label: obj?.nhomDoiTuong?.ten + " - " + obj?.ten,

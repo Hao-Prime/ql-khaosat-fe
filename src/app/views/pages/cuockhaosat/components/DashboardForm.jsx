@@ -242,14 +242,15 @@ const DashboardForm = ({ cuocKhaoSat, reloadDetail }) => {
                 <DanhSachNguoiKhaoSat cuocKhaoSat={cuocKhaoSat} donVi={donVi} reloadDetail={reloadDetail}></DanhSachNguoiKhaoSat>
                 <Divider />
                 <div className='flex justify-between'>
-                    <p className='text-center bold f-16'>Biểu đồ</p>
+                    <p className='text-center bold f-16'>Biểu đồ:</p>
 
                 </div>
                 <div className='form-dashboard-detail'>
-                    {listDataRS?.map((e) =>
+                    <p className='text-center'>Đang cập nhật</p>
+                    {/* {listDataRS?.map((e) =>
                         <DetailPhanTram object={e} level={0}></DetailPhanTram>
 
-                    )}
+                    )} */}
                 </div>
             </div>
         </div >
@@ -513,6 +514,7 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
     const [listDonViSave, setlistDonViSave] = useState([]);
     const [windowScreen, setWindowScreen] = useState(window.screen.width > 1000);
     const [modal, contextHolder] = Modal.useModal();
+    const [selectedRowIndex, setSelectedRowIndex] = useState(null);
     useEffect(() => {
 
         reloadData()
@@ -604,8 +606,9 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                     {
                         title: <p>Ngày bắt đầu <br /> Ngày kết thúc</p>,
                         render: (data) => (
-                            <p>{data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : <>{dayjs(cuocKhaoSat?.ngayBD).format("DD/MM/YYYY HH:mm")}<br /></>}
-                                {data?.ngayBD && <br />}
+                            <p>
+                                {data?.ngayBD ? dayjs(data?.ngayBD).format("DD/MM/YYYY HH:mm") : "-"}
+                                <br />
                                 {data?.ngayKT ? dayjs(data?.ngayKT).format("DD/MM/YYYY HH:mm") : "-"}
                             </p>),
                     },
@@ -642,17 +645,17 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                         align: "center",
                     },
                     {
-                        title: <p>Số phiếu<br /> đã tạo</p>,
+                        title: <p>Số phiếu<br /> đã thực hiện</p>,
                         dataIndex: 'soLuongTong',
                         align: "center",
                         className: 'nowrap',
                         render: (data, record) => (<p>{
                             record?.chiTieu > 0 ?
-                                `${record?.chiTieuDaDat}(${Math.floor(record?.chiTieuDaDat * 100 / record?.chiTieu)}%)`
+                                `${record?.chiTieuDaDat} (${((record?.chiTieuDaDat * 100) / record?.chiTieu).toFixed(2)}%)`
                                 : "0(0%)"} </p>),
                     },
                     {
-                        title: 'Đã báo cáo',
+                        title: 'Đã báo cáo ',
 
                         className: 'nowrap',
                         align: "center",
@@ -684,11 +687,15 @@ const DetailDonVi = ({ cuocKhaoSat, setDonVi, reloadDetail }) => {
                 tableLayout="fixed"
                 onRow={(record, rowIndex) => {
                     return {
-                        onClick: (event) => {
-                            setDonVi(record)
+                        onClick: () => {
+                            setSelectedRowIndex(rowIndex); // Lưu trữ chỉ số dòng khi click
+                            setDonVi(record); // Lưu trữ thông tin dòng khi click
                         },
                     };
                 }}
+                rowClassName={(record, index) =>
+                    index === selectedRowIndex ? 'selected-row' : ''
+                }
             />
         </>
     )

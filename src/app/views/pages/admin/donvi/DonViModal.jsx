@@ -109,7 +109,12 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
                             style={{ width: '100%' }}
                             onChange={(value) => onChange("donViTrucThuoc", { _id: value })}
                             treeData={listDonViTT}
+                            placeholder="Mắc định là đơn vị hiện tại của bạn"
                         />
+                    </div>
+                    <div className='pb-3'>
+                        <p className='bold'> Mã: </p>
+                        <Input defaultValue={donVi?.ma} onChange={(e) => onChange("ma", e?.target?.value)} placeholder="Mã đơn vị dùng để tạo ra mã khảo sát" />
                     </div>
                     <div className='pb-3'>
                         <p className='bold'> Tên đơn vị <span className='red'>*</span>: </p>
@@ -118,11 +123,11 @@ const DonViModal = ({ open, setOpen, donViUp, reLoadList }) => {
 
                     <div className='pb-3'>
                         <p className='bold'> Mô tả: </p>
-                        <TextArea defaultValue={donVi?.tenDonVi} onChange={(e) => onChange("moTa", e?.target?.value)} placeholder="Nhập mô tả" />
+                        <TextArea defaultValue={donVi?.moTa} onChange={(e) => onChange("moTa", e?.target?.value)} placeholder="Nhập mô tả" />
                     </div>
                     <div className='pb-3'>
                         <p className='bold'> Thứ tự: </p>
-                        <Input type="number" defaultValue={donVi?.stt} onChange={(e) => onChange("stt", e?.target?.value)} placeholder="Nhập tên đơn vị" />
+                        <Input type="number" defaultValue={donVi?.stt} onChange={(e) => onChange("stt", e?.target?.value)} placeholder="Nhập thứ tự" />
                     </div>
                 </div >
             }

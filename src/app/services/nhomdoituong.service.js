@@ -1,7 +1,7 @@
 import axios from "axios";
 
-function getAll(id) {
-  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/nhom-doi-tuong?id=${id}`);
+function getAll(id,idKeHoach) {
+  return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/nhom-doi-tuong?id=${id||""}&idKeHoach=${idKeHoach||""}`);
 }
 function save(nhomDoiTuong) {
   return axios.post(process.env.REACT_APP_URL_SERVER + "/be-form/nhom-doi-tuong", nhomDoiTuong);

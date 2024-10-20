@@ -23,7 +23,7 @@ const items = [
         label: 'Xóa',
     },
 ];
-const NoiDungKhaoSatPage = () => {
+const NoiDungKhaoSatPage = ({keHoach,showBreadcrumb}) => {
     const [modal, contextHolder] = Modal.useModal();
     const [listNoiDungKhaoSat, setListNoiDungKhaoSat] = useState([]);
     const [listNoiDungKhaoSatMD, setListNoiDungKhaoSatMD] = useState([]);
@@ -50,7 +50,7 @@ const NoiDungKhaoSatPage = () => {
     async function reLoadList(params) {
         setLoading(true)
 
-        let dataRSLisstDv = (await Services.getNoiDungKhaoSatService().getAll("", ""))?.data
+        let dataRSLisstDv = (await Services.getNoiDungKhaoSatService().getAll("",keHoach?._id))?.data
         setListNoiDungKhaoSatMD(SapXep.sapXepTheoObject2Atr(SapXep.sapXepTheoObjectAtr(dataRSLisstDv, "stt", 1),"nhomDoiTuong", "stt", 1))
         if(dataRSLisstDv?.length==0){
             setListNoiDungKhaoSat([])
@@ -121,7 +121,7 @@ const NoiDungKhaoSatPage = () => {
     return (
         <>
             <div className='pb-2'>
-                {/* <Breadcrumb
+            {showBreadcrumb == false ? <></> :<Breadcrumb
                     items={[
                         {
                             title: <p className='bold f-16 c-575762'>Trang chủ </p>,
@@ -132,11 +132,11 @@ const NoiDungKhaoSatPage = () => {
                         }
 
                     ]}
-                /> */}
+                />}
                 </div>
 
             <div className="page-new">
-                <NoiDungKhaoSatModal open={openNoiDungKhaoSatModal} setOpen={setOpenNoiDungKhaoSatModal} noiDungKhaoSatUp={noiDungKhaoSatUp} reLoadList={reLoadList} />
+                <NoiDungKhaoSatModal keHoach={keHoach} open={openNoiDungKhaoSatModal} setOpen={setOpenNoiDungKhaoSatModal} noiDungKhaoSatUp={noiDungKhaoSatUp} reLoadList={reLoadList} />
                 <div className='flex  ieoqwpesad'>
                     <div>
                         <Button onClick={() => { setOpenNoiDungKhaoSatModal(true); setNoiDungKhaoSatUp({trangThai:1}) }} type="primary" className='btn-add  bold'><AddIcon className='icon-btn' />Thêm mới</Button>
@@ -166,7 +166,7 @@ const NoiDungKhaoSatPage = () => {
                             title: "Nội dung",
                             dataIndex: "ten",
                             key: "ten",
-                            width: 600,
+                            width: 400,
                             className: 'header-align-center'
                         },
                         // {
