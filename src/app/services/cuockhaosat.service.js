@@ -66,6 +66,9 @@ function capNhatQuyenKhaoSat(taiKhoan) {
 function phanDonViPhuTrach(idkhaoSat, listDonVi) {
   return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/phan-phu-trach?idKhaoSat=${idkhaoSat}`, listDonVi);
 };
+function phanPhuTrachDoiTuong(donViPT) {
+  return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/phan-phu-trach-dt`, donViPT);
+};
 function capNhatThongTinKhaoSat(khaoSat) {
   return axios.put(process.env.REACT_APP_URL_SERVER + `/be-form/khao-sat/update-info`, khaoSat);
 };
@@ -114,6 +117,7 @@ const cuocKhaoSatService = {
   taoKeHoach,
   getKeHoach,
   themFileKeHoach,
-  xoaFileKeHoach
+  xoaFileKeHoach,
+  phanPhuTrachDoiTuong
 };
 export default cuocKhaoSatService;

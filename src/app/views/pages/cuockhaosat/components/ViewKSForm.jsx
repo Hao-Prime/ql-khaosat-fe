@@ -15,6 +15,7 @@ const ViewKSForm = () => {
     const [listPageForm, setListPageForm] = React.useState([]);
     const [page, setPage] = useState(0);
     const [cuocKhaoSat, setCuocKhaoSat] = React.useState();
+    const [doiTuongKhaoSat, setDoiTuongKhaoSat] = React.useState();
     const key = new URLSearchParams(window.location.search).get("key");
     const iddonVi = new URLSearchParams(window.location.search).get("iddv");
     const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ const ViewKSForm = () => {
             isMounted = false;
         };
     }, [key]);
-    function convertDataGird(data){
+    function convertDataGird(data) {
         const result = {};
         data?.forEach(item => {
             if (item.keyParent && item.keyParent.includes('dataGrid')) {
@@ -49,7 +50,11 @@ const ViewKSForm = () => {
     }
     function reloadList() {
         setLoading(true)
-        Services.getCuocKhaoSatService().getFormDetailSubmit(key).then(
+        const parts = key?.split("_");
+        const part1 = parts[0]; 
+        const part2 = parts[1] || null;
+
+        Services.getCuocKhaoSatService().getFormDetailSubmit(part1).then(
             (res) => {
                 if (res?.data?.error) {
                     Modal.error({
@@ -68,6 +73,15 @@ const ViewKSForm = () => {
                 }
             }
         )
+        if(part2){
+            Services.getDoiTuongKhaoSatService().getAll("","","",part2).then(
+                (res) => {
+                    if (res?.data) {
+                        setDoiTuongKhaoSat(res?.data)
+                    }
+                }
+            )
+        }
     }
     const convertCuocKhaoSatToListPage = (thanhPhan) => {
         let isContainer = true
@@ -96,21 +110,21 @@ const ViewKSForm = () => {
                         let listString = obj[key];
                         if (Array.isArray(listString)) {
                             listString?.forEach(element => {
-                                list.push({ key: element + "_" + key, valueCount: 1, type: 2, keyParent: keyParent ,code:1});
+                                list.push({ key: element + "_" + key, valueCount: 1, type: 2, keyParent: keyParent, code: 1 });
                             });
                         } else if (listString?.value) {// nó là object của api data
-                            list.push({ key: obj[key]?.value + "_" + key, label: listString?.label, valueCount: 1, type: 2, keyParent: keyParent ,code:2});
+                            list.push({ key: obj[key]?.value + "_" + key, label: listString?.label, valueCount: 1, type: 2, keyParent: keyParent, code: 2 });
                         } else {
-                            list.push({ key: obj[key] + "_" + key, valueCount: 1, type: 2, keyParent: keyParent ,code:3});
+                            list.push({ key: obj[key] + "_" + key, valueCount: 1, type: 2, keyParent: keyParent, code: 3 });
                         }
 
                     } else
                         if (typeof obj[key] === 'object') {
                             list = [...list, ...convertObjectChildValue(obj[key], key, keyParent)];
                         } else if (key?.includes('-radio')) {
-                            list.push({ key: obj[key] + "_" + key, valueCount: 1, type: 2, keyParent: keyParent ,code:4});
+                            list.push({ key: obj[key] + "_" + key, valueCount: 1, type: 2, keyParent: keyParent, code: 4 });
                         } else {
-                            list.push({ key, value: obj[key], type: 1, keyParent: keyParent ,code:5});
+                            list.push({ key, value: obj[key], type: 1, keyParent: keyParent, code: 5 });
                         }
                 }
 
@@ -122,13 +136,13 @@ const ViewKSForm = () => {
         let list = []
         if (keyParent?.includes("dataGrid")) {
             obj?.forEach((element, index) => {
-                list.push({ key: index + "_" + keyParent, valueCount: 1, type: 3, keyParent: keyParentGird ,code:6});
+                list.push({ key: index + "_" + keyParent, valueCount: 1, type: 3, keyParent: keyParentGird, code: 6 });
                 list = [...list, ...convertObject(element, keyParent + "_" + index)];
             });
         } else if (keyParent?.includes("survey")) {
             for (const key in obj) {
                 if (obj.hasOwnProperty(key)) {
-                    list.push({ key: obj[key] + "_" + keyParent?.replaceAll("survey", "radio"), valueCount: 1, type: 2, keyParent: keyParent, doiTuongId: key ,code:7});
+                    list.push({ key: obj[key] + "_" + keyParent?.replaceAll("survey", "radio"), valueCount: 1, type: 2, keyParent: keyParent, doiTuongId: key, code: 7 });
                 }
             }
 
@@ -150,12 +164,19 @@ const ViewKSForm = () => {
             if (confirmed) {
                 setSending(true)
                 let rs = convertObject({ ...dataSubmit, ...submission?.data })
-                rs = rs?.map(obj => {
-                    return { ...obj, label: obj?.label ? obj?.label : getLabelFromKey(obj?.key) };
-                })
-                rs= [...rs,...convertDataGird(rs)]
-                console.log(rs);
+                if(doiTuongKhaoSat){
+                    rs = rs?.map(obj => {
+                        return { ...obj, label: obj?.label ? obj?.label : getLabelFromKey(obj?.key), doiTuongKhaoSatId:doiTuongKhaoSat?._id  };
+                    })
+                }else {
+                    rs = rs?.map(obj => {
+                        return { ...obj, label: obj?.label ? obj?.label : getLabelFromKey(obj?.key)  };
+                    })
+                }
                 
+                rs = [...rs, ...convertDataGird(rs)]
+                console.log(rs);
+
                 Services.getCuocKhaoSatService().guiKetQua(
                     {
                         cuocKhaoSat: { _id: cuocKhaoSat?._id },
@@ -257,7 +278,7 @@ const ViewKSForm = () => {
                                         <>
                                             {
                                                 listPageForm?.map((form, index) =>
-                                                    <div className='' key={index} style={{ display: page == index ? "inline-block" : "none" }}>
+                                                    <div className='' key={index} style={{ display: page == index ? "block" : "none" }}>
                                                         <Form
                                                             // ref={formRef}
                                                             src={{

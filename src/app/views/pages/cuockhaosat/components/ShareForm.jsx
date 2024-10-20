@@ -13,10 +13,10 @@ import FormatDate from 'app/common/FormatDate';
 import DonViPhuTrachModal from './DonViPhuTrachModal';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import PhanCongTheoDoiTuong from './PhanCongTheoDoiTuong';
-const ShareForm = ({ cuocKhaoSat, reloadDetail }) => {
+const ShareForm = ({ cuocKhaoSat, reloadDetail, keHoach }) => {
     const [value, setValue] = useState(0);
     const [selectedRowIndex, setSelectedRowIndex] = useState(0);
-    const [donVi, setDonVi] = useState(cuocKhaoSat?.donViTao);
+    const [donViTHPTSelect, setDonViTHPTSelect] = useState();
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -36,14 +36,26 @@ const ShareForm = ({ cuocKhaoSat, reloadDetail }) => {
                     cuocKhaoSat={cuocKhaoSat}
                     reloadDetail={reloadDetail}
                     setSelectedRowIndex={setSelectedRowIndex}
-                    setDonVi={setDonVi}
+                    setDonVi={setDonViTHPTSelect}
                     selectedRowIndex={selectedRowIndex}
                 />
             </div>
-            <Divider variant="dashed" style={{ borderColor: '#7cb305' }} dashed className='m-1 p-2'>Phân công theo đối tượng được khảo sát </Divider>
+            <Divider variant="dashed" style={{ borderColor: '#7cb305' }} dashed className='m-1 p-2'>Phân công theo đối tượng được khảo sát của <span className='bold red'>{donViTHPTSelect?.tenDonVi}</span> </Divider>
+            {donViTHPTSelect?.chiTieu > 0?
+            <>
+             <p className='text-right bold'>Số lượng: {donViTHPTSelect?.chiTieu || 0}</p>
             <PhanCongTheoDoiTuong
-                donVi={donVi}
+                donVi={donViTHPTSelect?.donVi}
+                keHoach={keHoach}
+                cuocKhaoSat={cuocKhaoSat}
+                donViTHKS={donViTHPTSelect}
+                reloadDetail={reloadDetail}
             ></PhanCongTheoDoiTuong>
+            </>
+            :
+            <p className='gray f-15 mt-2 text-center'><i>Cần giao chỉ tiêu cho đơn vị này</i></p>
+            }
+           
         </div >
 
     );
@@ -95,7 +107,12 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail, setSelectedRowIndex, setDonVi,
         let daPhan = 0
         setlistAllDonVi(resListAllDonVi)
         setlistDonViPhuTrach(resListDonViPhuTrach)
-        resListDonViPhuTrach.forEach(element => {
+        resListDonViPhuTrach.forEach((element, index) => {
+            if (index == 0) {
+                console.log(element);
+                
+                setDonVi({ ...element, tenDonVi: element?.donVi?.tenDonVi , listPhuTrachDoiTuong: element?.listPhuTrachDoiTuong})
+            }
             if (element?.donVi?._id == taiKhoan?.donVi?._id) {
                 tong = tong + element?.chiTieu
             } else if (element?.donVi?.donViTrucThuoc == taiKhoan?.donVi?._id) {
@@ -215,7 +232,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail, setSelectedRowIndex, setDonVi,
             title: 'Tên đơn vị',
             dataIndex: 'tenDonVi',
             key: 'tenDonVi',
-            width: 240,
+            width: 190,
         },
         // {
         //     title: 'Người phụ trách',
@@ -229,53 +246,61 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail, setSelectedRowIndex, setDonVi,
             // dataIndex: 'maKhaoSat',
             render: (data) => (
                 <> {data?.maKhaoSat &&
-                    <>
+                    <>  {data?.dvnpt?.listPhuTrachDoiTuong?.length > 0 ?
 
-
-                        <p>
-                            <span onClick={() => { window.open(process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + data?.maKhaoSat) }}>
-                                {data?.maKhaoSat}
-                            </span>
+                        <p className='text-center'>
+                            <i>Mã theo đối tượng</i>
                         </p>
-                        <Tooltip title={
-                            <div className='bg-white bsaeqw' >
-                                <QRCode
-                                    errorLevel="H"
-                                    className='qr-siz'
-                                    value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + data?.maKhaoSat}
-                                // icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
-                                />
-                            </div>
+                        :
+                        <>
+                            <p>
+                                <span onClick={() => { window.open(process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + data?.maKhaoSat) }}>
+                                    {data?.maKhaoSat}
+                                </span>
+                            </p>
+                            <Tooltip title={
+                                <div className='bg-white bsaeqw' >
+                                    <QRCode
+                                        errorLevel="H"
+                                        className='qr-siz'
+                                        value={process.env.REACT_APP_URL_CLIENT + "/khao-sat?key=" + data?.maKhaoSat}
+                                    // icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcNYo0rQo34HEXqfOLMhBm8hdlYEM2U7XgkY8eyi3Fg&s"
+                                    />
+                                </div>
 
-                        }>
-                            <p><span className='brqwiopirqpw'><QrCodeScannerIcon className='icon-qr f-15' /> QR Code</span></p> </Tooltip>
+                            }>
+                                <p className='nowrap'><span className='brqwiopirqpw'><QrCodeScannerIcon className='icon-qr f-15' /> QR Code</span></p> </Tooltip>
+
+                        </>
+
+                    }
                     </>
 
                 }
                 </>
             ),
-            width: 140,
+            width: 110,
             align: "center",
         },
         {
             title: 'Trạng thái',
             key: 'trangThai',
             render: (data) => (<p className={data?.trangThai == 3 ? "green" : data?.trangThai == 2 ? "blue" : "black"}>{PhanLoai?.getPhanLoaiYeuCau(data?.trangThai)} </p>),
-            width: 180,
+            width: 160,
             align: "center",
         },
         {
             title: 'Số phiếu',
             key: 'chiTieu',
             dataIndex: 'chiTieu',
-            width: 130,
+            width: 120,
             editable: true,
             inputType: "number",
             align: "center",
         },
         {
             title: 'Thời hạn',
-            width: 160,
+            width: 120,
             editable: true,
             // dataIndex: 'ngayKT',
             align: "center",
@@ -324,8 +349,10 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail, setSelectedRowIndex, setDonVi,
                             // <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
                             //     Chỉnh
                             // </Typography.Link>
-                            <Typography.Link disabled={editingKey !== ''} onClick={() => { setOpenMModalDVPT(true);
-                             setDonViPTUp(record) }}>
+                            <Typography.Link disabled={editingKey !== ''} onClick={() => {
+                                setOpenMModalDVPT(true);
+                                setDonViPTUp(record)
+                            }}>
                                 Chỉnh
                             </Typography.Link>
                         }
@@ -402,6 +429,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail, setSelectedRowIndex, setDonVi,
                     trangThai: dvnpt?.trangThai,
                     maKhaoSat: dvnpt?.maKhaoSat,
                     ngayKT: dvnpt?.ngayKT,
+                    dvnpt: dvnpt,
                     // ...getContChild(element?.children, element?.listKhaoSat?.filter(obj => obj != cuocKhaoSat?._id)?.length),
                     children: formatData(element?.children, listSave)
                 })
@@ -412,6 +440,7 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail, setSelectedRowIndex, setDonVi,
                     trangThai: dvnpt?.trangThai,
                     maKhaoSat: dvnpt?.maKhaoSat,
                     ngayKT: dvnpt?.ngayKT,
+                    dvnpt: dvnpt,
                     // ...getContChild(element?.children, element?.listKhaoSat?.filter(obj => obj != cuocKhaoSat?._id)?.length),
                     children: formatData(element?.children, listSave)
                 })
@@ -586,7 +615,9 @@ const LinkKhaoSat = ({ cuocKhaoSat, reloadDetail, setSelectedRowIndex, setDonVi,
                                     return {
                                         onClick: () => {
                                             setSelectedRowIndex(rowIndex); // Lưu trữ chỉ số dòng khi click
-                                            setDonVi(record); // Lưu trữ thông tin dòng khi click
+                                            setDonVi(record?.dvnpt); // Lưu trữ thông tin dòng khi click
+                                            console.log(record);
+
                                         },
                                     };
                                 }}

@@ -12,7 +12,7 @@ import { CircularProgress } from '@mui/material';
 import Loading from 'app/components/Loading';
 import SapXep from 'app/common/SapXep';
 
-const EditForm = ({ bieuMau,ServiceSave, keHoach }) => {
+const EditForm = ({ bieuMau, ServiceSave, keHoach }) => {
     const key = new URLSearchParams(window.location.search).get("key");
     const [formData, setFormData] = useState({
         display: "form",
@@ -67,7 +67,7 @@ const EditForm = ({ bieuMau,ServiceSave, keHoach }) => {
             setSending(true);
             console.log(generateKey(form.component?.components))
 
-            
+
             ServiceSave({ ...bieuMau, thanhPhan: JSON.stringify(generateKey(form.component?.components)) }).then(
                 (res) => {
                     setSending(false);
@@ -126,8 +126,12 @@ const EditForm = ({ bieuMau,ServiceSave, keHoach }) => {
 
     }, [bieuMau]);
     useEffect(() => {
-        reLoadList()
-    }, []);
+        if (keHoach?._id) {
+            reLoadList()
+        }
+
+
+    }, [keHoach]);
     function reLoadList() {
         setLoading(true)
         // Services.getDoiTuongKhaoSatService().getAll("").then(
@@ -138,6 +142,7 @@ const EditForm = ({ bieuMau,ServiceSave, keHoach }) => {
         //     }
         // )
         addKeyFieldToAllComponents();
+        // console.log(keHoach);
     }
     const handleSaveComponent = (component) => {
         // let mauCauHoi = listCauHoi?.find(e => e?._id == component?.mauCauHoi)
@@ -168,11 +173,11 @@ const EditForm = ({ bieuMau,ServiceSave, keHoach }) => {
     };
 
     const addKeyFieldToAllComponents = async () => {
-        let listCauHoiRS = await Services.getNoiDungKhaoSatService().getAll("",keHoach?._id);
+        let listCauHoiRS = await Services.getNoiDungKhaoSatService().getAll("", keHoach?._id);
         setListCauHoi(listCauHoiRS?.data);
-        let listNhomDoiTuongRS = await Services.getNhomDoiTuongService().getAll("",keHoach?._id);
+        let listNhomDoiTuongRS = await Services.getNhomDoiTuongService().getAll("", keHoach?._id);
         setListNhomDoiTuong(listNhomDoiTuongRS?.data);
-        let listDoiTuongKSRS = (await Services.getDoiTuongKhaoSatService().getAll("","",keHoach?._id))?.data;
+        let listDoiTuongKSRS = (await Services.getDoiTuongKhaoSatService().getAll("", "", keHoach?._id))?.data;
         setListDoiTuongKS(listDoiTuongKSRS);
 
         const componentNames = Object.keys(Components.components);
@@ -217,11 +222,11 @@ const EditForm = ({ bieuMau,ServiceSave, keHoach }) => {
                                                 }) : selectedValue.data.data.values
                                         console.log(rs);
                                         selectedValue.data.data.values = rs
-                                        if(!selectedValue.data.key?.includes("_selectdoiTuong")){
-                                            selectedValue.data.key =selectedValue.data.key + "_selectdoiTuong";
+                                        if (!selectedValue.data.key?.includes("_selectdoiTuong")) {
+                                            selectedValue.data.key = selectedValue.data.key + "_selectdoiTuong";
                                         }
-                                    }else {
-                                        selectedValue.data.key.replaceAll("_selectdoiTuong","");
+                                    } else {
+                                        selectedValue.data.key.replaceAll("_selectdoiTuong", "");
                                     }
                                 } else if (selectedValue.data && selectedValue.data.mauQuestion) {
                                     selectedValue.data.questions = (listDoiTuongKSRS && listDoiTuongKSRS.length > 0)
@@ -270,7 +275,7 @@ const EditForm = ({ bieuMau,ServiceSave, keHoach }) => {
                                     selectedValue.data.values = mauCauHoi && mauCauHoi.giaTri ? mauCauHoi.giaTri : selectedValue.data.values;
                                     selectedValue.data.key = (mauCauHoi && mauCauHoi._id ? mauCauHoi._id : '') + "-" + (selectedValue.data.type);
                                     selectedValue.data.label = mauCauHoi && mauCauHoi.ten ? mauCauHoi.ten : selectedValue.data.label;
-                                }else  if (selectedValue && selectedValue.data) {
+                                } else if (selectedValue && selectedValue.data) {
                                     selectedValue.data.key = (mauCauHoi && mauCauHoi._id ? mauCauHoi._id : '') + "-" + (selectedValue.data.type);
                                     selectedValue.data.label = mauCauHoi && mauCauHoi.ten ? mauCauHoi.ten : selectedValue.data.label;
                                 }

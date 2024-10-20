@@ -184,6 +184,7 @@ const CuocKhaoSatDetailPage = ({keHoach }) => {
                                 key: '4',
                                 label: 'Phân công khảo sát',// bảng tình hình thực hiện 
                                 children: <ShareForm 
+                                keHoach={cuocKhaoSat?.keHoach}
                                 cuocKhaoSat={cuocKhaoSat} 
                                 reloadDetail={reloadDetail} 
                                 />,

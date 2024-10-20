@@ -165,17 +165,24 @@ const DoiTuongKhaoSatPage = ({keHoach,showBreadcrumb}) => {
 
                         },
                         {
+                            title: "Mã",
+                            dataIndex: "ma",
+                            key: "ma",
+                            width: 50,
+                            align: "center",
+                        },
+                        {
                             title: "Tên đối tượng",
                             dataIndex: "ten",
                             key: "ten",
-                            width: 150,
+                            width: 120,
 
                         },
                         {
                             title: "Mô tả",
                             dataIndex: "moTa",
                             key: "moTa",
-                            width: 200,
+                            width: 120,
                         },
                         {
                             title: "Thứ tự",
@@ -187,7 +194,8 @@ const DoiTuongKhaoSatPage = ({keHoach,showBreadcrumb}) => {
                         {
                             title: "Trang thái",
                             render: (data) => (data?.trangThai != 1 ? <span className='box-red'>Khóa</span> : <span className='box-green'>Mở</span>),
-                            width: 90,
+                            width: 70,
+                            align: "center",
                         },
                         {
                             title: " ",

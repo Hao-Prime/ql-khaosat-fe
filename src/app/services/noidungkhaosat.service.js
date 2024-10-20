@@ -1,6 +1,8 @@
 import axios from "axios";
 
 function getAll(id,idKeHoach) {
+  console.log(idKeHoach);
+  
   return axios.get(process.env.REACT_APP_URL_SERVER + `/be-form/noi-dung-khao-sat?id=${id||""}&idKeHoach=${idKeHoach||""}`);
 }
 function save(noiDungKhaoSat) {
